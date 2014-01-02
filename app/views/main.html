@@ -1,1 +1,9 @@
-<div>{{message}}</div>
+<div>
+  <div class="menu" ng-controller="MenuCtrl">
+    <a href="" ng-click="go('/main')">main</a>
+    <a href="" ng-click="go('/logout')">logout</a>
+  </div>
+  <br />
+  <span>{{message}}</span>
+  <div><a href="" ng-click="sendProtectedMessage()">Send Protected Message</a></div>
+</div>

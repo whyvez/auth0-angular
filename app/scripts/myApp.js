@@ -1,5 +1,5 @@
 var myApp = angular.module('myApp', [
-  'ngCookies', 'ngRoute'
+  'ngCookies', 'ngRoute', 'auth0'
 ]);
 
 myApp.config(function ($routeProvider) {
@@ -11,19 +11,4 @@ myApp.config(function ($routeProvider) {
 
   .otherwise({ redirectTo: '/login' });
 
-})
-.run(function ($rootScope, $cookies, $location) {
-  $rootScope.Auth0Widget = new Auth0Widget({
-      domain: 'YOUR_DOMAIN', 
-      clientID: 'YOUR_CLIENT_ID', 
-      callbackURL: 'YOUR_CALLBACK_URL',
-      callbackOnLocationHash: true
-  });
-
-    $rootScope.Auth0Widget.parseHash(window.location.hash, function (profile, id_token, access_token, state) { 
-    $cookies.profile = JSON.stringify(profile);
-    $location.path('/main');
-  });
-
 });
-
