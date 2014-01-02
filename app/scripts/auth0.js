@@ -1,9 +1,6 @@
 var auth0 = angular.module('auth0', []);
 
 auth0
-.constant('DOMAIN', 'your.domain.com')
-.constant('CLIENT_ID','YOUR_CLIENT_ID')
-.constant('CALLBACK_URL', 'YOUR_CALLBACK_URL')
 .factory('widget', function (DOMAIN, CLIENT_ID, CALLBACK_URL) {
   var auth0Widget = new Auth0Widget({
       domain:                 DOMAIN,
@@ -17,7 +14,6 @@ auth0
 .directive('a0Widget', function (widget) {
   return {
     restrict: 'AE',
-    transclude: true,
     link: function () {
       widget.signin({container: 'a0-container'});
     },
