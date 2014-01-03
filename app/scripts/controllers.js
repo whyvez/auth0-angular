@@ -22,7 +22,10 @@ myApp.controller('RootCtrl', function (auth, $scope, $location, $http) {
 });
 
 myApp.controller('LoginCtrl', function (auth, $scope, $location) {
-  auth.signin();
+  //auth.signin();
+  $scope.doAuth = function () {
+    auth.signin({connection: 'google-oauth2'});
+  };
 });
 
 myApp.controller('LogoutCtrl', function (auth, $scope, $location) {
