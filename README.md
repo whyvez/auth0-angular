@@ -151,7 +151,7 @@ On the backed you can use any JWT library to validate the token. Here are some:
 
 If you have multiple routes and you want to control what routes are anonymous, what routes need authentication and even do some custom logic to decide whether or not the user can access a route, read below.
 
-#### Apprach 1: embedded in the controller (the simplest)
+#### Approach 1: embedded in the controller (the simplest)
 
 The simplest way would be handling it at the controller level.
 
@@ -166,7 +166,7 @@ myApp.controller('RootCtrl', function (auth, $scope, $location, $http) {
 }
 ```
 
-#### Apprach 2: at the router level
+#### Approach 2: at the router level
 
 You could also do something at the routing level. Our module is not coupled with any particular implementation of Angular routing, so you can choose the default `ngRoute`, the [ui-router](https://github.com/angular-ui/ui-router) or some other custom module like [Angular Routing](https://github.com/dotJEM/angular-routing).
 
