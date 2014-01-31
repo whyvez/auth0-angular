@@ -7,8 +7,7 @@
     "express": "3.x",
     "express-jwt": "~0.1.0",
 
-    "auth0": "~0.2.2",
-    "request": "~2.33",
+    "auth0": "~0.3.1",
     "xtend": "~2.1.2"
   }
 }

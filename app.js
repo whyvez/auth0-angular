@@ -23,8 +23,7 @@ app.get('/api/protected', function (req, res) {
 /** For custom signup example **/
 
 var Auth0 = require('auth0');
-var request = require('request');
-var extend = require("xtend");
+var extend = require('xtend');
 
 var api = new Auth0({
   domain:       'contoso.auth0.com',
@@ -34,27 +33,20 @@ var api = new Auth0({
 
 var CONNECTION = 'Username-Password-Authentication';
 
-var https = require('https');
-
 app.use(express.bodyParser());
 
 app.use('/custom-signup', function (req, res) {
-  api._getAccessToken(function (err, token) {
+  var data = extend(req.body, {connection: CONNECTION, email_verified: false});
+
+  api.createUser(data, function (err) {
     if (err) {
-      console.log('Error fetching access token: ' + err);
+      console.log('Error creating user: ' + err);
+      res.send(500, err);
+      return;
     }
 
-    var data = extend(req.body, {connection: CONNECTION, email_verified: false});
-
-    request.post({url: 'https://contoso.auth0.com/api/users/?access_token=' + token, json: data}, function (e, r, body) {
-      if (r.statusCode === 200) {
-        res.send(200);
-        return;
-      }
-
-      res.send(r.statusCode, body);
-    });
-
+    res.send(200);
+    return;
   });
 });
 
