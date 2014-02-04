@@ -175,10 +175,11 @@ This [article](https://medium.com/p/4e927af3a15f) explains such approach using t
 ```js
 angular.module("myApp")
   .run(function ($rootScope, $state, auth) {
-    $rootScope.$on("$stateChangeStart", function(curr, prev){
+    $rootScope.$on("$stateChangeStart", function(event, curr, prev){
       if (curr.authenticate && !auth.isAuthenticated){
         // User isn’t authenticated
         $state.transitionTo("login");
+        event.preventDefault();
       }
     });
   });
