@@ -187,6 +187,26 @@ angular.module("myApp")
 
 > The `authenticate` attribute is a boolean that you add to your routing table specifying that the route needs authentication. Read more about this approach in the [article](https://medium.com/p/4e927af3a15f).
 
+### Custom hash URL prefix
+If you are using a custom hash prefix on:
+
+```js
+  $locationProvider.hashPrefix('!');
+```
+
+You will need to add the following code in order to assure that the callback URL does not break AngularJS `$locationProvider` component:
+
+```js
+  yourModule.config(function () {
+    // Detect access_token or error in hash URL
+    if (window.location.hash.match(/^#access_token/) || window.location.hash.match(/^#error/)) {
+    
+      //Append your prefix here
+      window.location.hash = '#!' + window.location.hash.substring(1);
+    }
+  });
+
+```
 
 ### Examples
 
