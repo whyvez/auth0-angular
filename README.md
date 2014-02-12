@@ -210,10 +210,11 @@ You will need to add the following code in order to assure that the callback URL
 
 ### Examples
 
-There are two examples:
+There are three examples:
 
 * [widget](widget): a simple angular app doing auth with social and username/password using the Login Widget.
 * [custom-login](custom-login): same as the previous one but without using the widget, just a custom login form.
+* [custom-signup](custom-signup): custom signup plus extra fields added to the user profile on creation.
 
 The server side is using node.js and you can run it with `npm install && node app.js`. It is pre-configured with a demo account with Amazon, Facebook, Google and username/password credentials.
 
