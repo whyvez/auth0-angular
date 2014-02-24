@@ -1,6 +1,6 @@
 # Auth0 and AngularJS
 
-This AngularJS module will help you implement client-side and server-side (API) authentication. You can use it together with [Auth0](https://www.auth0.com) to add username/password authentication, support for enterprise identity like Active Directory or SAML and also for social identities like Google, Facebook or Salesforce among others to your web, API and mobile native apps. 
+This AngularJS module will help you implement client-side and server-side (API) authentication. You can use it together with [Auth0](https://www.auth0.com) to add username/password authentication, support for enterprise identity like Active Directory or SAML and also for social identities like Google, Facebook or Salesforce among others to your web, API and mobile native apps.
 
 [Auth0](https://www.auth0.com) is a cloud service that provides a turn-key solution for authentication, authorization and Single Sign On.
 
@@ -10,7 +10,7 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
 
 ## Client Side Authentication
 
-1. There are two ways of implementing signin/singup. One is using our [Login Widget](https://docs.auth0.com/login-widget2), which is a complete Login UI ready to use and the other one is using the [JavaScript SDK](https://github.com/auth0/auth0.js) which is just a wrapper to our API so you can build your UI on top. 
+1. There are two ways of implementing signin/singup. One is using our [Login Widget](https://docs.auth0.com/login-widget2), which is a complete Login UI ready to use and the other one is using the [JavaScript SDK](https://github.com/auth0/auth0.js) which is just a wrapper to our API so you can build your UI on top.
     ```html
     <!-- login widget -->
     <script src="//d19p4zemcycm7a.cloudfront.net/w2/auth0-widget-2.3.js" type="text/javascript"> </script>
@@ -21,7 +21,7 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
     <!-- auth0.js and build your own UI -->
     <script src="https://d19p4zemcycm7a.cloudfront.net/w2/auth0-1.2.8.min.js"></script>
     ```
-    
+
 2.  Add the [Auth0 Angular module](auth0-angular.js):
     ```js
     <script src="https://raw.github.com/auth0/auth0-angular/master/auth0-angular.js" type="text/javascript"> </script>
@@ -49,25 +49,25 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
  * `/login`:  The route that will allow the user to input their credentials.
  * `/logout`: The route that the user will follow in order to close its session.
  * `/`:   A route where you are going to display some restricted content.
-Add the following router configuration to the `.config` block.  
+Add the following router configuration to the `.config` block.
 
     ```js
     myApp.config(function ($routeProvider, authProvider) {
-    
+
       ...
-    
+
       $routeProvider
       .when('/',        { templateUrl: 'views/root.html',     controller: 'RootCtrl'    })
       .when('/logout',  { templateUrl: 'views/logout.html',   controller: 'LogoutCtrl'  })
       .when('/login',   { templateUrl: 'views/login.html',    controller: 'LoginCtrl'   })
-    
+
       .otherwise({ redirectTo: '/login' });
     });
     ```
 
   > Note: We are currently using Angular's ngRoute but any other routing library can be used.
 
-5. Inject the `auth` service in your controllers and call the `signin`/`signout` methods. 
+5. Inject the `auth` service in your controllers and call the `signin`/`signout` methods.
   ```js
   myApp.controller('LoginCtrl', function ($scope, auth) {
     auth.signin();
@@ -76,11 +76,11 @@ Add the following router configuration to the `.config` block.
 
   ```js
   myApp.controller('LogoutCtrl', function ($scope, auth) {
-    auth0.signout();
+    auth.signout();
   });
   ```
 
-  > More details about the parameters you can use for the [Auth0 Login Widget](https://docs.auth0.com/login-widget2) and [auth0.js](https://github.com/auth0/auth0.js). 
+  > More details about the parameters you can use for the [Auth0 Login Widget](https://docs.auth0.com/login-widget2) and [auth0.js](https://github.com/auth0/auth0.js).
 
 6. Use the `auth.profile` object to show user attributes in the view.
   ```js
@@ -104,7 +104,7 @@ Add the following router configuration to the `.config` block.
 Now that the user was authenticated on the client side, you want to make sure that every time an API is called, the user attributes are sent in a secure way. The `auth` service that you used before also provides a `token` which is a signed [JSON Web Token](http://tools.ietf.org/html/draft-jones-json-web-token). This token can be sent through an HTTP header and the backedn API can validaate it without any extra roundtrip (since the token has been signed with a secret that is shared between the API and Auth0).
 
 1. Add to you application the `authInterceptor` dependency (it's included in the same auth0-angular.js file).
-    
+
   ```js
   var myApp = angular.module('myApp', [
     'ngCookies', 'ngRoute', 'auth0', 'authInterceptor'
@@ -132,7 +132,7 @@ Now that the user was authenticated on the client side, you want to make sure th
         $rootScope.$on('auth:forbidden', function (event, response) {
             // handle the case where the JWT is not valid (401 status code)
             auth.signout();
-            $location.path('/login');        
+            $location.path('/login');
         });
     ```
 > Note: the JWT expiration can be controlled from the Auth0 dashboard
@@ -161,7 +161,7 @@ myApp.controller('RootCtrl', function (auth, $scope, $location, $http) {
     $location.path('/login');
     return;
   }
-  
+
   // user is authenticated
 }
 ```
@@ -200,7 +200,7 @@ You will need to add the following code in order to assure that the callback URL
   yourModule.config(function () {
     // Detect access_token or error in hash URL
     if (window.location.hash.match(/^#access_token/) || window.location.hash.match(/^#error/)) {
-    
+
       //Append your prefix here
       window.location.hash = '#!' + window.location.hash.substring(1);
     }
@@ -226,7 +226,7 @@ The server side is using node.js and you can run it with `npm install && node ap
 
 Auth0 helps you to:
 
-* Add authentication with [multiple authentication sources](https://docs.auth0.com/identityproviders), either social like **Google, Facebook, Microsoft Account, LinkedIn, GitHub, Twitter, Box, Salesforce, amont others**, or enterprise identity systems like **Windows Azure AD, Google Apps, Active Directory, ADFS or any SAML Identity Provider**. 
+* Add authentication with [multiple authentication sources](https://docs.auth0.com/identityproviders), either social like **Google, Facebook, Microsoft Account, LinkedIn, GitHub, Twitter, Box, Salesforce, amont others**, or enterprise identity systems like **Windows Azure AD, Google Apps, Active Directory, ADFS or any SAML Identity Provider**.
 * Add authentication through more traditional **[username/password databases](https://docs.auth0.com/mysql-connection-tutorial)**.
 * Add support for **[linking different user accounts](https://docs.auth0.com/link-accounts)** with the same user.
 * Support for generating signed [Json Web Tokens](https://docs.auth0.com/jwt) to call your APIs and **flow the user identity** securely.
