@@ -99,7 +99,7 @@
         }
         return config;
       },
-      response: function (response) {
+      responseError: function (response) {
         // handle the case where the user is not authenticated
         if (response.status === 401) {
           $rootScope.$broadcast('auth:forbidden', response);
