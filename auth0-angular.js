@@ -10,11 +10,9 @@
 
   Auth0Wrapper.prototype = {};
 
-  Auth0Wrapper.prototype.signin = function (options) {
+  Auth0Wrapper.prototype.signin = function (options, callback) {
     var that = this;
-    this.auth0Lib.signin(options, function (err) {
-      that.$rootScope.$broadcast('auth:login-error', err);
-    });
+    this.auth0Lib.signin(options, callback);
   };
 
   Auth0Wrapper.prototype.signout = function () {
@@ -28,8 +26,8 @@
     this.accessToken = undefined;
   };
 
-  Auth0Wrapper.prototype.parseHash = function (locationHash, callback) {
-    this.auth0Lib.parseHash(locationHash, callback);
+  Auth0Wrapper.prototype.getProfile = function (locationHash, callback) {
+    this.auth0Lib.getProfile(locationHash, callback);
   };
 
   Auth0Wrapper.prototype.signup = function (options) {
@@ -71,7 +69,7 @@
   });
 
   auth0.run(function (auth, $cookies, $location, $rootScope) {
-    auth.parseHash(window.location.hash, function (profile, id_token, access_token, state) {
+    auth.getProfile(window.location.hash, function (err, profile, id_token, access_token, state) {
       $cookies.profile = JSON.stringify(profile);
       $cookies.idToken = id_token;
       $cookies.accessToken = access_token;

@@ -21,7 +21,7 @@ myApp.controller('RootCtrl', function (auth, $scope, $location, $http) {
   };
 });
 
-myApp.controller('LoginCtrl', function (auth, $scope, $location) {
+myApp.controller('LoginCtrl', function (auth, $rootScope, $scope, $cookies, $location) {
   $scope.user = '';
   $scope.pass = '';
   $scope.submit = function () {
@@ -29,15 +29,22 @@ myApp.controller('LoginCtrl', function (auth, $scope, $location) {
       connection: 'Username-Password-Authentication',
       username: $scope.user,
       password: $scope.pass
+    }, function (err, profile, id_token, access_token) {
+      if (err) return $scope.$broadcast('auth:login-error', err);
+
+      $cookies.profile = JSON.stringify(profile);
+      $cookies.idToken = id_token;
+      $cookies.accessToken = access_token;
+      $location.path('/');
     });
   };
 
   $scope.$on('auth:login-error', function (event, err) {
-    alert(err);
+    alert(err.message);
   });
 
   $scope.doGoogleAuth = function () {
-    auth.signin({connection: 'google-oauth2'});
+    auth.signin({popup: true, connection: 'google-oauth2'});
   };
 });
 
