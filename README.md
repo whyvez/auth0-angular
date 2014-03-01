@@ -218,7 +218,7 @@ There are three examples:
 
 The server side is using node.js and you can run it with `npm install && node app.js`. It is pre-configured with a demo account with Amazon, Facebook, Google and username/password credentials.
 
-![](https://dl.dropboxusercontent.com/s/6fm04vrom8ojcby/angular.gif?dl=1)
+![](https://dl.dropboxusercontent.com/u/21665105/angular.gif)
 
 ---
 
@@ -235,7 +235,7 @@ Auth0 helps you to:
 
 ## Create a free account in Auth0
 
-1. Go to [Auth0](http://developers.auth0.com) and click Sign Up.
+1. Go to [Auth0](https://auth0.com) and click Sign Up.
 2. Use Google, GitHub or Microsoft Account to login.
 
 ## License
