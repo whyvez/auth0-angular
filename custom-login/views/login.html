@@ -1,15 +1,16 @@
 <div id="login-container">
-  <form>
+  <form ng-submit="submit()">
     <fieldset>
       <input type="text" name="user" ng-model="user" />
       <br>
       <input type="password" name="pass" ng-model="pass" />
       <br>
-      <button type="submit" ng-click="submit()">submit</button>
+      <button type="submit">submit</button>
     </fieldset>
   </form>
 
   <div id="login-container">
-    <a href="" ng-click="doGoogleAuth()">Login with Google</a>
+    <a href="" ng-click="doGoogleAuthWithPopup()">Login with Google (popup mode)</a><br/>
+    <a href="" ng-click="doGoogleAuthWithRedirect()">Login with Google (redirect mode)</a>
   </div>
 </div>

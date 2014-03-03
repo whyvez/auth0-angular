@@ -29,7 +29,11 @@ myApp.controller('LoginCtrl', function (auth, $scope, $location, $http) {
       connection: 'Username-Password-Authentication',
       username:   $scope.user,
       password:   $scope.pass
-    });
+    }).then(function() {
+        $location.path('/');      
+      }, function(err) {
+        alert(err.message || err.error_description)
+      });
   };
 
   $scope.doSignup = function () {
@@ -46,6 +50,10 @@ myApp.controller('LoginCtrl', function (auth, $scope, $location, $http) {
           connection: 'Username-Password-Authentication',
           username:   $scope.signup.user,
           password:   $scope.signup.pass
+        }).then(function() {
+          $location.path('/');      
+        }, function(err) {
+          alert(err.message || err.error_description)
         });
       }
     })
@@ -55,13 +63,6 @@ myApp.controller('LoginCtrl', function (auth, $scope, $location, $http) {
 
   };
 
-  $scope.$on('auth:login-error', function (event, err) {
-    alert(err);
-  });
-
-  $scope.doGoogleAuth = function () {
-    auth.signin({connection: 'google-oauth2'});
-  };
 });
 
 myApp.controller('LogoutCtrl', function (auth, $scope, $location) {
