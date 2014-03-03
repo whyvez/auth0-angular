@@ -11,6 +11,7 @@ myApp.controller('RootCtrl', function (auth, $scope, $location, $http) {
     $location.path('/login');
     return;
   }
+
   $scope.auth = auth;
 
   $scope.sendProtectedMessage = function () {
@@ -21,30 +22,34 @@ myApp.controller('RootCtrl', function (auth, $scope, $location, $http) {
   };
 });
 
-myApp.controller('LoginCtrl', function (auth, $rootScope, $scope, $cookies, $location) {
+myApp.controller('LoginCtrl', function (auth, $scope, $cookies, $location) {
   $scope.user = '';
   $scope.pass = '';
+      
   $scope.submit = function () {
     auth.signin({
       connection: 'Username-Password-Authentication',
       username: $scope.user,
       password: $scope.pass
-    }, function (err, profile, id_token, access_token) {
-      if (err) return $scope.$broadcast('auth:login-error', err);
-
-      $cookies.profile = JSON.stringify(profile);
-      $cookies.idToken = id_token;
-      $cookies.accessToken = access_token;
-      $location.path('/');
-    });
+    })
+      .then(function() {
+        $location.path('/');      
+      }, function(err) {
+        alert(err.message || err.error_description)
+      });
   };
 
-  $scope.$on('auth:login-error', function (event, err) {
-    alert(err.message);
-  });
+  $scope.doGoogleAuthWithPopup = function () {
+    auth.signin({popup: true, connection: 'google-oauth2'})
+      .then(function() {
+        $location.path('/');
+      }, function(err) {
+        alert(err.error || err.message || err.error_description)
+      });
+  };
 
-  $scope.doGoogleAuth = function () {
-    auth.signin({popup: true, connection: 'google-oauth2'});
+  $scope.doGoogleAuthWithRedirect = function () {
+    return auth.signin({connection: 'google-oauth2'});
   };
 });
 
