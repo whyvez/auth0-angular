@@ -70,7 +70,14 @@ Add the following router configuration to the `.config` block.
 5. Inject the `auth` service in your controllers and call the `signin`/`signout` methods.
   ```js
   myApp.controller('LoginCtrl', function ($scope, auth) {
-    auth.signin();
+    auth.signin()
+      .then(function () {
+        // on login success
+
+      }, function () {
+        // on fail
+      
+      });;
   });
   ```
 
