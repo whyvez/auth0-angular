@@ -1,8 +1,8 @@
 # Custom Login Example
 
-Style your own login.
+Use your own login.
 
-### Prerequisites
+### Running the example
 In order to run the example, install `serve` to host static assets:
 
 ```sh

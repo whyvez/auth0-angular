@@ -1,8 +1,8 @@
 # Widget Example
 
-Use Auth0 Widget to provide Authentication.
+Using Auth0 Login Widget.
 
-### Prerequisites
+### Running the example
 In order to run the example, install `serve` to host static assets:
 
 ```sh

@@ -2,8 +2,8 @@
 
 Create a new user and store extra data fields.
 
-### Node.js Backend
-#### Prerequisitest
+### Running the example
+#### Node.js Backend
 In order to run the example, go to the `nodejs` folder and run:
 ```sh
 npm install

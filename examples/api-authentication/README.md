@@ -2,8 +2,8 @@
 
 Use Auth0 to secure your API and consume it from an AngularJS client.
 
-### Node.js Backend
-#### Prerequisitest
+### Running the example
+#### Node.js Backend
 In order to run the example, go to the `nodejs` folder and run:
 ```sh
 npm install
