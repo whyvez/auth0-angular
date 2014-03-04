@@ -21,10 +21,10 @@ After doing that, start the server by doing:
 ```sh
 node app.js
 ```
-and point your browser to [http://localhost:1337/](http://localhost:1337).
+
+Open your browser at [http://localhost:1337/](http://localhost:1337).
 
 #### ASP.NET Web API Owin Backend
 
 In order to run the example, go to the `aspnet-owin` folder, open the solution and run it.
-
-and point your browser to [http://localhost:1337/index.html](http://localhost:1337/index.html).
+Open your browser at [http://localhost:1337/index.html](http://localhost:1337/index.html).
