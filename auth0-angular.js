@@ -18,6 +18,10 @@
 
   Auth0Wrapper.prototype._deserialize = function () {
     if (!this.$cookies.profile) {
+      this.isAuthenticated = false;
+      this.profile = undefined;
+      this.idToken = undefined;
+      this.accessToken = undefined;
       return;
     }
 
