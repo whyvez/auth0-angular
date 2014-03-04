@@ -17,7 +17,9 @@
   };
 
   Auth0Wrapper.prototype._deserialize = function () {
-    if (!this.$cookies.profile) return;
+    if (!this.$cookies.profile) {
+      return;
+    }
 
     this.profile = JSON.parse(this.$cookies.profile);
     this.isAuthenticated = !!this.profile;
@@ -32,20 +34,26 @@
   };
 
   Auth0Wrapper.prototype.signin = function (options, callback) {
+    options = options || {};
+
     var that = this;
     var deferred = that.$q.defer();
 
-    if (!options.popup && callback) throw new Error('Since you are using "redirect" mode, the callback you defined will never be called.')
+    if (!options.popup && callback) {
+      throw new Error('Since you are using "redirect" mode, the callback you defined will never be called.');
+    }
 
-    that.auth0Lib.signin(options, function(err, profile, id_token, access_token, state) { 
-      if (err) return deferred.reject(err);
+    that.auth0Lib.signin(options, function(err, profile, id_token, access_token, state) {
+      if (err) {
+        return deferred.reject(err);
+      }
       
       that._serialize(profile, id_token, access_token, state);
       that._deserialize();
       
       that.$safeApply(undefined, callback);
 
-      return deferred.resolve(); 
+      return deferred.resolve();
     });
 
     return deferred.promise;
@@ -63,7 +71,12 @@
       that.$safeApply(undefined, callback.apply(null, arguments));
     };
 
-    that.auth0Lib.getProfile(locationHash, wrappedCallback);
+    var getProfileThis = that.auth0Lib;
+    if (!that.auth0Lib.getProfile) {
+      getProfileThis     = that.auth0Lib.getClient();
+    }
+
+    getProfileThis.getProfile(locationHash, wrappedCallback);
   };
 
   Auth0Wrapper.prototype.signup = function (options) {
@@ -106,8 +119,10 @@
 
   auth0.run(function (auth, $cookies, $location, $rootScope, $window) {
     // this is only used when doing social authentication in redirect mode (auth.signin({connection: 'google-oauth2'});)
-    auth.getProfile($window.location.hash, function (err, profile, id_token, access_token, state) {
-      if (err) return $rootScope.$broadcast('auth:error', err);
+    auth.getProfile(window.location.hash, function (err, profile, id_token, access_token, state) {
+      if (err) {
+        return $rootScope.$broadcast('auth:error', err);
+      }
 
       auth._serialize(profile, id_token, access_token, state);
       auth._deserialize();
@@ -158,5 +173,6 @@
   authInterceptorModule.config(function ($httpProvider) {
     $httpProvider.interceptors.push('authInterceptor');
   });
+
 
 }());
