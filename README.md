@@ -4,7 +4,7 @@ This AngularJS module will help you implement client-side and server-side (API) 
 
 [Auth0](https://www.auth0.com) is a cloud service that provides a turn-key solution for authentication, authorization and Single Sign On.
 
-The following [examples](examples) offer a good starting point for including Auth0 in your application:
+The following [examples](examples) offer a good starting point for including Auth0 in your AngularJS application:
 
  * [custom-login](examples/custom-login): Create an html login form and use Auth0 to authenticate.
  * [custom-signup](examples/custom-signup): Create an html signup form and store custom fields in Auth0 records.
