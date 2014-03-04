@@ -4,13 +4,6 @@ This AngularJS module will help you implement client-side and server-side (API) 
 
 [Auth0](https://www.auth0.com) is a cloud service that provides a turn-key solution for authentication, authorization and Single Sign On.
 
-The following [examples](examples) offer a good starting point for including Auth0 in your AngularJS application:
-
- * [Custom Login](examples/custom-login): Create an html login form and use Auth0 to authenticate.
- * [Custom Signup](examples/custom-signup): Create an html signup form and store custom fields
- * [Widget](examples/widget): Use and customize Auth0 widget to fit your use case
- * [API Authentication](examples/api-authentication): Call your protected API in the technology you want (Java, .NET, [Node.js](examples/api-authentication/nodejs) using Auth0 generated tokens.
-
 # Tutorial
 
 ## Client Side Authentication
@@ -224,13 +217,13 @@ You will need to add the following code in order to assure that the callback URL
 
 ### Examples
 
-There are three examples:
+The following [examples](examples) offer a good starting point for including Auth0 in your AngularJS application:
 
-* [widget](widget): a simple angular app doing auth with social and username/password using the Login Widget.
-* [custom-login](custom-login): same as the previous one but without using the widget, just a custom login form.
-* [custom-signup](custom-signup): custom signup plus extra fields added to the user profile on creation.
+ * [Custom Login](examples/custom-login): Custom login form that uses Auth0 to authenticate.
+ * [Custom Signup](examples/custom-signup): Custom signup plus extra fields added to the user profile on creation.
+ * [Widget](examples/widget): A simple angular app doing auth with social and username/password using the Login Widget.
+ * [API Authentication](examples/api-authentication): Call your protected API in the technology you want (Java, .NET, [Node.js](examples/api-authentication/nodejs) using Auth0 generated tokens.
 
-The server side is using node.js and you can run it with `npm install && node app.js`. It is pre-configured with a demo account with Amazon, Facebook, Google and username/password credentials.
 
 ![](https://dl.dropboxusercontent.com/u/21665105/angular.gif)
 
