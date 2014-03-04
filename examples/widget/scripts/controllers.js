@@ -11,11 +11,12 @@ myApp.controller('RootCtrl', function (auth, $scope, $location) {
     $location.path('/login');
     return;
   }
+
   $scope.auth = auth;
 });
 
-myApp.controller('LoginCtrl', function (auth) {
-  auth.signin();
+myApp.controller('LoginCtrl', function (auth, $scope) {
+  $scope.auth = auth;
 });
 
 myApp.controller('LogoutCtrl', function (auth, $location) {

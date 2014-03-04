@@ -16,14 +16,15 @@
 <body>
   <div ng-app="myApp">
     <div ng-controller="MenuCtrl">
+      <a href="" ng-controller="LoginCtrl" ng-click="auth.signin()">click to login</a>
+      <br />
       <a href="" ng-click="go('/')">main</a>
-      <a href="" ng-click="go('/login')">login</a>
       <a href="" ng-click="go('/logout')">logout</a>
     </div>
 
     <div ng-view>
     </div>
   </div>
-  
+
 </body>
 </html>
