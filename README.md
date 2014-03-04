@@ -6,9 +6,9 @@ This AngularJS module will help you implement client-side and server-side (API) 
 
 The following [examples](examples) offer a good starting point for including Auth0 in your AngularJS application:
 
- * [Create an html login form and use Auth0 to authenticate](examples/custom-login).
- * [Create an html signup form and store custom fields](examples/custom-signup).
- * [Use and customize Auth0 widget to fit your use case](examples/widget).
+ * [Custom Login](examples/custom-login): Create an html login form and use Auth0 to authenticate.
+ * [Custom Signup](examples/custom-signup): Create an html signup form and store custom fields
+ * [Widget](examples/widget): Use and customize Auth0 widget to fit your use case
  * [API Authentication](examples/api-authentication): Call your protected API in the technology you want (Java, .NET, [Node.js](examples/api-authentication/nodejs) using Auth0 generated tokens.
 
 # Tutorial
