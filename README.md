@@ -4,11 +4,18 @@ This AngularJS module will help you implement client-side and server-side (API) 
 
 [Auth0](https://www.auth0.com) is a cloud service that provides a turn-key solution for authentication, authorization and Single Sign On.
 
+The following [examples](examples) offer a good starting point in order to include Auth0 in your application:
+
+ * [custom-login](examples/custom-login): Create an html login form and use Auth0 to authenticate.
+ * [custom-signup](examples/custom-signup): Create an html signup form and store custom fields in Auth0 records.
+ * [widget](examples/widget): Use and customize Auth0 widget to fit your needs.
+ * [api-authentication](examples/api-authentication): Call your protected API in the technology you want (Java, .NET, [Node.js](examples/api-authentication/nodejs) using Auth0 generated tokens.
+
 # Tutorial
 
-For this tutorial, you need to create a new account in [Auth0](https://www.auth0.com) and setup a new application. We will then implement client side and server side auth.
-
 ## Client Side Authentication
+
+For this tutorial, you need to create a new account in [Auth0](https://www.auth0.com) and setup a new application. We will then implement client side and server side auth.
 
 1. There are two ways of implementing signin/singup. One is using our [Login Widget](https://docs.auth0.com/login-widget2), which is a complete Login UI ready to use and the other one is using the [JavaScript SDK](https://github.com/auth0/auth0.js) which is just a wrapper to our API so you can build your UI on top.
     ```html
