@@ -12,3 +12,4 @@ After doing that, start the server by doing:
 ```sh
 node app.js
 ```
+and point your browser to [http://localhost:1337/](http://localhost:1337).
