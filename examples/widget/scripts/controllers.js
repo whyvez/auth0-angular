@@ -6,26 +6,19 @@ myApp.controller('MenuCtrl', function ($scope, $location) {
   };
 });
 
-myApp.controller('RootCtrl', function (auth, $scope, $location, $http) {
+myApp.controller('RootCtrl', function (auth, $scope, $location) {
   if (!auth.isAuthenticated) {
     $location.path('/login');
     return;
   }
   $scope.auth = auth;
-
-  $scope.sendProtectedMessage = function () {
-    $http({method: 'GET', url: '/api/protected'})
-      .success(function (data, status, headers, config) {
-        $scope.result = 'Protected data was: ' + data;
-      });
-  };
 });
 
-myApp.controller('LoginCtrl', function (auth, $scope, $location) {
+myApp.controller('LoginCtrl', function (auth) {
   auth.signin();
 });
 
-myApp.controller('LogoutCtrl', function (auth, $scope, $location) {
+myApp.controller('LogoutCtrl', function (auth, $location) {
   auth.signout();
   $location.path('/login');
 });

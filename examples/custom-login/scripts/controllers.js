@@ -6,20 +6,13 @@ myApp.controller('MenuCtrl', function ($scope, $location) {
   };
 });
 
-myApp.controller('RootCtrl', function (auth, $scope, $location, $http) {
+myApp.controller('RootCtrl', function (auth, $scope, $location) {
   if (!auth.isAuthenticated) {
     $location.path('/login');
     return;
   }
 
   $scope.auth = auth;
-
-  $scope.sendProtectedMessage = function () {
-    $http({method: 'GET', url: '/api/protected'})
-      .success(function (data, status, headers, config) {
-        $scope.result = 'Protected data was: ' + data;
-      });
-  };
 });
 
 myApp.controller('LoginCtrl', function (auth, $scope, $cookies, $location) {
@@ -33,9 +26,9 @@ myApp.controller('LoginCtrl', function (auth, $scope, $cookies, $location) {
       password: $scope.pass
     })
       .then(function() {
-        $location.path('/');      
+        $location.path('/');
       }, function(err) {
-        alert(err.message || err.error_description)
+        alert(err.message || err.error_description);
       });
   };
 
@@ -44,7 +37,7 @@ myApp.controller('LoginCtrl', function (auth, $scope, $cookies, $location) {
       .then(function() {
         $location.path('/');
       }, function(err) {
-        alert(err.error || err.message || err.error_description)
+        alert(err.error || err.message || err.error_description);
       });
   };
 

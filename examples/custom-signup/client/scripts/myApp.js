@@ -21,7 +21,8 @@ myApp.config(function ($routeProvider, authProvider) {
   authProvider.init({
     domain: 'contoso.auth0.com',
     clientID: 'DyG9nCwIEofSy66QM3oo5xU6NFs3TmvT',
-    callbackURL: 'http://localhost:1337/custom-signup',
+    // TODO set your own callbackURL, for instance http://localhost:1337/
+    callbackURL: document.location.href,
     callbackOnLocationHash: true
   });
 });

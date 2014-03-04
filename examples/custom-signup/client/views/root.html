@@ -1,10 +1,8 @@
 <div>
   <br />
   <span>Welcome {{auth.profile.name}}!</span>
-  <fieldset>
-  <div><a href="" ng-click="sendProtectedMessage()">Call a Secure API</a></div>
-  <div>{{result}}</div>
-  </fieldset>
+  <br />
+  <span>Your favorite color is {{auth.profile.favColor}}.</span>
 
   <div style="margin-top: 10px">User Profile</div>
   <pre><code>{{auth.profile | json}}</code></pre>

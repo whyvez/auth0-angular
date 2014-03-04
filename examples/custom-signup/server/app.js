@@ -1,26 +1,18 @@
+var resolve   = require('path').resolve;
+
 var express   = require('express');
 var app       = express();
-var jwt       = require('express-jwt');
 
 var SECRET    = 'A92LWsdBgH6legaUm8U3uyJ7n1bdEik7WvO8nQab9LlHTtnawpRx8d-HPqW0b2g-';
-var AUDIENCE  = 'DyG9nCwIEofSy66QM3oo5xU6NFs3TmvT';
-
-var authenticate = jwt({
-  secret: new Buffer(SECRET, 'base64'),
-  audience: AUDIENCE
-});
 
 app.use(express.logger());
 
-app.use('/', express.static(__dirname + '/'));
-
-app.use('/api', authenticate);
-
-app.get('/api/protected', function (req, res) {
-  res.send(200, 'This API Rocks!');
+// Get auth0-angular.js from the root directory
+app.use('/auth0-angular.js',function (req, res) {
+  res.sendfile(resolve(__dirname + '/../../../auth0-angular.js'));
 });
 
-/** For custom signup example **/
+app.use('/', express.static(__dirname + '/../client'));
 
 var Auth0 = require('auth0');
 var extend = require('xtend');
@@ -49,8 +41,6 @@ app.use('/custom-signup', function (req, res) {
     return;
   });
 });
-
-/** ------------------------ **/
 
 app.listen(1337);
 console.log('listening on port http://localhost:1337');
