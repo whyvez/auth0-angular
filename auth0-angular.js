@@ -71,12 +71,7 @@
       that.$safeApply(undefined, callback.apply(null, arguments));
     };
 
-    var getProfileThis = that.auth0Lib;
-    if (!that.auth0Lib.getProfile) {
-      getProfileThis     = that.auth0Lib.getClient();
-    }
-
-    getProfileThis.getProfile(locationHash, wrappedCallback);
+    this.auth0Lib.getProfile(locationHash, wrappedCallback);
   };
 
   Auth0Wrapper.prototype.signup = function (options) {
