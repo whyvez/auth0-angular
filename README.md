@@ -19,7 +19,7 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
 
     ```html
     <!-- auth0.js and build your own UI -->
-    <script src="//cdn.auth0.com/w2/auth0-1.6.0.js"></script>
+    <script src="//cdn.auth0.com/w2/auth0-1.6.2.js"></script>
     ```
 
 2.  Add the [Auth0 Angular module](auth0-angular.js):
