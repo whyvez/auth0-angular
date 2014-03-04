@@ -20,7 +20,7 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
 1. There are two ways of implementing signin/singup. One is using our [Login Widget](https://docs.auth0.com/login-widget2), which is a complete Login UI ready to use and the other one is using the [JavaScript SDK](https://github.com/auth0/auth0.js) which is just a wrapper to our API so you can build your UI on top.
     ```html
     <!-- login widget -->
-    <script //src="cdn.auth0.com/w2/auth0-widget-2.6.1.js" type="text/javascript"> </script>
+    <script src="cdn.auth0.com/w2/auth0-widget-2.6.1.js" type="text/javascript"> </script>
     ```
     _- or -_
 
