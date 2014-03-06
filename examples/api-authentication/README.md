@@ -6,6 +6,7 @@ Sample APIs provided in:
 
 * Node.js API
 * ASP.NET Web API Owin
+* Java Servlet
 
 > Notice that in both cases we are serving the static html/js files form the same domain. You can easily have two different domains, one hosting the static assets and another completely different hosting the API. In that case, make sure to configure CORS.
 
