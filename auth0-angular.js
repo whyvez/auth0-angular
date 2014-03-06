@@ -116,9 +116,11 @@
     };
   });
 
-  auth0.run(function (auth, $cookies, $location, $rootScope, $window) {
+  // Why $route if we are not using it? See https://github.com/angular/angular.js/issues/1213
+  auth0.run(function (auth, $cookies, $location, $rootScope, $window, $route) {
+
     // this is only used when doing social authentication in redirect mode (auth.signin({connection: 'google-oauth2'});)
-    auth.getProfile(window.location.hash, function (err, profile, id_token, access_token, state) {
+    auth.getProfile($window.location.hash, function (err, profile, id_token, access_token, state) {
       if (err) {
         return $rootScope.$broadcast('auth:error', err);
       }
