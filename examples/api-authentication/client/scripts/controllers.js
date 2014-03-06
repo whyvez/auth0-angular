@@ -30,26 +30,34 @@ myApp.controller('LoginCtrl', function (auth, $scope, $cookies, $location) {
     auth.signin({
       connection: 'Username-Password-Authentication',
       username: $scope.user,
-      password: $scope.pass
+      password: $scope.pass,
+      scope: 'openid profile'
     })
-      .then(function() {
-        $location.path('/');      
-      }, function(err) {
-        alert(err.message || err.error_description)
-      });
+    .then(function() {
+      $location.path('/');
+    }, function(err) {
+      window.alert(err.message || err.error_description);
+    });
   };
 
   $scope.doGoogleAuthWithPopup = function () {
-    auth.signin({popup: true, connection: 'google-oauth2'})
+    auth.signin({
+      popup: true,
+      connection: 'google-oauth2',
+      scope: 'openid profile'
+    })
       .then(function() {
         $location.path('/');
       }, function(err) {
-        alert(err.error || err.message || err.error_description)
+        window.alert(err.error || err.message || err.error_description);
       });
   };
 
   $scope.doGoogleAuthWithRedirect = function () {
-    return auth.signin({connection: 'google-oauth2'});
+    return auth.signin({
+      connection: 'google-oauth2',
+      scope: 'openid profile'
+    });
   };
 });
 
