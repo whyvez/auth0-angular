@@ -19,7 +19,7 @@
 
         <init-param>
             <param-name>jwt.audience</param-name>
-            <param-value>P2CJ7ZQee6SpqEm19WkEHGWqo7jofdPhxfd6Rocp</param-value>
+            <param-value>DyG9nCwIEofSy66QM3oo5xU6NFs3TmvT</param-value>
         </init-param>
     </filter>
 

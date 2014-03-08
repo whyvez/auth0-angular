@@ -1,5 +1,7 @@
 package com.auth0.example;
 
+import com.auth0.jwt.JWTVerifier;
+
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
