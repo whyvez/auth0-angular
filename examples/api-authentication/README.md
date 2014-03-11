@@ -8,7 +8,7 @@ Sample APIs provided in:
 * ASP.NET Web API Owin
 * Java Servlet
 
-> Notice that in both cases we are serving the static html/js files form the same domain. You can easily have two different domains, one hosting the static assets and another completely different hosting the API. In that case, make sure to configure CORS. (see example below)
+> Notice that in both cases we are serving the static html/js files form the same domain. You can easily have two different domains, one hosting the static assets and another completely different hosting the API. In that case, make sure to configure CORS.
 
 ### Running the example
 
@@ -40,7 +40,7 @@ mvn clean install org.mortbay.jetty:jetty-maven-plugin:run-war -Djetty.port=1337
 
 After the server started, open your browser at [http://localhost:1337/](http://localhost:1337).
 
-### Configuring CORS
+### Bonus track: Configuring CORS
 
 #### Node.js API Backend
 
