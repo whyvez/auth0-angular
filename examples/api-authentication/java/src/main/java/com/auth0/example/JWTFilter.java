@@ -21,14 +21,13 @@ public class JWTFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        String token = null;
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
 
         // Allow CORS
         allowPreflightRequest(request, response, chain, httpRequest);
 
-        token = getToken(token, httpRequest);
+        String token = getToken(httpRequest);
 
         try {
             Map<String, Object> decoded = jwtVerifier.verify(token);
@@ -38,7 +37,8 @@ public class JWTFilter implements Filter {
         }
     }
 
-    private String getToken(String token, HttpServletRequest httpRequest) throws ServletException {
+    private String getToken(HttpServletRequest httpRequest) throws ServletException {
+        String token = null;
         final String authorizationHeader = httpRequest.getHeader("authorization");
         if (authorizationHeader != null) {
             String[] parts = authorizationHeader.split(" ");
