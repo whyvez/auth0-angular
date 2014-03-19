@@ -1,6 +1,6 @@
 (function () {
 
-  var auth0 = angular.module('auth0', ['ngCookies']);
+  var auth0 = angular.module('auth0', ['ngCookies', 'ngRoute']);
 
   function Auth0Wrapper(auth0Lib, $cookies, $rootScope, $safeApply, $q) {
     this.auth0Lib = auth0Lib;
