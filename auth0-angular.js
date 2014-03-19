@@ -86,6 +86,8 @@
     this.auth0Lib.reset(options);
   };
 
+  auth0.value('Auth0Wrapper', Auth0Wrapper);
+
   auth0.provider('auth', function () {
     var auth0Wrapper, auth0Lib;
 
@@ -103,9 +105,9 @@
 
     };
 
-    this.$get = function ($cookies, $rootScope, $safeApply, $q) {
+    this.$get = function ($cookies, $rootScope, $safeApply, $q, Auth0Wrapper) {
       if (!auth0Lib) {
-        throw new Error('You need add to your config Auth0 initialization');
+        throw new Error('You need to add Auth0Widget or Auth0.js dependency');
       }
 
       if (!auth0Wrapper) {
