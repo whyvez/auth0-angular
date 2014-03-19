@@ -35,6 +35,11 @@
     "it": false,
     "angular": false,
     "Auth0Widget": false,
-    "Auth0": false
+    "Auth0": false,
+
+
+    "expect": false,
+    "inject": false,
+    "module": false
   }
 }
