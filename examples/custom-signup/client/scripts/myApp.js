@@ -2,7 +2,7 @@ var myApp = angular.module('myApp', [
   'ngCookies', 'ngRoute', 'auth0', 'authInterceptor'
 ]);
 
-myApp.config(function ($routeProvider, authProvider) {
+myApp.config(function ($routeProvider, authProvider, $httpProvider) {
   $routeProvider
   .when('/logout',  {
     templateUrl: 'views/logout.html',
@@ -25,4 +25,6 @@ myApp.config(function ($routeProvider, authProvider) {
     callbackURL: document.location.href,
     callbackOnLocationHash: true
   });
+
+  $httpProvider.interceptors.push('authInterceptor');
 });

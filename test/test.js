@@ -32,6 +32,20 @@ describe('Auth0 Angular', function () {
 
       inject(function (auth) { expect(auth).not.to.be.equal(undefined); });
     });
+
+    it('should not add authInterceptor to the $httpProvider.interceptors list by default', function (done) {
+      var fakeModule = angular.module('fakeModule', []);
+      fakeModule.config(function($httpProvider) {
+        expect($httpProvider.interceptors).to.be.deep.equal([]);
+        done();
+      });
+
+      module('auth0', 'fakeModule');
+
+      inject(function ($http) { expect($http).not.to.be.equal(undefined); });
+
+    });
+
     it.skip('should handle multiple clients', function () {
       // TODO On this mode, user won't be able to get the token from clients
       executeInConfigBlock(function (authProvider) {
