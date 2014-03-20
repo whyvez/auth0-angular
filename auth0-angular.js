@@ -1,6 +1,6 @@
 (function () {
 
-  var auth0 = angular.module('auth0', ['ngCookies', 'ngRoute']);
+  var auth0 = angular.module('auth0-auth', ['ngCookies', 'ngRoute']);
 
   function Auth0Wrapper(auth0Lib, $cookies, $rootScope, $safeApply, $q) {
     this.auth0Lib = auth0Lib;
@@ -118,8 +118,25 @@
     };
   });
 
+  auth0.factory('$safeApply', function safeApplyFactory($rootScope, $exceptionHandler) {
+    return function safeApply(scope, expr) {
+      scope = scope || $rootScope;
+      if (['$apply', '$digest'].indexOf(scope.$root.$$phase) !== -1) {
+        try {
+          return scope.$eval(expr);
+        } catch (e) {
+          $exceptionHandler(e);
+        }
+      } else {
+        return scope.$apply(expr);
+      }
+    };
+  });
+
+  var auth0Main = angular.module('auth0', ['auth0-auth']);
+
   // Why $route if we are not using it? See https://github.com/angular/angular.js/issues/1213
-  auth0.run(function (auth, $cookies, $location, $rootScope, $window, $route) {
+  auth0Main.run(function (auth, $cookies, $location, $rootScope, $window, $route) {
 
     // this is only used when doing social authentication in redirect mode (auth.signin({connection: 'google-oauth2'});)
     auth.getProfile($window.location.hash, function (err, profile, id_token, access_token, state) {
@@ -137,22 +154,7 @@
     auth._deserialize();
   });
 
-  auth0.factory('$safeApply', function safeApplyFactory($rootScope, $exceptionHandler) {
-    return function safeApply(scope, expr) {
-      scope = scope || $rootScope;
-      if (['$apply', '$digest'].indexOf(scope.$root.$$phase) !== -1) {
-        try {
-          return scope.$eval(expr);
-        } catch (e) {
-          $exceptionHandler(e);
-        }
-      } else {
-        return scope.$apply(expr);
-      }
-    };
-  });
-
-  var authInterceptorModule = angular.module('authInterceptor', ['auth0']);
+  var authInterceptorModule = angular.module('authInterceptor', ['auth0-auth']);
 
   authInterceptorModule.factory('authInterceptor', function (auth, $rootScope, $q) {
     return {

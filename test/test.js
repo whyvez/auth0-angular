@@ -1,13 +1,12 @@
-function executeInConfigBlock(cb) {
+function executeInConfigBlock(cb, includes) {
   var fakeModule = angular.module('fakeModule', []);
-  fakeModule.config(function(_authProvider_) {
-    cb(_authProvider_);
-  });
+  var modulesToInclude = (includes ? includes : ['auth0-auth']).concat('fakeModule');
+  fakeModule.config(cb);
 
-  module('auth0', 'fakeModule');
+  module.apply(null, modulesToInclude);
 }
 
-function singleClientAuth0ConfigInit() {
+function initAuth0() {
   executeInConfigBlock(function (authProvider) {
     authProvider.init({
       domain: 'my-domain.auth0.com',
@@ -43,37 +42,47 @@ describe('Auth0 Angular', function () {
       module('auth0', 'fakeModule');
 
       inject(function ($http) { expect($http).not.to.be.equal(undefined); });
-
     });
+  });
 
-    it.skip('should handle multiple clients', function () {
-      // TODO On this mode, user won't be able to get the token from clients
-      executeInConfigBlock(function (authProvider) {
-        authProvider.init({
-          domain: 'my-domain.auth0.com',
-          clients: [{
-            clientID: 'my-client-id',
-            urlPattern: 'http://*.hello.com/bye',
-            // Default token to use when pattern does not match the others
-            main: true
-          },{
-            clientID: 'other-client',
-            // Interceptor will only add use token when URL matches urlPattern.
-            // The urls will be matched in the order on the order of hwo the clients were inserted.
-            urlPattern: 'http://*.other.com/client'
-          }],
-          callbackURL: 'http://localhost/callback'
+  describe('Interceptor', function () {
+    var $http, $httpBackend;
+
+    describe('authInterceptor', function () {
+
+      it('should intercept requests when added to $httpProvider.interceptors', function (done) {
+        executeInConfigBlock(function($httpProvider, authProvider, $provide) {
+          authProvider.init({
+            clientID: 'some-client-id',
+            callbackURL: 'some-callback-URL',
+            domain: 'hello.auth0.com'
+          });
+          $httpProvider.interceptors.push('authInterceptor');
+          $provide.decorator('auth', function () {
+            return {idToken: 'w00t'};
+          });
+        }, ['authInterceptor']);
+
+        inject(function (_$http_, _$httpBackend_) {
+          $httpBackend = _$httpBackend_;
+          $http = _$http_;
         });
+
+        $http({url: '/hello'}).then(function (res) {
+          expect(res.data).to.be.equal('hello');
+          done();
+        });
+        $httpBackend.expectGET('/hello', function (headers) {
+          return headers.Authorization === 'Bearer w00t';
+        }).respond(200, 'hello');
+        $httpBackend.flush();
       });
-
-      inject(function (auth) { expect(auth).not.to.be.equal(undefined); });
     });
-
   });
 
   describe('Multiple Clients (runtime)', function () {
     var auth, $httpBackend, $http;
-    beforeEach(singleClientAuth0ConfigInit);
+    beforeEach(initAuth0);
     beforeEach(module(function ($provide) {
       $provide.value('Auth0Wrapper', {});
     }));
@@ -83,32 +92,25 @@ describe('Auth0 Angular', function () {
       $http = _$http_;
     });
 
-    it.skip('should allow adding a new client on runtime', function () {
-      // TODO Shall we name this addClient or addApplication?
-      // TODO Should CORS be disabled by default?
-      // addClient({clientId}, {urlPattern})
-      auth.addClient('other-app-client-id', 'http://other/*');
-    });
-
-    it.skip('should add token to request that matches a client url pattern', function (done) {
-      auth.addClient('other-app-client-id', 'http://other/*');
-      $http.post('http://other/resource', 'foo');
-
-      $httpBackend.expectPOST('http://other/resource', 'foo', function (headers) {
-        expect(headers.Authorization).not.to.be.equal(undefined);
-        expect(headers.Authorization).to.be.equal('Bearer mytoken');
-
-        done();
-      }).respond(200, '');
-
-      $httpBackend.flush();
+    it.skip('should allow getting a new token on runtime', function () {
+      // TODO addToken
+      // Change to addToken clientId
+      // auth -> tokenManager
+      // tokenManger: Token Manager (token store)
     });
 
     it.skip('should allow delegation token to be handled by the user', function () {
       // Add client returns a promise that contains the emitted delegation token
-      auth.addClient('other-app-client-id', 'http://other/*').then(function (delegationToken) {
+      // When calling getDelegationToken add it to context
+      // Have a cache and check expiration
+      auth.getToken('other-app-client-id').then(function (delegationToken) {
         expect(delegationToken).not.to.be.equal(undefined);
+        // put token in the interceptor!
+      }, function (error) {
+        // XXX Token fetch failed!
       });
     });
   });
+
+
 });
