@@ -139,9 +139,9 @@
         return deferred.reject(err);
       }
 
-      that.delegatedTokens[clientID] = delegationResult.idToken;
+      that.delegatedTokens[clientID] = delegationResult.id_token;
 
-      return deferred.resolve(delegationResult.idToken);
+      return deferred.resolve(delegationResult.id_token);
     }));
 
     return deferred.promise;

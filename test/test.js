@@ -58,9 +58,7 @@ describe('Auth0 Angular', function () {
             domain: 'hello.auth0.com'
           });
           $httpProvider.interceptors.push('authInterceptor');
-          $provide.decorator('auth', function () {
-            return {idToken: 'w00t'};
-          });
+          $provide.decorator('auth', function () { return {idToken: 'w00t'}; });
         }, ['authInterceptor']);
 
         inject(function (_$http_, _$httpBackend_) {
@@ -92,7 +90,7 @@ describe('Auth0 Angular', function () {
       ];
       token = token.join('.');
       getDelegationToken = sinon.stub();
-      getDelegationToken.onCall(0).callsArgWith(3, null, {idToken: token});
+      getDelegationToken.onCall(0).callsArgWith(3, null, {id_token: token});
 
       $provide.value('auth0Lib', {getDelegationToken: getDelegationToken });
     }));
@@ -147,7 +145,7 @@ describe('Auth0 Angular', function () {
 
       var clientId = 'client-id';
 
-      getDelegationToken.onCall(1).callsArgWith(3, null, {idToken: 'different-token'});
+      getDelegationToken.onCall(1).callsArgWith(3, null, {id_token: 'different-token'});
 
       auth.getToken(clientId).then(function (token) {
         expect(token).to.be.ok;
@@ -168,8 +166,8 @@ describe('Auth0 Angular', function () {
 
     it('should refresh the token when it has expired', function (done) {
       var expiredToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjEzMTQ2OTk4OTIsImlhdCI6MTM5NDY2Mzg5Mn0.edWsCCgMfvWzaio_aa6AHVKTV4vvV1j8v_BrUpDEaLE';
-      getDelegationToken.onCall(0).callsArgWith(3, null, {idToken: expiredToken});
-      getDelegationToken.onCall(1).callsArgWith(3, null, {idToken: 'different.token.hello'});
+      getDelegationToken.onCall(0).callsArgWith(3, null, {id_token: expiredToken});
+      getDelegationToken.onCall(1).callsArgWith(3, null, {id_token: 'different.token.hello'});
       var clientId = 'client-id';
       var oldToken = 'token';
 
