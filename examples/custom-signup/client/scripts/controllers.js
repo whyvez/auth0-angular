@@ -20,12 +20,12 @@ myApp.controller('LoginCtrl', function (auth, $scope, $location, $http) {
   $scope.doLogin = function () {
     auth.signin({
       connection: 'Username-Password-Authentication',
-      username:   $scope.user,
-      password:   $scope.pass
+      username:   $scope.login.user,
+      password:   $scope.login.pass
     }).then(function() {
         $location.path('/');
       }, function(err) {
-        alert(err.message || err.error_description);
+        window.alert(err.message || err.error_description);
       });
   };
 
