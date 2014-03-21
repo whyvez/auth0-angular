@@ -2,7 +2,7 @@ var myApp = angular.module('myApp', [
   'ngCookies', 'ngRoute', 'auth0', 'authInterceptor'
 ]);
 
-myApp.config(function ($routeProvider, authProvider) {
+myApp.config(function ($routeProvider, authProvider, $httpProvider) {
   $routeProvider
   .when('/logout',  {
     templateUrl: 'views/logout.html',
@@ -22,7 +22,8 @@ myApp.config(function ($routeProvider, authProvider) {
     domain: 'contoso.auth0.com',
     clientID: 'DyG9nCwIEofSy66QM3oo5xU6NFs3TmvT',
     // TODO set your own callbackURL, for instance http://localhost:1337/
-    callbackURL: document.location.href,
-    callbackOnLocationHash: true
+    callbackURL: document.location.href
   });
+
+  $httpProvider.interceptors.push('authInterceptor');
 });
