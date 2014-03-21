@@ -29,7 +29,7 @@ describe('Auth0 Angular', function () {
         });
       });
 
-      inject(function (auth) { expect(auth).not.to.be.equal(undefined); });
+      inject(function (auth) { expect(auth).to.be.ok; });
     });
 
     it('should not add authInterceptor to the $httpProvider.interceptors list by default', function (done) {
@@ -41,7 +41,7 @@ describe('Auth0 Angular', function () {
 
       module('auth0', 'fakeModule');
 
-      inject(function ($http) { expect($http).not.to.be.equal(undefined); });
+      inject(function ($http) { expect($http).to.be.ok; });
     });
   });
 
@@ -70,8 +70,8 @@ describe('Auth0 Angular', function () {
 
         $http({url: '/hello'}).then(function (res) {
           expect(res.data).to.be.equal('hello');
-          done();
-        });
+        })
+        .then(done);
         $httpBackend.expectGET('/hello', function (headers) {
           return headers.Authorization === 'Bearer w00t';
         }).respond(200, 'hello');
@@ -80,37 +80,129 @@ describe('Auth0 Angular', function () {
     });
   });
 
-  describe('Multiple Clients (runtime)', function () {
-    var auth, $httpBackend, $http;
+  describe('Token store', function () {
+    var auth, $rootScope, getDelegationToken, hasTokenExpiredOriginal;
+
     beforeEach(initAuth0);
     beforeEach(module(function ($provide) {
-      $provide.value('Auth0Wrapper', {});
+      var token = [
+        'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9',
+        'eyJleHAiOjEzOTQ2OTk4OTIsImlhdCI6MTM5NDY2Mzg5Mn0',
+        'X6wKtHdkf06U2XIAUaxx0UXT6EYjNqB3uktJcuxHim4'
+      ];
+      token = token.join('.');
+      getDelegationToken = sinon.stub();
+      getDelegationToken.onCall(0).callsArgWith(3, null, {idToken: token});
+
+      $provide.value('auth0Lib', {getDelegationToken: getDelegationToken });
     }));
-    inject(function (_auth_, _$httpBackend_, _$http_) {
-      $httpBackend = _$httpBackend_;
+
+    beforeEach(inject(function (_auth_, _$rootScope_) {
       auth = _auth_;
-      $http = _$http_;
+      $rootScope = _$rootScope_;
+      hasTokenExpiredOriginal = auth.hasTokenExpired;
+    }));
+
+    afterEach(function () {
+      auth.hasTokenExpired = hasTokenExpiredOriginal;
     });
 
-    it.skip('should allow getting a new token on runtime', function () {
-      // TODO addToken
-      // Change to addToken clientId
-      // auth -> tokenManager
-      // tokenManger: Token Manager (token store)
+    it('should get the token using the API on the first time', function (done) {
+      auth.getToken('client-id').then(function (token) {
+        expect(token).to.be.ok;
+      })
+      .then(done);
+
+      // Flush the promise!
+      $rootScope.$apply();
     });
 
-    it.skip('should allow delegation token to be handled by the user', function () {
-      // Add client returns a promise that contains the emitted delegation token
-      // When calling getDelegationToken add it to context
-      // Have a cache and check expiration
-      auth.getToken('other-app-client-id').then(function (delegationToken) {
-        expect(delegationToken).not.to.be.equal(undefined);
-        // put token in the interceptor!
-      }, function (error) {
-        // XXX Token fetch failed!
-      });
+    it('should retrieve the token from the cache when already loaded', function (done) {
+      auth.hasTokenExpired = function () { return false; };
+      var oldToken;
+
+      var clientId = 'client-id';
+
+      auth.getToken(clientId)
+      .then(function (token) {
+        expect(token).to.be.ok;
+        oldToken = token;
+      })
+      .then(function () { return auth.getToken(clientId); })
+      .then(function (newToken) {
+        expect(newToken).to.be.equal(oldToken);
+        expect(getDelegationToken).to.be.ok;
+        expect(getDelegationToken.calledOnce).to.be.equal(true);
+        expect(getDelegationToken.calledTwice).to.be.equal(false);
+      })
+      .then(done);
+
+      // Flush the promise!
+      $rootScope.$apply();
+
+    });
+
+    it('should refresh the token when the renewal parameter is set', function (done) {
+      var oldToken;
+
+      var clientId = 'client-id';
+
+      getDelegationToken.onCall(1).callsArgWith(3, null, {idToken: 'different-token'});
+
+      auth.getToken(clientId).then(function (token) {
+        expect(token).to.be.ok;
+        oldToken = token;
+      })
+      .then(function () { return auth.getToken(clientId, undefined, true); })
+      .then(function (newToken) {
+        expect(newToken).not.to.be.equal(oldToken);
+        expect(getDelegationToken).to.be.ok;
+        expect(getDelegationToken.calledOnce).to.be.equal(false);
+        expect(getDelegationToken.calledTwice).to.be.equal(true);
+      })
+      .then(done);
+
+      // Flush the promise!
+      $rootScope.$apply();
+    });
+
+    it('should refresh the token when it has expired', function (done) {
+      var expiredToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjEzMTQ2OTk4OTIsImlhdCI6MTM5NDY2Mzg5Mn0.edWsCCgMfvWzaio_aa6AHVKTV4vvV1j8v_BrUpDEaLE';
+      getDelegationToken.onCall(0).callsArgWith(3, null, {idToken: expiredToken});
+      getDelegationToken.onCall(1).callsArgWith(3, null, {idToken: 'different.token.hello'});
+      var clientId = 'client-id';
+      var oldToken = 'token';
+
+      auth.getToken(clientId).then(function (token) {
+        expect(token).to.be.ok;
+        oldToken = token;
+      })
+      .then(function () { return auth.getToken(clientId); })
+      .then(function (newToken) {
+        expect(newToken).not.to.be.equal(oldToken);
+        expect(getDelegationToken).to.be.ok;
+        expect(getDelegationToken.calledOnce).to.be.equal(false);
+        expect(getDelegationToken.calledTwice).to.be.equal(true);
+      })
+      .then(done);
+
+      // Flush the promise!
+      $rootScope.$apply();
+    });
+
+    it('should call reject when token fetch failed', function (done) {
+      getDelegationToken.onCall(0).callsArgWith(3, {error: 'An error ocurred'}, null);
+
+      var clientId = 'client-id';
+
+      auth.getToken(clientId).then(null, function (err) {
+        expect(err.error).to.be.ok;
+      })
+      .then(done);
+
+      // Flush the promise!
+      $rootScope.$apply();
     });
   });
-
 
 });
