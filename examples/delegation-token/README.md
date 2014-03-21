@@ -1,6 +1,6 @@
 # Token Delegation Example
 
-This example show Angularjs client side authentication + server side authentication to two different Applications. A delegation token is requested in order to communicate with the second API.
+This example show Angularjs client side authentication + server side authentication to two different APIs. A delegation token is requested in order to communicate with the secondary API.
 
 In order to run the example, in this current folder and run:
 ```sh
