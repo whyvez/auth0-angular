@@ -53,7 +53,7 @@ npm install cors --save
 The following code demonstrates enabling CORS for all requests using basic headers and methods, see docs for more info.
 
 ```js
-require cors = require('cors');
+var cors = require('cors');
 ...
 var corsOptions = { 
   origin: 'http://myFrontendDomain.com',
