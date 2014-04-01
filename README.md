@@ -258,7 +258,7 @@ Install karma (test runner):
 
 ```sh
 npm install -g karma-cli
----
+```
 
 And run by doing:
 
