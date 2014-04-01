@@ -159,12 +159,15 @@
 
     that.auth0Lib.signin(options, function(err, profile, id_token, access_token, state) {
       if (err) {
+        that.$rootScope.$broadcast('auth:authentication-fail', profile);
         return deferred.reject(err);
       }
-      
+
       that._serialize(profile, id_token, access_token, state);
       that._deserialize();
-      
+
+      that.$rootScope.$broadcast('auth:authentication-success', profile);
+
       that.$safeApply(undefined, callback);
 
       return deferred.resolve();
@@ -176,6 +179,7 @@
   Auth0Wrapper.prototype.signout = function () {
     this._serialize(undefined, undefined, undefined);
     this._deserialize();
+    this.$rootScope.$broadcast('auth:logout');
   };
 
   Auth0Wrapper.prototype._wrapCallback = function (callback) {
@@ -185,14 +189,24 @@
     };
   };
 
-  Auth0Wrapper.prototype.getProfile = function (locationHash, callback) {
-    var that = this;
+  Auth0Wrapper.prototype.parseHash = function (locationHash) {
+    return this.auth0Lib.parseHash(locationHash);
+  };
 
-    var wrappedCallback = function() {
-      that.$safeApply(undefined, callback.apply(null, arguments));
-    };
+  Auth0Wrapper.prototype.getProfile = function (token) {
+    var deferred = this.$q.defer();
 
-    this.auth0Lib.getProfile(locationHash, wrappedCallback);
+    var wrappedCallback = this._wrapCallback(function (err, profile) {
+      if (err) {
+        return deferred.reject(err);
+      }
+
+      deferred.resolve(profile);
+    });
+
+    this.auth0Lib.getProfile(token, wrappedCallback);
+
+    return deferred.promise;
   };
 
   Auth0Wrapper.prototype.signup = function (options) {
@@ -245,20 +259,26 @@
   // Why $route if we are not using it? See https://github.com/angular/angular.js/issues/1213
   auth0Main.run(function (auth, $cookies, $location, $rootScope, $window, $route) {
 
-    // this is only used when doing social authentication in redirect mode (auth.signin({connection: 'google-oauth2'});)
-    auth.getProfile($window.location.hash, function (err, profile, id_token, access_token, state) {
-      if (err) {
-        return $rootScope.$broadcast('auth:error', err);
-      }
+    var result = auth.parseHash($window.location.hash);
 
-      auth._serialize(profile, id_token, access_token, state);
+    if (result && result.id_token) {
+      // this is only used when doing social authentication in redirect mode (auth.signin({connection: 'google-oauth2'});)
+      auth.getProfile(result.id_token).then(function (profile) {
+        auth._serialize(profile, result.id_token, result.access_token, result.state);
+        // this will rehydrate the "auth" object with the profile stored in $cookies
+        auth._deserialize();
+
+        $rootScope.$broadcast('auth:redirect-success', profile);
+      }, function (err) {
+        // this will rehydrate the "auth" object with the profile stored in $cookies
+        auth._deserialize();
+
+        $rootScope.$broadcast('auth:redirect-fail', err);
+      });
+    } else {
+      $rootScope.$broadcast('auth:no-redirect');
       auth._deserialize();
-
-      $location.path('/');
-    });
-
-    // this will rehydrate the "auth" object with the profile stored in $cookies
-    auth._deserialize();
+    }
   });
 
   var authInterceptorModule = angular.module('authInterceptor', ['auth0-auth']);

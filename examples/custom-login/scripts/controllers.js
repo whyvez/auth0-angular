@@ -6,12 +6,7 @@ myApp.controller('MenuCtrl', function ($scope, $location) {
   };
 });
 
-myApp.controller('RootCtrl', function (auth, $scope, $location) {
-  if (!auth.isAuthenticated) {
-    $location.path('/login');
-    return;
-  }
-
+myApp.controller('RootCtrl', function (auth, $scope) {
   $scope.auth = auth;
 });
 
