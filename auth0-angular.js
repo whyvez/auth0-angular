@@ -31,7 +31,7 @@
     return window.atob(output); //polifyll https://github.com/davidchambers/Base64.js
   });
 
-  var auth0 = angular.module('auth0-auth', ['util', 'ngCookies', 'ngRoute']);
+  var auth0 = angular.module('auth0-auth', ['util', 'ngCookies']);
 
   function Auth0Wrapper(auth0Lib, $cookies, $rootScope, $safeApply, $q, urlBase64Decode) {
     this.auth0Lib = auth0Lib;
@@ -254,7 +254,7 @@
     };
   });
 
-  var auth0Main = angular.module('auth0', ['auth0-auth']);
+  var auth0Main = angular.module('auth0', ['auth0-auth', 'ngRoute']);
 
   // Why $route if we are not using it? See https://github.com/angular/angular.js/issues/1213
   auth0Main.run(function (auth, $cookies, $location, $rootScope, $window, $route) {
