@@ -13,13 +13,13 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
 1. There are two ways of implementing signin/singup. One is using our [Login Widget](https://docs.auth0.com/login-widget2), which is a complete Login UI ready to use and the other one is using the [JavaScript SDK](https://github.com/auth0/auth0.js) which is just a wrapper to our API so you can build your UI on top.
     ```html
     <!-- login widget -->
-    <script src="cdn.auth0.com/w2/auth0-widget-2.6.1.js" type="text/javascript"> </script>
+    <script src="//cdn.auth0.com/w2/auth0-widget-3.js" type="text/javascript"> </script>
     ```
     _- or -_
 
     ```html
     <!-- auth0.js and build your own UI -->
-    <script src="//cdn.auth0.com/w2/auth0-1.6.2.js"></script>
+    <script src="//cdn.auth0.com/w2/auth0-2.0.9.js"></script>
     ```
 
 2.  Add the [Auth0 Angular module](auth0-angular.js):
@@ -77,7 +77,7 @@ Add the following router configuration to the `.config` block.
       }, function () {
         // on fail
       
-      });;
+      });
   });
   ```
 
@@ -215,6 +215,19 @@ You will need to add the following code in order to assure that the callback URL
 
 ```
 
+### Getting delegation tokens
+You may want to obtain a token to be used in an application different from the current one:
+```js
+  var tokenPromise = auth.getToken(targetClientId, options)
+    .then(function(token) {
+      // Use the token to do a request to that API and add Authorization = 'Bearer ' + token;
+
+    }, function (err) {
+      // Handle error fetching application token here
+
+    });
+```
+
 ### Examples
 
 The following [examples](examples) offer a good starting point for including Auth0 in your AngularJS application:
@@ -223,6 +236,10 @@ The following [examples](examples) offer a good starting point for including Aut
  * [Custom Signup](examples/custom-signup): Custom signup plus extra fields added to the user profile on creation.
  * [Widget](examples/widget): A simple angular app doing auth with social and username/password using the Login Widget.
  * [API Authentication](examples/api-authentication): Call your protected API in the technology you want (Java, .NET, [Node.js](examples/api-authentication/nodejs) using Auth0 generated tokens.
+
+Advanced scenarios:
+ * [UI Router](examples/ui-router): A full featured example of ui-router with auth0-angular.
+ * [Delegation Token](examples/delegation-token): Call two different APIs (with different client ids) from a single Angular App.
 
 
 ![](https://dl.dropboxusercontent.com/u/21665105/angular.gif)
