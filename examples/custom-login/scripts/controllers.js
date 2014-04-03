@@ -10,7 +10,7 @@ myApp.controller('RootCtrl', function (auth, $scope) {
   $scope.auth = auth;
 });
 
-myApp.controller('LoginCtrl', function (auth, $scope, $cookies, $location) {
+myApp.controller('LoginCtrl', function (auth, $scope) {
   $scope.user = '';
   $scope.pass = '';
       
@@ -19,21 +19,11 @@ myApp.controller('LoginCtrl', function (auth, $scope, $cookies, $location) {
       connection: 'Username-Password-Authentication',
       username: $scope.user,
       password: $scope.pass
-    })
-      .then(function() {
-        $location.path('/');
-      }, function(err) {
-        alert(err.message || err.error_description);
-      });
+    });
   };
 
   $scope.doGoogleAuthWithPopup = function () {
-    auth.signin({popup: true, connection: 'google-oauth2'})
-      .then(function() {
-        $location.path('/');
-      }, function(err) {
-        alert(err.error || err.message || err.error_description);
-      });
+    auth.signin({popup: true, connection: 'google-oauth2'});
   };
 
   $scope.doGoogleAuthWithRedirect = function () {
