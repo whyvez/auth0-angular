@@ -210,6 +210,60 @@ Then, register on the `$stateChangeStart` event and check for that property:
   });
 ```
 
+#### ngRoute (Angular default routes)
+
+Angular default routes can be restricted using promises.
+
+Let's create a function that returns a promise that wraps `auth.isAuthenticated`:
+```js
+function isAuthenticated($q, $timeout, auth) {
+  var deferred = $q.defer();
+  $timeout(function () {
+    if (auth.isAuthenticated) {
+      deferred.resolve();
+    } else {
+      deferred.reject();
+    }
+  }, 0);
+  return deferred.promise;
+}
+```
+
+Then, add that function to the `resolve` field of the route we want to restrict:
+
+```js
+myApp.config(function ($routeProvider) {
+  $routeProvider
+  .when('/logout',  {
+    templateUrl: 'views/logout.html',
+    controller: 'LogoutCtrl'
+  })
+  .when('/login',   {
+    templateUrl: 'views/login.html',
+    controller: 'LoginCtrl'
+  })
+  .when('/', {
+    templateUrl: 'views/root.html',
+    controller: 'RootCtrl',
+    /* isAuthenticated will prevent user access to forbidden routes */
+    resolve: { isAuthenticated: isAuthenticated }
+  })
+  .otherwise({ redirectTo: '/login' });
+});
+```
+
+Intercept the `$routeChangeError` event and redirect to the otherwise route:
+
+```js
+myApp.run(function ($rootScope, $location) {
+  $rootScope.$on('$routeChangeError', function () {
+    var otherwise = $route.routes && $route.routes.null && $route.routes.null.redirectTo;
+    // Access denied to a route, redirect to otherwise
+    $location.path(otherwise);
+  });
+});
+```
+
 
 ### Custom hash URL prefix
 If you are using a custom hash prefix on:
