@@ -1,6 +1,6 @@
 {
   "name": "auth0-angular",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "devDependencies": {
     "grunt": "^0.4.4",
     "grunt-cli": "^0.1.13",
