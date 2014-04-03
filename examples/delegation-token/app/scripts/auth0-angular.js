@@ -152,6 +152,7 @@
       that._serialize(profile, id_token, access_token, state);
       that._deserialize();
       that.$rootScope.$broadcast(AUTH_EVENTS.loginSuccess, profile);
+      that.$rootScope.$apply();
     });
   };
   Auth0Wrapper.prototype.signout = function () {

@@ -170,6 +170,7 @@
       that._deserialize();
 
       that.$rootScope.$broadcast(AUTH_EVENTS.loginSuccess, profile);
+      that.$rootScope.$apply();
     });
   };
 
