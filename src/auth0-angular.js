@@ -33,6 +33,14 @@
 
   var auth0 = angular.module('auth0-auth', ['util', 'ngCookies']);
 
+  var AUTH_EVENTS = {
+    loginSuccess: 'LOGIN_SUCCESS',
+    loginFailed: 'LOGIN_FAILED',
+    logout: 'LOGOUT'
+  };
+
+  auth0.constant('AUTH_EVENTS', AUTH_EVENTS);
+
   function Auth0Wrapper(auth0Lib, $cookies, $rootScope, $safeApply, $q, urlBase64Decode) {
     this.auth0Lib = auth0Lib;
     this.$cookies    = $cookies;
@@ -147,39 +155,28 @@
     return deferred.promise;
   };
 
-  Auth0Wrapper.prototype.signin = function (options, callback) {
+  Auth0Wrapper.prototype.signin = function (options) {
     options = options || {};
 
     var that = this;
-    var deferred = that.$q.defer();
-
-    if (!options.popup && callback) {
-      throw new Error('Since you are using "redirect" mode, the callback you defined will never be called.');
-    }
 
     that.auth0Lib.signin(options, function(err, profile, id_token, access_token, state) {
       if (err) {
-        that.$rootScope.$broadcast('auth:authentication-fail', profile);
-        return deferred.reject(err);
+        that.$rootScope.$broadcast(AUTH_EVENTS.loginFailed, profile);
+        return;
       }
 
       that._serialize(profile, id_token, access_token, state);
       that._deserialize();
 
-      that.$rootScope.$broadcast('auth:authentication-success', profile);
-
-      that.$safeApply(undefined, callback);
-
-      return deferred.resolve();
+      that.$rootScope.$broadcast(AUTH_EVENTS.loginSuccess, profile);
     });
-
-    return deferred.promise;
   };
 
   Auth0Wrapper.prototype.signout = function () {
     this._serialize(undefined, undefined, undefined);
     this._deserialize();
-    this.$rootScope.$broadcast('auth:logout');
+    this.$rootScope.$broadcast(AUTH_EVENTS.logout);
   };
 
   Auth0Wrapper.prototype._wrapCallback = function (callback) {
@@ -265,15 +262,14 @@
           // this will rehydrate the "auth" object with the profile stored in $cookies
           auth._deserialize();
 
-          $rootScope.$broadcast('auth:redirect-success', profile);
+          $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, profile);
         }, function (err) {
           // this will rehydrate the "auth" object with the profile stored in $cookies
           auth._deserialize();
 
-          $rootScope.$broadcast('auth:redirect-fail', err);
+          $rootScope.$broadcast(AUTH_EVENTS.loginFailed, err);
         });
       } else {
-        $rootScope.$broadcast('auth:no-redirect');
         auth._deserialize();
       }
     };
