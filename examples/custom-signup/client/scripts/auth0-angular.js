@@ -47,9 +47,10 @@
       'ngCookies'
     ]);
   var AUTH_EVENTS = {
-      loginSuccess: 'LOGIN_SUCCESS',
-      loginFailed: 'LOGIN_FAILED',
-      logout: 'LOGOUT'
+      forbidden: 'auth:FORBIDDEN',
+      loginSuccess: 'auth:LOGIN_SUCCESS',
+      loginFailed: 'auth:LOGIN_FAILED',
+      logout: 'auth:LOGOUT'
     };
   auth0.constant('AUTH_EVENTS', AUTH_EVENTS);
   function Auth0Wrapper(auth0Lib, $cookies, $rootScope, $safeApply, $q, urlBase64Decode) {
@@ -263,7 +264,8 @@
     'auth',
     '$rootScope',
     '$q',
-    function (auth, $rootScope, $q) {
+    'AUTH_EVENTS',
+    function (auth, $rootScope, $q, AUTH_EVENTS) {
       return {
         request: function (config) {
           config.headers = config.headers || {};
@@ -275,7 +277,7 @@
         responseError: function (response) {
           // handle the case where the user is not authenticated
           if (response.status === 401) {
-            $rootScope.$broadcast('auth:forbidden', response);
+            $rootScope.$broadcast(AUTH_EVENTS.forbidden, response);
           }
           return response || $q.when(response);
         }
