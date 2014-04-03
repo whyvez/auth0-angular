@@ -22,7 +22,7 @@ module.exports = function(config) {
       'bower_components/angular-cookies/angular-cookies.js',
       'bower_components/angular-route/angular-route.js',
 
-      'auth0-angular.js',
+      'build/auth0-angular.js',
 
       'test/**/*.js'
     ],
