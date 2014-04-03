@@ -150,7 +150,7 @@ Now that the user was authenticated on the client side, you want to make sure th
 3. If the JSON Web Token (`JWT`) has expired or has been tampered, you can handle that case here:
 
     ```js
-        $rootScope.$on('auth:forbidden', function (event, response) {
+        $rootScope.$on(AUTH_EVENTS.forbidden, function (event, response) {
             // handle the case where the JWT is not valid (401 status code)
             auth.signout();
             $location.path('/login');
@@ -172,41 +172,44 @@ On the backed you can use any JWT library to validate the token. Here are some:
 
 If you have multiple routes and you want to control what routes are anonymous, what routes need authentication and even do some custom logic to decide whether or not the user can access a route, read below.
 
-#### Approach 1: embedded in the controller (the simplest)
+#### UI Router
 
-The simplest way would be handling it at the controller level.
+Add a `data` field to the states you want to restrict with some information of the rule you want to apply:
 
 ```js
-myApp.controller('RootCtrl', function (auth, $scope, $location, $http) {
-  if (!auth.isAuthenticated) {
-    $location.path('/login');
-    return;
-  }
+myApp.config(function($stateProvider, $urlRouterProvider, $httpProvider, authProvider) {
+  $urlRouterProvider.otherwise('/login');
 
-  // user is authenticated
-}
+  $stateProvider
+  .state('logout', { url: '/logout', templateUrl: 'views/logout.html', controller: 'LogoutCtrl' })
+  .state('login', { url: '/login', templateUrl: 'views/login.html', controller: 'LoginCtrl' })
+  .state('root', { url: '/', templateUrl: 'views/root.html', controller: 'RootCtrl', data: { rule: 'authenticated' } });
+
+});
 ```
 
-#### Approach 2: at the router level
-
-You could also do something at the routing level. Our module is not coupled with any particular implementation of Angular routing, so you can choose the default `ngRoute`, the [ui-router](https://github.com/angular-ui/ui-router) or some other custom module like [Angular Routing](https://github.com/dotJEM/angular-routing).
-
-This [article](https://medium.com/p/4e927af3a15f) explains such approach using the [ui-router](https://github.com/angular-ui/ui-router)
+Then, register on the `$stateChangeStart` event and check for that property:
 
 ```js
-angular.module("myApp")
-  .run(function ($rootScope, $state, auth) {
-    $rootScope.$on("$stateChangeStart", function(event, curr, prev){
-      if (curr.authenticate && !auth.isAuthenticated){
-        // User isn’t authenticated
-        $state.transitionTo("login");
-        event.preventDefault();
+  myApp.run(function ($rootScope, $state, auth, AUTH_EVENTS) {
+    $rootScope.$on('$stateChangeStart', function(e, to) {
+      if ( !to || !to.data || !angular.isFunction(to.data.rule)) { return; }
+      var rule = to.data.rule;
+  
+      if (rule === 'authenticated' && !auth.isAuthenticated) {
+        // Stop redirect
+        e.preventDefault();
+  
+        // Send user to login state
+        $state.go('login', {});
+        return;
       }
+  
+      $state.go(to, {}, {notify: false});
     });
   });
 ```
 
-> The `authenticate` attribute is a boolean that you add to your routing table specifying that the route needs authentication. Read more about this approach in the [article](https://medium.com/p/4e927af3a15f).
 
 ### Custom hash URL prefix
 If you are using a custom hash prefix on:
