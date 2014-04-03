@@ -7,11 +7,6 @@ myApp.controller('MenuCtrl', function ($scope, $location) {
 });
 
 myApp.controller('RootCtrl', function (auth, $scope, $location, $http) {
-  if (!auth.isAuthenticated) {
-    $location.path('/login');
-    return;
-  }
-
   $scope.auth = auth;
 
   $scope.sendProtectedMessage = function () {
@@ -22,7 +17,7 @@ myApp.controller('RootCtrl', function (auth, $scope, $location, $http) {
   };
 });
 
-myApp.controller('LoginCtrl', function (auth, $scope, $cookies, $location) {
+myApp.controller('LoginCtrl', function (auth, $scope) {
   $scope.user = '';
   $scope.pass = '';
       
@@ -32,11 +27,6 @@ myApp.controller('LoginCtrl', function (auth, $scope, $cookies, $location) {
       username: $scope.user,
       password: $scope.pass,
       scope: 'openid profile'
-    })
-    .then(function() {
-      $location.path('/');
-    }, function(err) {
-      window.alert(err.message || err.error_description);
     });
   };
 
@@ -45,12 +35,7 @@ myApp.controller('LoginCtrl', function (auth, $scope, $cookies, $location) {
       popup: true,
       connection: 'google-oauth2',
       scope: 'openid profile'
-    })
-      .then(function() {
-        $location.path('/');
-      }, function(err) {
-        window.alert(err.error || err.message || err.error_description);
-      });
+    });
   };
 
   $scope.doGoogleAuthWithRedirect = function () {

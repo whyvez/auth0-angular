@@ -2,15 +2,17 @@ var myApp = angular.module('myApp', [
   'ui.router', 'auth0', 'authInterceptor'
 ]);
 
-myApp.run(function ($rootScope, $state, auth) {
-  $rootScope.$on('auth:redirect-success', function () {
-    // TODO Handle when login by redirect succeeds
+myApp.run(function ($rootScope, $state, auth, AUTH_EVENTS) {
+  $rootScope.$on(AUTH_EVENTS.loginSuccess, function () {
+    // TODO Handle when login succeeds
     $state.go('root');
   });
-  $rootScope.$on('auth:redirect-fail', function () {
-    // TODO Handle when login by redirect fails
+
+  $rootScope.$on(AUTH_EVENTS.loginFailed, function () {
+    // TODO Handle when login fails
     $state.go('login');
   });
+
   $rootScope.$on('$stateChangeStart', function(e, to) {
     if ( !to || !to.data || !angular.isFunction(to.data.rule)) {
       return;
@@ -33,10 +35,10 @@ myApp.run(function ($rootScope, $state, auth) {
 function isAuthenticated(auth) { return auth.isAuthenticated; }
 
 myApp.config(function($stateProvider, $urlRouterProvider, $httpProvider, authProvider) {
-  //
-  // For any unmatched url, redirect to /state1
+
+  // For any unmatched url, redirect to /login
   $urlRouterProvider.otherwise('/login');
-  //
+
   // Now set up the states
   $stateProvider
   .state('logout', {

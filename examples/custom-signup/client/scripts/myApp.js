@@ -2,6 +2,35 @@ var myApp = angular.module('myApp', [
   'ngCookies', 'ngRoute', 'auth0', 'authInterceptor'
 ]);
 
+myApp.run(function ($rootScope, $location, $route, AUTH_EVENTS) {
+  $rootScope.$on('$routeChangeError', function () {
+    var otherwise = $route.routes && $route.routes.null && $route.routes.null.redirectTo;
+    // Access denied to a route, redirect to otherwise
+    $location.path(otherwise);
+  });
+
+  $rootScope.$on(AUTH_EVENTS.loginSuccess, function () {
+    // TODO Handle when login succeeds
+    $location.path('/');
+  });
+  $rootScope.$on(AUTH_EVENTS.loginFailed, function () {
+    // TODO Handle when login fails
+    $location.path('/login');
+  });
+});
+
+function isAuthenticated($q, $timeout, auth) {
+  var deferred = $q.defer();
+  $timeout(function () {
+    if (auth.isAuthenticated) {
+      deferred.resolve();
+    } else {
+      deferred.reject();
+    }
+  }, 0);
+  return deferred.promise;
+}
+
 myApp.config(function ($routeProvider, authProvider, $httpProvider) {
   $routeProvider
   .when('/logout',  {
@@ -14,7 +43,8 @@ myApp.config(function ($routeProvider, authProvider, $httpProvider) {
   })
   .when('/', {
     templateUrl: 'views/root.html',
-    controller: 'RootCtrl'
+    controller: 'RootCtrl',
+    resolve: { isAuthenticated: isAuthenticated }
   })
   .otherwise({ redirectTo: '/login' });
 

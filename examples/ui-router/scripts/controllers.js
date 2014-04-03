@@ -13,21 +13,11 @@ myApp.controller('LoginCtrl', function (auth, $scope, $cookies, $state) {
       connection: 'Username-Password-Authentication',
       username: $scope.user,
       password: $scope.pass
-    })
-      .then(function() {
-        $state.go('root');
-      }, function(err) {
-        alert(err.message || err.error_description);
-      });
+    });
   };
 
   $scope.doGoogleAuthWithPopup = function () {
-    auth.signin({popup: true, connection: 'google-oauth2'})
-      .then(function() {
-        $state.go('root');
-      }, function(err) {
-        alert(err.error || err.message || err.error_description);
-      });
+    auth.signin({popup: true, connection: 'google-oauth2'});
   };
 
   $scope.doGoogleAuthWithRedirect = function () {

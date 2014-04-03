@@ -6,15 +6,11 @@ myApp.controller('MenuCtrl', function ($scope, $location) {
   };
 });
 
-myApp.controller('RootCtrl', function (auth, $scope, $location) {
-  if (!auth.isAuthenticated) {
-    $location.path('/login');
-    return;
-  }
+myApp.controller('RootCtrl', function (auth, $scope) {
   $scope.auth = auth;
 });
 
-myApp.controller('LoginCtrl', function (auth, $scope, $location, $http) {
+myApp.controller('LoginCtrl', function (auth, $scope, $http) {
   $scope.login =  {user: '', pass: ''};
   $scope.signup = {user: '', pass: '', favColor: 'red'};
   $scope.doLogin = function () {
@@ -22,11 +18,7 @@ myApp.controller('LoginCtrl', function (auth, $scope, $location, $http) {
       connection: 'Username-Password-Authentication',
       username:   $scope.login.user,
       password:   $scope.login.pass
-    }).then(function() {
-        $location.path('/');
-      }, function(err) {
-        window.alert(err.message || err.error_description);
-      });
+    });
   };
 
   $scope.doSignup = function () {
@@ -43,19 +35,13 @@ myApp.controller('LoginCtrl', function (auth, $scope, $location, $http) {
           connection: 'Username-Password-Authentication',
           username:   $scope.signup.user,
           password:   $scope.signup.pass
-        }).then(function() {
-          $location.path('/');
-        }, function(err) {
-          alert(err.message || err.error_description);
         });
       }
     })
     .error(function (data, status, headers, config) {
       window.alert('Error creating account for user ' + $scope.signup.user + ': '  + data);
     });
-
   };
-
 });
 
 myApp.controller('LogoutCtrl', function (auth, $scope, $location) {
