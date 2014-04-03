@@ -254,32 +254,34 @@
     };
   });
 
-  var auth0Main = angular.module('auth0', ['auth0-auth', 'ngRoute']);
+  auth0.factory('parseHash', function (auth, $rootScope, $window) {
+    return function () {
+      var result = auth.parseHash($window.location.hash);
 
-  // Why $route if we are not using it? See https://github.com/angular/angular.js/issues/1213
-  auth0Main.run(function (auth, $cookies, $location, $rootScope, $window, $route) {
+      if (result && result.id_token) {
+        // this is only used when using redirect mode
+        auth.getProfile(result.id_token).then(function (profile) {
+          auth._serialize(profile, result.id_token, result.access_token, result.state);
+          // this will rehydrate the "auth" object with the profile stored in $cookies
+          auth._deserialize();
 
-    var result = auth.parseHash($window.location.hash);
+          $rootScope.$broadcast('auth:redirect-success', profile);
+        }, function (err) {
+          // this will rehydrate the "auth" object with the profile stored in $cookies
+          auth._deserialize();
 
-    if (result && result.id_token) {
-      // this is only used when doing social authentication in redirect mode (auth.signin({connection: 'google-oauth2'});)
-      auth.getProfile(result.id_token).then(function (profile) {
-        auth._serialize(profile, result.id_token, result.access_token, result.state);
-        // this will rehydrate the "auth" object with the profile stored in $cookies
+          $rootScope.$broadcast('auth:redirect-fail', err);
+        });
+      } else {
+        $rootScope.$broadcast('auth:no-redirect');
         auth._deserialize();
-
-        $rootScope.$broadcast('auth:redirect-success', profile);
-      }, function (err) {
-        // this will rehydrate the "auth" object with the profile stored in $cookies
-        auth._deserialize();
-
-        $rootScope.$broadcast('auth:redirect-fail', err);
-      });
-    } else {
-      $rootScope.$broadcast('auth:no-redirect');
-      auth._deserialize();
-    }
+      }
+    };
   });
+
+  var auth0Main = angular.module('auth0', ['auth0-auth']);
+
+  auth0Main.run(function (parseHash) { parseHash(); });
 
   var authInterceptorModule = angular.module('authInterceptor', ['auth0-auth']);
 
