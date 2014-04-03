@@ -144,8 +144,7 @@
   };
   Auth0Wrapper.prototype.signin = function (options) {
     options = options || {};
-    var that = this;
-    that.auth0Lib.signin(options, function (err, profile, id_token, access_token, state) {
+    var callback = function (err, profile, id_token, access_token, state) {
       if (err) {
         that.$rootScope.$broadcast(AUTH_EVENTS.loginFailed, profile);
         return;
@@ -154,7 +153,14 @@
       that._deserialize();
       that.$rootScope.$broadcast(AUTH_EVENTS.loginSuccess, profile);
       that.$rootScope.$apply();
-    });
+    };
+    var that = this;
+    // In Auth0 widget the callback to signin is executed when the widget ends
+    // loading. In that case, we should not broadcast any event.
+    if (typeof Auth0Widget !== 'undefined' && that.auth0Lib instanceof Auth0Widget) {
+      callback = null;
+    }
+    that.auth0Lib.signin(options, callback);
   };
   Auth0Wrapper.prototype.signout = function () {
     this._serialize(undefined, undefined, undefined);
