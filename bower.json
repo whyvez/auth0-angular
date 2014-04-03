@@ -1,6 +1,5 @@
 {
   "name": "auth0-angular",
-  "version": "0.0.1",
   "dependencies": {
     "angular": "~1.2.14",
     "angular-cookies": "~1.2.14",
