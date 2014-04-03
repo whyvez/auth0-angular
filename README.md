@@ -19,17 +19,17 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
 
     ```html
     <!-- auth0.js and build your own UI -->
-    <script src="//cdn.auth0.com/w2/auth0-2.0.9.js"></script>
+    <script src="//cdn.auth0.com/w2/auth0-2.js"></script>
     ```
 
 2.  Add the [Auth0 Angular module](auth0-angular.js):
     ```js
-    <script src="https://raw.github.com/auth0/auth0-angular/master/auth0-angular.js" type="text/javascript"> </script>
+    <script src="https://cdn.auth0.com/w2/auth0-angular-0.js"> </script>
     ```
 
-2. Include the Auth0 module as a dependency of the app main module:
+2. Include the `auth0` and `authInterceptor` modules as dependencies of the app main module:
     ```js
-    var app = angular.module('myApp', ['auth0']);
+    var app = angular.module('myApp', ['auth0', 'authInterceptor']);
     ```
 
 3. Inject and initiate the `auth` service in the app main config block with your `domain`, `clientID` and `callbackURL` (get them from Auth0 dashboard in the Application settings).
@@ -39,8 +39,7 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
       authProvider.init({
         domain: 'yourdomain.auth0.com',
         clientID: 'YOUR_CLIENT_ID',
-        callbackURL: 'http://localhost:1337/',
-        callbackOnLocationHash: true
+        callbackURL: 'http://localhost:1337/'
       });
     });
   ```
@@ -70,14 +69,7 @@ Add the following router configuration to the `.config` block.
 5. Inject the `auth` service in your controllers and call the `signin`/`signout` methods.
   ```js
   myApp.controller('LoginCtrl', function ($scope, auth) {
-    auth.signin()
-      .then(function () {
-        // on login success
-
-      }, function () {
-        // on fail
-      
-      });
+    auth.signin();
   });
   ```
 
@@ -87,12 +79,34 @@ Add the following router configuration to the `.config` block.
   });
   ```
 
+6. Handle the `loginSuccess` and `loginFailed` events from a `run` loop of you module:
+```js
+  myApp.run(function ($rootScope, $location, $route, AUTH_EVENTS) {
+    $rootScope.$on(AUTH_EVENTS.loginSuccess, function () {
+      // TODO Handle when login succeeds
+      $location.path('/');
+    });
+    $rootScope.$on(AUTH_EVENTS.loginFailed, function () {
+      // TODO Handle when login fails
+      $location.path('/login');
+    });
+  });
+```
+
+
   > More details about the parameters you can use for the [Auth0 Login Widget](https://docs.auth0.com/login-widget2) and [auth0.js](https://github.com/auth0/auth0.js).
 
-6. Use the `auth.profile` object to show user attributes in the view.
+7. Use the `auth.profile` object to show user attributes in the view.
   ```js
   myApp.controller('RootCtrl', function ($scope, $location, $http, auth) {
+    if (!auth.isAuthenticated) {
+      // Reject the user
+      $location.path('/login');
+      return;
+    }
 
+
+    // User is logged in at this point
     ...
 
     $scope.user = auth.profile;
