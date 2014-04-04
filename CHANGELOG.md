@@ -1,6 +1,6 @@
 ## 0.0.2
 
- * Removed promises from signin method. Now the way to handle login is by listening to `AUTH_EVENTS.loginSucces`:
+ * Removed promises from `signin` method. Now the way to handle login is by listening to `AUTH_EVENTS.loginSuccess`:
  
    ```js
        $rootScope.$on(AUTH_EVENTS.loginSuccess, function () {
