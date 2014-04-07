@@ -2,6 +2,7 @@
 
 ## 0.1.1
 
+ * Now when login fails the proper error object is sent in the `AUTH_EVENTS.loginFailed` event.
  * Fixing bug that made `getToken` method fail: As `getToken` is not exposed by the widget it should be accessed using the `getClient` method that returns the auth0.js wrapped instance.
 
 ## 0.1.0
@@ -18,7 +19,7 @@
        $rootScope.$on(AUTH_EVENTS.loginSuccess, function () {
         // TODO Handle when login succeeds
         $location.path('/');
-       }); 
+       });
    ```
  * Removed `ngRoute` and `route` from auth0-angular.
  * Created a dictionary with the authentication events:

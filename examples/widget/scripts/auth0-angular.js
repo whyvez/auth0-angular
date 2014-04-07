@@ -153,7 +153,7 @@
     options = options || {};
     var callback = function (err, profile, id_token, access_token, state) {
       if (err) {
-        that.$rootScope.$broadcast(AUTH_EVENTS.loginFailed, profile);
+        that.$rootScope.$broadcast(AUTH_EVENTS.loginFailed, err);
         return;
       }
       that._serialize(profile, id_token, access_token, state);
