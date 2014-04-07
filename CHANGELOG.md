@@ -1,6 +1,11 @@
 # 0.1.x
 
+## 0.1.1
+
+ * Fixing bug that made `getToken` method fail: As `getToken` is not exposed by the widget it should be accessed using the `getClient` method that returns the auth0.js wrapped instance.
+
 ## 0.1.0
+
  * Added `AUTH_EVENTS.redirectEnded` event that is emitted when the callback URL is parsed but it does not contain neither `access_token` nor `error`. On that way, it can be determined whether the redirect ended to execute an action. For example, this is useful with the `AUTH_EVENTS.loginSuccess` and `AUTH_EVENTS.loginFailed` to show a loading page while being redirected.
 
 # 0.0.x

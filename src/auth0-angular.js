@@ -144,7 +144,15 @@
       return deferred.promise;
     }
 
-    this.auth0Lib.getDelegationToken(clientID, this.idToken, options, this._wrapCallback(function (err, delegationResult) {
+    var obj = this.auth0Lib;
+
+    // Case where auth0Lib is the widget (which does not expose
+    // getDelegationToken directly).
+    if (!obj.getDelegationToken) {
+      obj = obj.getClient().getDelegationToken;
+    }
+
+    obj.getDelegationToken(clientID, this.idToken, options, this._wrapCallback(function (err, delegationResult) {
       if (err) {
         return deferred.reject(err);
       }
