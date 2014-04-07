@@ -149,7 +149,7 @@
     // Case where auth0Lib is the widget (which does not expose
     // getDelegationToken directly).
     if (!obj.getDelegationToken) {
-      obj = obj.getClient().getDelegationToken;
+      obj = obj.getClient();
     }
 
     obj.getDelegationToken(clientID, this.idToken, options, this._wrapCallback(function (err, delegationResult) {
