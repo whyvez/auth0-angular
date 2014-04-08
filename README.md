@@ -299,6 +299,11 @@ You may want to obtain a token to be used in an application different from the c
     });
 ```
 
+### FAQ
+
+#### I'm setting the `callbackURL` parameter to `https://localhost:3000/#hello` but redirects me to `https://localhost:3000/#access_token=...`. Why?
+On redirect mode, when the provider redirects back to the single page application it should send the authentication result. This is done by setting the hash URL with access_token or error. Currently, we are not supporting customization of that URL.
+
 ### Examples
 
 The following [examples](examples) offer a good starting point for including Auth0 in your AngularJS application:
