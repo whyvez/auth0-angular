@@ -68,22 +68,20 @@
     this.auth0Lib.parseHash(locationHash, callback);
   };
   Auth0Wrapper.prototype._deserialize = function () {
-    if (!this.$cookies.profile) {
+    if (!this.$cookies.idToken) {
       this.isAuthenticated = false;
-      this.profile = undefined;
       this.idToken = undefined;
       this.accessToken = undefined;
       return;
     }
-    this.profile = JSON.parse(this.$cookies.profile);
-    this.isAuthenticated = !!this.profile;
     this.idToken = this.$cookies.idToken;
     this.accessToken = this.$cookies.accessToken;
+    this.isAuthenticated = true;
   };
-  Auth0Wrapper.prototype._serialize = function (profile, id_token, access_token) {
-    this.$cookies.profile = JSON.stringify(profile);
+  Auth0Wrapper.prototype._serialize = function (id_token, access_token, state) {
     this.$cookies.idToken = id_token;
     this.$cookies.accessToken = access_token;
+    this.$cookies.state = state;
   };
   Auth0Wrapper.prototype.hasTokenExpired = function (token) {
     if (!token) {
@@ -156,10 +154,11 @@
         that.$rootScope.$broadcast(AUTH_EVENTS.loginFailed, err);
         return;
       }
-      that._serialize(profile, id_token, access_token, state);
+      that._serialize(id_token, access_token, state);
       that._deserialize();
-      that.$rootScope.$broadcast(AUTH_EVENTS.loginSuccess, profile);
-      that.$rootScope.$apply();
+      that.getProfile(id_token).then(function (profile) {
+        that.$rootScope.$broadcast(AUTH_EVENTS.loginSuccess, profile);
+      });
     };
     var that = this;
     // In Auth0 widget the callback to signin is executed when the widget ends
@@ -185,10 +184,12 @@
   };
   Auth0Wrapper.prototype.getProfile = function (token) {
     var deferred = this.$q.defer();
+    var that = this;
     var wrappedCallback = this._wrapCallback(function (err, profile) {
         if (err) {
           return deferred.reject(err);
         }
+        that.profile = profile;
         deferred.resolve(profile);
       });
     this.auth0Lib.getProfile(token, wrappedCallback);
@@ -250,7 +251,7 @@
         if (result && result.id_token) {
           // this is only used when using redirect mode
           auth.getProfile(result.id_token).then(function (profile) {
-            auth._serialize(profile, result.id_token, result.access_token, result.state);
+            auth._serialize(result.id_token, result.access_token, result.state);
             // this will rehydrate the "auth" object with the profile stored in $cookies
             auth._deserialize();
             $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, profile);
@@ -261,7 +262,9 @@
           });
         } else {
           auth._deserialize();
-          $rootScope.$broadcast(AUTH_EVENTS.redirectEnded);
+          auth.getProfile(auth.idToken).finally(function () {
+            $rootScope.$broadcast(AUTH_EVENTS.redirectEnded);
+          });
         }
       };
     }

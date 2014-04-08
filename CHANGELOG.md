@@ -2,6 +2,7 @@
 
 ## 0.1.1
 
+ * Profile is no longer saved in cookies as, in some cases, it was bigger that the maximum allowed size. Current policy is to store it in memory and each time page reloads is fetched again.
  * Now when login fails the proper error object is sent in the `AUTH_EVENTS.loginFailed` event.
  * Fixing bug that made `getToken` method fail: As `getToken` is not exposed by the widget it should be accessed using the `getClient` method that returns the auth0.js wrapped instance.
 
