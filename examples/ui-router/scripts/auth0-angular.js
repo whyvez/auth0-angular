@@ -54,9 +54,9 @@
       redirectEnded: 'auth:REDIRECT_ENDED'
     };
   auth0.constant('AUTH_EVENTS', AUTH_EVENTS);
-  function Auth0Wrapper(auth0Lib, $cookies, $rootScope, $safeApply, $q, urlBase64Decode) {
+  function Auth0Wrapper(auth0Lib, $cookieStore, $rootScope, $safeApply, $q, urlBase64Decode) {
     this.auth0Lib = auth0Lib;
-    this.$cookies = $cookies;
+    this.$cookieStore = $cookieStore;
     this.$rootScope = $rootScope;
     this.$safeApply = $safeApply;
     this.$q = $q;
@@ -68,20 +68,33 @@
     this.auth0Lib.parseHash(locationHash, callback);
   };
   Auth0Wrapper.prototype._deserialize = function () {
-    if (!this.$cookies.idToken) {
+    var idToken;
+    try {
+      idToken = this.$cookieStore.get('idToken');
+    } catch (e) {
+      idToken = undefined;
+    }
+    if (!idToken) {
       this.isAuthenticated = false;
       this.idToken = undefined;
       this.accessToken = undefined;
       return;
     }
-    this.idToken = this.$cookies.idToken;
-    this.accessToken = this.$cookies.accessToken;
+    this.idToken = this.$cookieStore.get('idToken');
+    this.accessToken = this.$cookieStore.get('accessToken');
     this.isAuthenticated = true;
   };
+  function setOrRemoveFromCookieStore($cookieStore, fieldName, field) {
+    if (field) {
+      $cookieStore.put(fieldName, field);
+    } else {
+      $cookieStore.remove(fieldName);
+    }
+  }
   Auth0Wrapper.prototype._serialize = function (id_token, access_token, state) {
-    this.$cookies.idToken = id_token;
-    this.$cookies.accessToken = access_token;
-    this.$cookies.state = state;
+    setOrRemoveFromCookieStore(this.$cookieStore, 'idToken', id_token);
+    setOrRemoveFromCookieStore(this.$cookieStore, 'accessToken', access_token);
+    setOrRemoveFromCookieStore(this.$cookieStore, 'state', state);
   };
   Auth0Wrapper.prototype.hasTokenExpired = function (token) {
     if (!token) {
@@ -221,20 +234,20 @@
         $provide.value('auth0Lib', auth0Lib);
       };
       this.$get = [
-        '$cookies',
+        '$cookieStore',
         '$rootScope',
         '$safeApply',
         '$q',
         '$injector',
         'urlBase64Decode',
-        function ($cookies, $rootScope, $safeApply, $q, $injector, urlBase64Decode) {
+        function ($cookieStore, $rootScope, $safeApply, $q, $injector, urlBase64Decode) {
           // We inject auth0Lib manually in order to throw a friendly error
           var auth0Lib = $injector.get('auth0Lib');
           if (!auth0Lib) {
             throw new Error('You need to add Auth0Widget or Auth0.js dependency');
           }
           if (!auth0Wrapper) {
-            auth0Wrapper = new Auth0Wrapper(auth0Lib, $cookies, $rootScope, $safeApply, $q, urlBase64Decode);
+            auth0Wrapper = new Auth0Wrapper(auth0Lib, $cookieStore, $rootScope, $safeApply, $q, urlBase64Decode);
           }
           return auth0Wrapper;
         }
@@ -252,11 +265,11 @@
           // this is only used when using redirect mode
           auth.getProfile(result.id_token).then(function (profile) {
             auth._serialize(result.id_token, result.access_token, result.state);
-            // this will rehydrate the "auth" object with the profile stored in $cookies
+            // this will rehydrate the "auth" object with the profile stored in $cookieStore
             auth._deserialize();
             $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, profile);
           }, function (err) {
-            // this will rehydrate the "auth" object with the profile stored in $cookies
+            // this will rehydrate the "auth" object with the profile stored in $cookieStore
             auth._deserialize();
             $rootScope.$broadcast(AUTH_EVENTS.loginFailed, err);
           });

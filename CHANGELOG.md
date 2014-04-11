@@ -1,5 +1,11 @@
 # 0.1.x
 
+## 0.1.2
+
+ * Version 1.2.16 of Angular changed the behavior of how `$cookies` handles `$cookies.hello = undefined`. In the past, it erased `hello` but now serializes `undefined` as `"undefined"`. Replacing `$cookies` with `$cookieStore` (which handle serialization) to avoid further problems.
+ * Adding error handling when cookie parsing fails so it does not break the library.
+ * Updating Angular version to 1.2.16.
+
 ## 0.1.1
 
  * Profile is no longer saved in cookies as, in some cases, it was bigger than the maximum allowed size. Current policy is to store it in memory and each time page reloads fetch it again.
@@ -15,7 +21,7 @@
 ## 0.0.2
 
  * Removed promises from `signin` method. Now the way to handle login is by listening to `AUTH_EVENTS.loginSuccess`:
- 
+
    ```js
        $rootScope.$on(AUTH_EVENTS.loginSuccess, function () {
         // TODO Handle when login succeeds
@@ -24,7 +30,7 @@
    ```
  * Removed `ngRoute` and `route` from auth0-angular.
  * Created a dictionary with the authentication events:
- 
+
     ```js
       myApp.run(function ($rootScope, AUTH_EVENTS) {
         $rootScope.$on(AUTH_EVENTS.loginSuccess, function () {
