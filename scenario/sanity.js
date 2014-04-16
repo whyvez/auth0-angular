@@ -27,10 +27,8 @@ describe('custom login example', function() {
     logoutButton.click();
   });
 
-
-  describe('ro', function () {
-
-    it('should log in successfully with valid credentials', function() {
+  describe('when doing auth with "ro"', function () {
+    it('should sign in successfully with valid credentials', function() {
       element(by.model('user')).sendKeys('hello@bye.com');
       element(by.model('pass')).sendKeys('hello');
 
@@ -58,6 +56,64 @@ describe('custom login example', function() {
       expect(alertDialog.getText()).toEqual('login failed');
 
       alertDialog.accept();
+    });
+
+    it('should keep working after reload', function () {
+      element(by.model('user')).sendKeys('hello@bye.com');
+      element(by.model('pass')).sendKeys('hello');
+
+      element(by.css('button')).click();
+      browser.wait(function() { return browser.isElementPresent(by.css('span')); }, 5000);
+
+      element(by.binding('auth.profile.name')).getText().then(function (text) {
+        expect(text).toEqual('Welcome hello@bye.com!');
+      });
+
+      element(by.css('pre > code')).getText().then(function (text) {
+        var obj = JSON.parse(text);
+        expect(obj).not.toBeFalsy();
+      });
+
+      browser.get('/');
+      
+      browser.wait(function() { return browser.isElementPresent(by.css('span')); }, 5000);
+
+      // Prevent afterEach from crashing
+      findAnchorByContent('logout', function (button) {
+        logoutButton = button;
+      });
+
+      element(by.binding('auth.profile.name')).getText().then(function (text) {
+        expect(text).toEqual('Welcome hello@bye.com!');
+      });
+
+      element(by.css('pre > code')).getText().then(function (text) {
+        var obj = JSON.parse(text);
+        expect(obj).not.toBeFalsy();
+      });
+    });
+
+    it('should logout correctly', function () {
+      element(by.model('user')).sendKeys('hello@bye.com');
+      element(by.model('pass')).sendKeys('hello');
+
+      element(by.css('button')).click();
+      browser.wait(function() { return browser.isElementPresent(by.css('span')); }, 5000);
+
+      element(by.binding('auth.profile.name')).getText().then(function (text) {
+        expect(text).toEqual('Welcome hello@bye.com!');
+      });
+
+      element(by.css('pre > code')).getText().then(function (text) {
+        var obj = JSON.parse(text);
+        expect(obj).not.toBeFalsy();
+      });
+
+      logoutButton.click();
+      
+      expect(element(by.model('user')).getText()).toEqual('');
+      expect(element(by.model('pass')).getText()).toEqual('');
+
     });
   });
 

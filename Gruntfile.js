@@ -122,7 +122,7 @@ module.exports = function (grunt) {
 
     protractor: {
       local: {
-        configFile: 'scenario/custom-login/protractor.conf.js'
+        configFile: 'scenario/protractor.conf.js'
       }
     },
 

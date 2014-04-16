@@ -9,7 +9,7 @@ exports.config = {
   },
 
   specs: [
-    './custom-login.js',
+    './sanity.js',
   ],
 
   baseUrl: 'http://localhost:3000/',
