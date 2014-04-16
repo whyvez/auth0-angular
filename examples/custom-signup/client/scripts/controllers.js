@@ -11,13 +11,15 @@ myApp.controller('RootCtrl', function (auth, $scope) {
 });
 
 myApp.controller('LoginCtrl', function (auth, $scope, $http) {
-  $scope.login =  {user: '', pass: ''};
+  $scope.user = '';
+  $scope.pass = '';
+
   $scope.signup = {user: '', pass: '', favColor: 'red'};
   $scope.doLogin = function () {
     auth.signin({
       connection: 'Username-Password-Authentication',
-      username:   $scope.login.user,
-      password:   $scope.login.pass
+      username:   $scope.user,
+      password:   $scope.pass
     });
   };
 
