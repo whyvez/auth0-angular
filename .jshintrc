@@ -41,6 +41,11 @@
     "expect": false,
     "inject": false,
     "module": false,
-    "sinon": false
+    "sinon": false,
+
+    "browser": false,
+    "element": false,
+    "by": false,
+    "xit": false
   }
 }

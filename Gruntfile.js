@@ -100,6 +100,15 @@ module.exports = function (grunt) {
       }
     },
 
+    connect: {
+      scenario_custom_login: {
+        options: {
+          base: './examples/custom-login',
+          port: 3000
+        }
+      }
+    },
+
 
     watch: {
       dev: {
@@ -108,6 +117,12 @@ module.exports = function (grunt) {
         },
         files: filesToWatch,
         tasks: ['build']
+      }
+    },
+
+    protractor: {
+      local: {
+        configFile: 'scenario/custom-login/protractor.conf.js'
       }
     },
 
@@ -163,6 +178,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', ['clean', 'jshint', 'ngmin', 'concat', 'uglify', 'karma', 'copy']);
   grunt.registerTask('test', ['build', 'karma']);
+  grunt.registerTask('scenario', ['build', 'connect:scenario_custom_login', 'protractor:local']);
   grunt.registerTask('cdn', ['build', 's3', 'maxcdn']);
   grunt.registerTask('default', ['build', 'watch']);
 
