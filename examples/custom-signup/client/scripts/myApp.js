@@ -54,7 +54,7 @@ myApp.config(function ($routeProvider, authProvider, $httpProvider) {
   })
   .when('/login',   {
     templateUrl: 'views/login.html',
-    controller: 'LoginCtrl',
+    controller: 'LoginCtrl'
   })
   .when('/', {
     templateUrl: 'views/root.html',
