@@ -10,7 +10,8 @@ myApp.run(function ($rootScope, $state, auth, AUTH_EVENTS) {
 
   $rootScope.$on(AUTH_EVENTS.loginFailed, function () {
     // TODO Handle when login fails
-    $state.go('login');
+    window.alert('login failed');
+    $state.go('logout');
   });
 
   $rootScope.$on('$stateChangeStart', function(e, to) {
