@@ -248,7 +248,7 @@
           } else if (typeof Auth0 !== 'undefined') {
             auth0Lib = new Auth0(options);
           } else {
-            throw new Error('You need to add Auth0Widget or Auth0.js dependency');
+            throw new Error('Auth0Widget or Auth0.js dependency not found');
           }
         }
         $provide.value('auth0Lib', auth0Lib);
@@ -264,7 +264,7 @@
           // We inject auth0Lib manually in order to throw a friendly error
           var auth0Lib = $injector.get('auth0Lib');
           if (!auth0Lib) {
-            throw new Error('You need to add Auth0Widget or Auth0.js dependency');
+            throw new Error('auth0Lib dependency not found. Have you called auth0Provider.init?');
           }
           if (!auth0Wrapper) {
             auth0Wrapper = new Auth0Wrapper(auth0Lib, $cookieStore, $rootScope, $safeApply, $q, urlBase64Decode);
