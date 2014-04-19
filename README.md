@@ -24,7 +24,7 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
 
 2.  Add the [Auth0 Angular module](src/auth0-angular.js):
     ```js
-    <script src="https://cdn.auth0.com/w2/auth0-angular-0.1.js"> </script>
+    <script src="https://cdn.auth0.com/w2/auth0-angular-0.2.js"> </script>
     ```
 
 2. Include the `auth0` and `authInterceptor` modules as dependencies of the app main module:
