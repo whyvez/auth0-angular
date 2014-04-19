@@ -34,10 +34,10 @@
   var auth0 = angular.module('auth0-auth', ['util', 'ngCookies']);
 
   var AUTH_EVENTS = {
-    forbidden: 'auth:FORBIDDEN',
-    loginSuccess: 'auth:LOGIN_SUCCESS',
-    loginFailed: 'auth:LOGIN_FAILED',
-    logout: 'auth:LOGOUT',
+    forbidden:     'auth:FORBIDDEN',
+    loginSuccess:  'auth:LOGIN_SUCCESS',
+    loginFailed:   'auth:LOGIN_FAILED',
+    logout:        'auth:LOGOUT',
     redirectEnded: 'auth:REDIRECT_ENDED'
   };
 
@@ -53,6 +53,8 @@
     this.urlBase64Decode = urlBase64Decode;
 
     this.delegatedTokens = {};
+
+    this.profile      = {};
   }
 
   Auth0Wrapper.prototype = {};
@@ -192,8 +194,8 @@
       that._deserialize();
 
       that.getProfile(id_token)
-        .then(function (profile) {
-          that.$rootScope.$broadcast(AUTH_EVENTS.loginSuccess, profile);
+        .then(function () {
+          that.$rootScope.$broadcast(AUTH_EVENTS.loginSuccess, that.profile);
         });
     };
 
@@ -234,9 +236,17 @@
         return deferred.reject(err);
       }
 
-      that.profile = profile;
+      // Cleanup old keys
+      Object.keys(that.profile).forEach(function (key) {
+        delete that.profile[key];
+      });
 
-      deferred.resolve(profile);
+      // Add new keys
+      Object.keys(profile).forEach(function (key) {
+        that.profile[key] = profile[key];
+      });
+
+      deferred.resolve(that.profile);
     });
 
     this.auth0Lib.getProfile(token, wrappedCallback);
@@ -255,20 +265,32 @@
   auth0.provider('auth', function ($provide) {
     var auth0Wrapper;
 
-    this.init = function (options) {
+    /**
+     * Initializes the auth service.
+     *
+     * this.init(options, [Auth0Constructor])
+     *
+     * @param options           object   Options for auth0.js or widget
+     * @param Auth0Constructor  function (optional) constructor to create auth0Lib
+     */
+    this.init = function (options, Auth0Constructor) {
       var auth0Lib;
 
       if (options.callbackOnLocationHash === undefined) {
         options.callbackOnLocationHash = true;
       }
 
-      // User has included widget
-      if (typeof Auth0Widget !== 'undefined') {
-        auth0Lib = new Auth0Widget(options);
-      } else if (typeof Auth0 !== 'undefined') {
-        auth0Lib = new Auth0(options);
+      if (Auth0Constructor) {
+        auth0Lib = new Auth0Constructor(options);
       } else {
-        throw new Error('You need to add Auth0Widget or Auth0.js dependency');
+        // User has included Auth0 widget
+        if (typeof Auth0Widget !== 'undefined') {
+          auth0Lib = new Auth0Widget(options);
+        } else if (typeof Auth0 !== 'undefined') {
+          auth0Lib = new Auth0(options);
+        } else {
+          throw new Error('You need to add Auth0Widget or Auth0.js dependency');
+        }
       }
 
       $provide.value('auth0Lib', auth0Lib);
@@ -295,12 +317,12 @@
 
       if (result && result.id_token) {
         // this is only used when using redirect mode
-        auth.getProfile(result.id_token).then(function (profile) {
+        auth.getProfile(result.id_token).then(function () {
           auth._serialize(result.id_token, result.access_token, result.state);
           // this will rehydrate the "auth" object with the profile stored in $cookieStore
           auth._deserialize();
 
-          $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, profile);
+          $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, auth.profile);
         }, function (err) {
           // this will rehydrate the "auth" object with the profile stored in $cookieStore
           auth._deserialize();

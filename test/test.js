@@ -43,6 +43,68 @@ describe('Auth0 Angular', function () {
 
       inject(function ($http) { expect($http).to.be.ok; });
     });
+
+    it('should allow passing a different constructor', function () {
+
+      var MyAuth0Constructor = function () { };
+      executeInConfigBlock(function (authProvider) {
+        authProvider.init({
+          domain: 'my-domain.auth0.com',
+          clientId: 'my-client-id',
+          callbackURL: 'http://localhost/callback'
+        }, MyAuth0Constructor);
+      });
+
+      inject(function (auth, auth0Lib) {
+        expect(auth).to.be.ok;
+        expect(auth0Lib.constructor).to.be.equal(MyAuth0Constructor);
+      });
+    });
+  });
+
+  describe('auth.profile and getProfile', function () {
+    var auth, $rootScope;
+
+    beforeEach(initAuth0);
+    beforeEach(module(function ($provide) {
+      var getProfile = sinon.stub();
+      getProfile.onCall(0).callsArgWith(1, null, {foo: 'bar', one: {two: {three: 'baz'}}});
+
+      $provide.value('auth0Lib', {getProfile: getProfile});
+    }));
+    beforeEach(inject(function (_auth_, _$rootScope_) {
+      auth = _auth_;
+      $rootScope = _$rootScope_;
+    }));
+
+    it('auth.profile should never be null or undefined', function () {
+      expect(auth.profile).to.be.ok;
+
+      // Profile has not been loaded yet
+      expect(auth.profile.foo).not.to.be.equal('bar');
+    });
+    it('auth.profile and getProfile should return the same reference', function (done) {
+      expect(auth.profile).to.be.ok;
+      expect(auth.profile.foo).not.to.be.equal('bar');
+
+      auth.getProfile('id-token').then(function (newProfile) {
+        expect(auth.profile).to.be.equal(newProfile);
+        expect(auth.profile.foo).to.be.equal('bar');
+        expect(auth.profile.one.two.three).to.be.equal('baz');
+      })
+      .then(done);
+      $rootScope.$apply();
+    });
+    it('all auth.profile fields should be cleaned on getProfile', function (done) {
+      auth.profile.hello = 'yes';
+      auth.getProfile('id-token').then(function () {
+        expect(auth.profile.hello).not.to.be.ok;
+        expect(auth.profile.foo).to.be.equal('bar');
+        expect(auth.profile.one.two.three).to.be.equal('baz');
+      })
+      .then(done);
+      $rootScope.$apply();
+    });
   });
 
   describe('Interceptor', function () {

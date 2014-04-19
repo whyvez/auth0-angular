@@ -1,3 +1,11 @@
+# 0.2.x
+
+# 0.2.0
+
+ * There is only one instance of `auth.profile`. When doing `getProfile` the promise returns `auth.profile` not a new instance.
+ * `auth.profile` by default starts as an empty object that will be later populated when the `getProfile` promise is resolved.
+ * `authProvider.init` was changed to `authProvider.init(options, [Auth0Constructor]). `Auth0Constructor` is a constructor (function that can be `new`ed) that could be either Auth0 (found in auth0.js) or Auth0Widget (found in auth0-widget). RequireJS users now are able to parametrize the constructor to be used.
+
 # 0.1.x
 
 ## 0.1.2
