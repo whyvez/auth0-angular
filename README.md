@@ -316,6 +316,7 @@ The following [examples](examples) offer a good starting point for including Aut
 Advanced scenarios:
  * [UI Router](examples/ui-router): A full featured example of ui-router with auth0-angular.
  * [Delegation Token](examples/delegation-token): Call two different APIs (with different client ids) from a single Angular App.
+ * [RequireJS](examples/requirejs): An example of how to integrate auth0-angular with RequireJS.
 
 
 ![](https://dl.dropboxusercontent.com/u/21665105/angular.gif)
