@@ -152,7 +152,7 @@ module.exports = function (grunt) {
         upload: [{
           src:    'release/*',
           dest:   'w2/',
-          options: { gzip: true }
+          options: { gzip: false }
         }]
       }
     },
