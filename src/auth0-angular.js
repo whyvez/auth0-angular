@@ -300,7 +300,7 @@
       // We inject auth0Lib manually in order to throw a friendly error
       var auth0Lib = $injector.get('auth0Lib');
       if (!auth0Lib) {
-        throw new Error('auth0Lib dependency not found. Have you called auth0Provider.init?');
+        throw new Error('auth0Lib dependency not found. Have you called authProvider.init?');
       }
 
       if (!auth0Wrapper) {
