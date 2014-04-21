@@ -1,3 +1,15 @@
+/**
+ * Auth0 Angular e2e tests:
+ *
+ * The basic flows to test are:
+ *
+ *  * Login success
+ *  * Login failed
+ *  * Reload page and load profile information correctly.
+ *  * Logout and reload page and profile information is not shown.
+ *
+ *  Repeat each step for ro, redirect and popup modes.
+ */
 
 function findAnchorByContent(content, cb) {
   element.all(by.css('a')).then(function (anchors) {
