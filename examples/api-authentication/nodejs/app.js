@@ -17,7 +17,7 @@ app.use('/', express.static(__dirname + '/../client/'));
 app.use('/api', authenticate);
 
 app.get('/api/protected', function (req, res) {
-  res.send(200, 'This API Rocks!');
+  res.send(200, 'This API Rocks! - Hi ' + req.user.name );
 });
 
 app.listen(1337);
