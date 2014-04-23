@@ -43,7 +43,7 @@ After the server started, open your browser at [http://localhost:1337/](http://l
 
 #### Laravel API
 
-The laravel API example is a little more complicated and has it's own [README](https://github.com/auth0/auth0-angular/tree/master/examples/api-authentication/laravel)
+The laravel API example is a little more complicated and has it's own [README](/examples/api-authentication/laravel/README.md)
 
 ### Bonus track: Configuring CORS
 
