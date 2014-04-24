@@ -10,7 +10,7 @@ myApp.controller('RootCtrl', function (auth, $scope, $location, $http) {
   $scope.auth = auth;
 
   $scope.sendProtectedMessage = function () {
-    $http({method: 'GET', url: '/api/protected'})
+    $http({method: 'GET', url: API_ENDPOINT})
       .success(function (data, status, headers, config) {
         $scope.result = 'Protected data was: ' + data;
       });

@@ -7,8 +7,9 @@ Sample APIs provided in:
 * Node.js API
 * ASP.NET Web API Owin
 * Java Servlet
+* Laravel API
 
-> Notice that in both cases we are serving the static html/js files form the same domain. You can easily have two different domains, one hosting the static assets and another completely different hosting the API. In that case, make sure to configure CORS.
+> Notice that in the first three cases we are serving the static html/js files form the same domain. You can easily have two different domains, one hosting the static assets and another completely different hosting the API, like we do in the Laravel example. In that case, make sure to configure CORS.
 
 ### Running the example
 
@@ -39,6 +40,10 @@ mvn clean install org.mortbay.jetty:jetty-maven-plugin:run-war -Djetty.port=1337
 ```
 
 After the server started, open your browser at [http://localhost:1337/](http://localhost:1337).
+
+#### Laravel API
+
+The laravel API example is a little more complicated and has it's own [README](/examples/api-authentication/laravel/README.md)
 
 ### Bonus track: Configuring CORS
 
