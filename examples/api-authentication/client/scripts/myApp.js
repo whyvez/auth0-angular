@@ -2,6 +2,8 @@ var myApp = angular.module('myApp', [
   'ngCookies', 'ngRoute', 'auth0', 'authInterceptor'
 ]);
 
+angular.module('myApp').constant('API_ENDPOINT', '/api/protected');
+
 var loaded;
 
 myApp.run(function ($rootScope, $location, $route, AUTH_EVENTS, $q) {

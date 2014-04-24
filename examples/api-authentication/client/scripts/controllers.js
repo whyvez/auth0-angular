@@ -6,7 +6,7 @@ myApp.controller('MenuCtrl', function ($scope, $location) {
   };
 });
 
-myApp.controller('RootCtrl', function (auth, $scope, $location, $http) {
+myApp.controller('RootCtrl', function (auth, $scope, $location, $http, API_ENDPOINT) {
   $scope.auth = auth;
 
   $scope.sendProtectedMessage = function () {
