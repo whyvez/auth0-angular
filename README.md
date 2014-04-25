@@ -6,33 +6,64 @@ This AngularJS module will help you implement client-side and server-side (API) 
 
 # Tutorial
 
+> TL;DR: You can jump directly to the [examples section](#examples).
+
 ## Client Side Authentication
 
 For this tutorial, you need to create a new account in [Auth0](https://www.auth0.com) and setup a new application. We will then implement client side and server side auth.
 
-1. There are two ways of implementing signin/singup. One is using our [Login Widget](https://docs.auth0.com/login-widget2), which is a complete Login UI ready to use and the other one is using the [JavaScript SDK](https://github.com/auth0/auth0.js) which is just a wrapper to our API so you can build your UI on top.
-    ```html
-    <!-- login widget -->
-    <script src="//cdn.auth0.com/w2/auth0-widget-3.0.js" type="text/javascript"> </script>
-    ```
-    _- or -_
+There are two ways of implementing signin/singup. One is using our [JavaScript SDK](https://github.com/auth0/auth0.js) (:a:) which is just a wrapper to our API so you can build your UI on top or the other one is using [Login Widget](https://docs.auth0.com/login-widget2) (:b:), which is a complete Login UI ready.
 
+1.  Add the [Auth0 Angular module](src/auth0-angular.js):
+    ```html
+    <script src="https://cdn.auth0.com/w2/auth0-angular-0.3.js"> </script>
+    ```
+    If you are going to use the [Javascript SDK](https://github.com/auth0/auth0.js) :a: add the following to your `index.html`:
     ```html
     <!-- auth0.js and build your own UI -->
     <script src="//cdn.auth0.com/w2/auth0-2.0.js"></script>
     ```
 
-2.  Add the [Auth0 Angular module](src/auth0-angular.js):
-    ```js
-    <script src="https://cdn.auth0.com/w2/auth0-angular-0.3.js"> </script>
+    Or, in case you want to use the [Login Widget](https://docs.auth0.com/login-widget2) :b::
+
+    ```html
+    <!-- login widget -->
+    <script src="//cdn.auth0.com/w2/auth0-widget-3.0.js" type="text/javascript"> </script>
     ```
 
-2. Include the `auth0` and `authInterceptor` modules as dependencies of the app main module:
+1. Configure routes for the Authentication flow:
     ```js
-    var app = angular.module('myApp', ['auth0', 'authInterceptor']);
+    myApp.config(function ($routeProvider, authProvider) {
+      ...
+      $routeProvider
+      //  Here where you are going to display some restricted content.
+      .when('/',        { templateUrl: 'views/root.html',     controller: 'RootCtrl'    })
+      // Where the user will follow in order to close their session.
+      .when('/logout',  { templateUrl: 'views/logout.html',   controller: 'LogoutCtrl'  })
+      // Where the user will input their credentials.
+      .when('/login',   { templateUrl: 'views/login.html',    controller: 'LoginCtrl'   })
+
+      .otherwise({ redirectTo: '/login' });
+    });
     ```
 
-3. Inject and initiate the `auth` service in the app main config block with your `domain`, `clientID` and `callbackURL` (get them from Auth0 dashboard in the Application settings).
+  > Note: Angular's [default routing library](https://docs.angularjs.org/api/ngRoute/service/$route) is used in this example but [ui-router](https://github.com/angular-ui/ui-router) can be used too.
+
+
+
+2. Add module as dependencies:
+
+  For the Javascript SDK :a::
+    ```js
+    var app = angular.module('myApp', ['ngCookies', 'auth0']);
+    ```
+
+    or in case you plan to use Auth0 Login Widget :b::
+    ```js
+    var app = angular.module('myApp', ['ngCookies', 'auth0-redirect']);
+    ```
+
+3. Inject and initiate the `auth` service in the app main config block with your `domain`, `clientID` and `callbackURL` (get them from [Auth0](https://app.auth0.com/#/) dashboard in [Application Settings](https://app.auth0.com/#/applications)).
     ```js
     myApp.config(function ($routeProvider, authProvider) {
       ...
@@ -44,59 +75,56 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
     });
   ```
 
-4. You can configure three routes for the Authentication flow (or just one and show/hide the login UI, whatever you prefer):
- * `/login`:  The route that will allow the user to input their credentials.
- * `/logout`: The route that the user will follow in order to close its session.
- * `/`:   A route where you are going to display some restricted content.
-Add the following router configuration to the `.config` block.
 
-    ```js
-    myApp.config(function ($routeProvider, authProvider) {
-
-      ...
-
-      $routeProvider
-      .when('/',        { templateUrl: 'views/root.html',     controller: 'RootCtrl'    })
-      .when('/logout',  { templateUrl: 'views/logout.html',   controller: 'LogoutCtrl'  })
-      .when('/login',   { templateUrl: 'views/login.html',    controller: 'LoginCtrl'   })
-
-      .otherwise({ redirectTo: '/login' });
-    });
-    ```
-
-  > Note: We are currently using Angular's ngRoute but any other routing library can be used.
-
-5. Inject the `auth` service in your controllers and call the `signin`/`signout` methods.
-  ```js
-  myApp.controller('LoginCtrl', function ($scope, auth) {
-    auth.signin();
-  });
-  ```
-
+4. Inject the `auth` service in your controllers and call the `signin`/`signout` methods.
   ```js
   myApp.controller('LogoutCtrl', function ($scope, auth) {
     auth.signout();
+    $location.path('/login');
   });
   ```
 
-6. Handle the `loginSuccess` and `loginFailed` events from a `run` loop of you module:
-```js
-  myApp.run(function ($rootScope, $location, $route, AUTH_EVENTS) {
-    $rootScope.$on(AUTH_EVENTS.loginSuccess, function () {
-      // TODO Handle when login succeeds
-      $location.path('/');
-    });
-    $rootScope.$on(AUTH_EVENTS.loginFailed, function () {
-      // TODO Handle when login fails
-      $location.path('/login');
-    });
+  In Javascript SDK, `auth.signin` returns a promise :a::
+  ```js
+  myApp.controller('LoginCtrl', function ($scope, auth) {
+    auth.signin()
+      .then(function () {
+        // User logged in successfully
+        $location.path('/');
+      }, function (err) {
+        // Oops something went wrong
+        window.alert('Oops, invalid credentials');
+        $location.path('/login');
+      });
   });
-```
+  ```
 
+  In Login Widget :b:, you need to handle `AUTH_EVENTS.loginSuccess` and `AUTH_EVENTS.loginFailed` events as each time the user logs in the page is reloaded and the state is lost:
+    ```js
+    myApp.run(function ($rootScope, $location, AUTH_EVENTS, $timeout, parseHash) {
+      $rootScope.$on(AUTH_EVENTS.loginSuccess, function () {
+        // TODO Handle when login succeeds
+        $location.path('/');
+      });
+      $rootScope.$on(AUTH_EVENTS.loginFailed, function () {
+        // TODO Handle when login fails
+        window.alert('login failed');
+      });
+    
+      parseHash();
+    });
+    ```
+  ```js
+  myApp.controller('LoginCtrl', function (auth, $scope) {
+    $scope.auth = auth;
+  });
+  ```
+  ```html
+  <!-- Include this on your index.html -->
+  <a href="" ng-controller="LoginCtrl" ng-click="auth.signin()">click to login</a>
+  ```
 
-  > More details about the parameters you can use for the [Auth0 Login Widget](https://docs.auth0.com/login-widget2) and [auth0.js](https://github.com/auth0/auth0.js).
-
-7. Use the `auth.profile` object to show user attributes in the view.
+6. Use the `auth.profile` object to show user attributes in the view.
   ```js
   myApp.controller('RootCtrl', function ($scope, $location, $http, auth) {
     if (!auth.isAuthenticated) {
@@ -120,16 +148,23 @@ Add the following router configuration to the `.config` block.
   </div>
   ```
 
+> More details about the parameters you can use for the [Auth0 Login Widget](https://docs.auth0.com/login-widget2) and [auth0.js](https://github.com/auth0/auth0.js).
+
 ## Server Side Authentication
 
 Now that the user was authenticated on the client side, you want to make sure that every time an API is called, the user attributes are sent in a secure way. The `auth` service that you used before also provides a `token` which is a signed [JSON Web Token](http://tools.ietf.org/html/draft-jones-json-web-token). This token can be sent through an HTTP header and the backedn API can validaate it without any extra roundtrip (since the token has been signed with a secret that is shared between the API and Auth0).
 
-1. Add to you application the `authInterceptor` dependency (it's included in the same auth0-angular.js file).
+1. Add to your application the `authInterceptor` module:
 
   ```js
   var myApp = angular.module('myApp', [
-    'ngCookies', 'ngRoute', 'auth0', 'authInterceptor'
+    'ngCookies', 'auth0', /* or 'auth0-redirect' */ 'authInterceptor'
   ]);
+
+  
+  myApp.config(function ($httpProvider) {
+    $httpProvider.interceptors.push('authInterceptor');
+  });
   ```
 
 2. Use `$http` from your controller in order to make the request.
@@ -144,10 +179,10 @@ Now that the user was authenticated on the client side, you want to make sure th
       });
   ```
 
-  > NOTE: behind the scenes, the `authInterceptor` will add the JSON Web Token to each request. Something like: `config.headers.Authorization = 'Bearer '+ auth.idToken;`
+  > NOTE: behind the scenes, the `authInterceptor` will add the JSON Web Token to each request: `config.headers.Authorization = 'Bearer '+ auth.idToken;`
 
 
-3. If the JSON Web Token (`JWT`) has expired or has been tampered, you can handle that case here:
+3. If the JSON Web Token (`JWT`) has expired or has been tampered, you can handle the case with this event here:
 
     ```js
         $rootScope.$on(AUTH_EVENTS.forbidden, function (event, response) {
@@ -158,13 +193,13 @@ Now that the user was authenticated on the client side, you want to make sure th
     ```
 > Note: the JWT expiration can be controlled from the Auth0 dashboard
 
-On the backed you can use any JWT library to validate the token. Here are some:
+Now, choose your backend. You can use a JWT library to validate the token. Here are some:
 * [ASP.NET Web API](https://docs.auth0.com/aspnetwebapi-tutorial)
 * [Node.js API](https://docs.auth0.com/nodeapi-tutorial)
 * [Ruby API](https://docs.auth0.com/rubyapi-tutorial)
 * [PHP API](https://docs.auth0.com/phpapi-tutorial)
 
----
+> For more information about JWT check [jwt.io](http://jwt.io).
 
 ## Bonus tracks
 
@@ -259,11 +294,30 @@ myApp.run(function ($rootScope, $location) {
   $rootScope.$on('$routeChangeError', function () {
     var otherwise = $route.routes && $route.routes.null && $route.routes.null.redirectTo;
     // Access denied to a route, redirect to otherwise
-    $location.path(otherwise);
+    $timeout(function () {
+      $location.path(otherwise);
+    });
   });
 });
 ```
 
+### Delegation tokens
+You can obtain a token to be used in an application different from the current one:
+```js
+var tokenPromise = auth.getToken(targetClientId, options)
+  .then(function(token) {
+    // Use the token to do a request to that API and add Authorization = 'Bearer ' + token;
+  }, function (err) {
+    // Handle error fetching application token here
+  });
+```
+
+For more information, check the [delegation token](examples/delegation-token) example.
+
+### FAQ
+
+#### I'm setting the `callbackURL` parameter to `https://localhost:3000/#hello` but redirects me to `https://localhost:3000/#access_token=...`. Why?
+On redirect mode, when the provider redirects back to the single page application it should send the authentication result. This is done by setting the hash URL with access_token or error. Currently, we are not supporting customization of that URL.
 
 ### Custom hash URL prefix
 If you are using a custom hash prefix on:
@@ -286,23 +340,6 @@ You will need to add the following code in order to assure that the callback URL
 
 ```
 
-### Getting delegation tokens
-You may want to obtain a token to be used in an application different from the current one:
-```js
-  var tokenPromise = auth.getToken(targetClientId, options)
-    .then(function(token) {
-      // Use the token to do a request to that API and add Authorization = 'Bearer ' + token;
-
-    }, function (err) {
-      // Handle error fetching application token here
-
-    });
-```
-
-### FAQ
-
-#### I'm setting the `callbackURL` parameter to `https://localhost:3000/#hello` but redirects me to `https://localhost:3000/#access_token=...`. Why?
-On redirect mode, when the provider redirects back to the single page application it should send the authentication result. This is done by setting the hash URL with access_token or error. Currently, we are not supporting customization of that URL.
 
 ### Examples
 
