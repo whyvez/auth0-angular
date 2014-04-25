@@ -1,6 +1,6 @@
 define(['angular', 'auth0', 'auth0-angular', 'angular-cookies', 'angular-route'], function (angular, Auth0) {
   var myApp = angular.module('myApp', [
-    'ngCookies', 'ngRoute', 'auth0', 'authInterceptor'
+    'ngCookies', 'auth0', 'ngRoute', 'authInterceptor'
   ]);
 
   var loaded;

@@ -1,6 +1,6 @@
 function executeInConfigBlock(cb, includes) {
   var fakeModule = angular.module('fakeModule', []);
-  var modulesToInclude = (includes ? includes : ['auth0-auth']).concat('fakeModule');
+  var modulesToInclude = (includes ? includes : ['auth0']).concat('fakeModule');
   fakeModule.config(cb);
 
   module.apply(null, modulesToInclude);

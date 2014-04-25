@@ -1,5 +1,5 @@
 var myApp = angular.module('myApp', [
-  'ui.router', 'auth0', 'authInterceptor'
+  'ngCookies', 'auth0', 'ui.router',  'authInterceptor'
 ]);
 
 myApp.run(function ($rootScope, $state, auth, AUTH_EVENTS) {

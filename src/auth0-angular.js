@@ -31,7 +31,7 @@
     return window.atob(output); //polifyll https://github.com/davidchambers/Base64.js
   });
 
-  var auth0 = angular.module('auth0-auth', ['util', 'ngCookies']);
+  var auth0 = angular.module('auth0', ['util', 'ngCookies']);
 
   var AUTH_EVENTS = {
     forbidden:     'auth:FORBIDDEN',
@@ -311,7 +311,7 @@
     };
   });
 
-  auth0.factory('parseHash', function (auth, $rootScope, $window) {
+  var auth0Redirect = angular.module('auth0-redirect', ['auth0']);
     return function () {
       var result = auth.parseHash($window.location.hash);
 
@@ -339,11 +339,9 @@
     };
   });
 
-  var auth0Main = angular.module('auth0', ['auth0-auth']);
+  auth0Redirect.run(function (parseHash) { parseHash(); });
 
-  auth0Main.run(function (parseHash) { parseHash(); });
-
-  var authInterceptorModule = angular.module('authInterceptor', ['auth0-auth']);
+  var authInterceptorModule = angular.module('authInterceptor', ['auth0']);
 
   authInterceptorModule.factory('authInterceptor', function (auth, $rootScope, $q, AUTH_EVENTS) {
     return {

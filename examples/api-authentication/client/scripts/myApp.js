@@ -1,5 +1,5 @@
 var myApp = angular.module('myApp', [
-  'ngCookies', 'ngRoute', 'auth0', 'authInterceptor'
+  'ngCookies', 'auth0', 'ngRoute', 'authInterceptor'
 ]);
 
 angular.module('myApp').constant('API_ENDPOINT', '/api/protected');
