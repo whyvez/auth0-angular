@@ -15,13 +15,14 @@
 </head>
 
 <body>
-  <div ng-app="myApp">
+  <div ng-app="myApp" ng-controller="MsgCtrl">
     <div>
       <a href="" ui-sref="root">main</a>
       <a href="" ui-sref="login">login</a>
       <a href="" ui-sref="logout">logout</a>
     </div>
 
+    <div style="margin-top: 10px;">{{message}}</div>
     <div ui-view>
     </div>
   </div>

@@ -1,26 +1,5 @@
 (function () {
   var util = angular.module('util', []);
-  util.factory('$safeApply', [
-    '$rootScope',
-    '$exceptionHandler',
-    function safeApplyFactory($rootScope, $exceptionHandler) {
-      return function safeApply(scope, expr) {
-        scope = scope || $rootScope;
-        if ([
-            '$apply',
-            '$digest'
-          ].indexOf(scope.$root.$$phase) !== -1) {
-          try {
-            return scope.$eval(expr);
-          } catch (e) {
-            $exceptionHandler(e);
-          }
-        } else {
-          return scope.$apply(expr);
-        }
-      };
-    }
-  ]);
   //this is used to parse the profile
   util.value('urlBase64Decode', function (str) {
     var output = str.replace('-', '+').replace('_', '/');
@@ -42,7 +21,7 @@
     }
     return window.atob(output);  //polifyll https://github.com/davidchambers/Base64.js
   });
-  var auth0 = angular.module('auth0-auth', [
+  var auth0 = angular.module('auth0', [
       'util',
       'ngCookies'
     ]);
@@ -54,15 +33,17 @@
       redirectEnded: 'auth:REDIRECT_ENDED'
     };
   auth0.constant('AUTH_EVENTS', AUTH_EVENTS);
-  function Auth0Wrapper(auth0Lib, $cookieStore, $rootScope, $safeApply, $q, urlBase64Decode) {
+  function Auth0Wrapper(auth0Lib, $cookieStore, $rootScope, $q, urlBase64Decode, $timeout) {
     this.auth0Lib = auth0Lib;
     this.$cookieStore = $cookieStore;
     this.$rootScope = $rootScope;
-    this.$safeApply = $safeApply;
     this.$q = $q;
+    this.$timeout = $timeout;
     this.urlBase64Decode = urlBase64Decode;
     this.delegatedTokens = {};
     this.profile = {};
+    this._loaded = $q.defer();
+    this.loaded = this._loaded.promise;
   }
   Auth0Wrapper.prototype = {};
   Auth0Wrapper.prototype.parseHash = function (locationHash, callback) {
@@ -152,46 +133,52 @@
     if (!obj.getDelegationToken) {
       obj = obj.getClient();
     }
-    obj.getDelegationToken(clientID, this.idToken, options, this._wrapCallback(function (err, delegationResult) {
-      if (err) {
-        return deferred.reject(err);
-      }
-      that.delegatedTokens[clientID] = delegationResult.id_token;
-      return deferred.resolve(delegationResult.id_token);
-    }));
+    obj.getDelegationToken(clientID, this.idToken, options, function (err, delegationResult) {
+      that.$timeout(function () {
+        if (err) {
+          return deferred.reject(err);
+        }
+        that.delegatedTokens[clientID] = delegationResult.id_token;
+        return deferred.resolve(delegationResult.id_token);
+      });
+    });
     return deferred.promise;
   };
   Auth0Wrapper.prototype.signin = function (options) {
     options = options || {};
+    var that = this;
+    var $q = that.$q;
+    var defer = $q.defer();
     var callback = function (err, profile, id_token, access_token, state) {
-      if (err) {
-        that.$rootScope.$broadcast(AUTH_EVENTS.loginFailed, err);
-        return;
-      }
-      that._serialize(id_token, access_token, state);
-      that._deserialize();
-      that.getProfile(id_token).then(function () {
-        that.$rootScope.$broadcast(AUTH_EVENTS.loginSuccess, that.profile);
+      that.$timeout(function () {
+        if (err) {
+          that.$rootScope.$broadcast(AUTH_EVENTS.loginFailed, err);
+          defer.reject(err);
+          return;
+        }
+        that._serialize(id_token, access_token, state);
+        that._deserialize();
+        that.getProfile(id_token).then(function () {
+          that.$rootScope.$broadcast(AUTH_EVENTS.loginSuccess, that.profile);
+          defer.resolve(that.profile);
+        }, function (err) {
+          that.$rootScope.$broadcast(AUTH_EVENTS.loginFailed, err);
+          defer.reject(err);
+        });
       });
     };
-    var that = this;
     // In Auth0 widget the callback to signin is executed when the widget ends
     // loading. In that case, we should not broadcast any event.
     if (typeof Auth0Widget !== 'undefined' && that.auth0Lib instanceof Auth0Widget) {
       callback = null;
     }
     that.auth0Lib.signin(options, callback);
+    return defer.promise;
   };
   Auth0Wrapper.prototype.signout = function () {
     this._serialize(undefined, undefined, undefined);
     this._deserialize();
     this.$rootScope.$broadcast(AUTH_EVENTS.logout);
-  };
-  Auth0Wrapper.prototype._wrapCallback = function (callback) {
-    var that = this;
-    return function () {
-      return that.$safeApply(undefined, callback.apply(null, arguments));
-    };
   };
   Auth0Wrapper.prototype.parseHash = function (locationHash) {
     return this.auth0Lib.parseHash(locationHash);
@@ -199,7 +186,8 @@
   Auth0Wrapper.prototype.getProfile = function (token) {
     var deferred = this.$q.defer();
     var that = this;
-    var wrappedCallback = this._wrapCallback(function (err, profile) {
+    var wrappedCallback = function (err, profile) {
+      that.$timeout(function () {
         if (err) {
           return deferred.reject(err);
         }
@@ -213,6 +201,7 @@
         });
         deferred.resolve(that.profile);
       });
+    };
     this.auth0Lib.getProfile(token, wrappedCallback);
     return deferred.promise;
   };
@@ -248,7 +237,7 @@
           } else if (typeof Auth0 !== 'undefined') {
             auth0Lib = new Auth0(options);
           } else {
-            throw new Error('You need to add Auth0Widget or Auth0.js dependency');
+            throw new Error('Auth0Widget or Auth0.js dependency not found');
           }
         }
         $provide.value('auth0Lib', auth0Lib);
@@ -256,68 +245,88 @@
       this.$get = [
         '$cookieStore',
         '$rootScope',
-        '$safeApply',
         '$q',
         '$injector',
         'urlBase64Decode',
-        function ($cookieStore, $rootScope, $safeApply, $q, $injector, urlBase64Decode) {
+        '$timeout',
+        function ($cookieStore, $rootScope, $q, $injector, urlBase64Decode, $timeout) {
           // We inject auth0Lib manually in order to throw a friendly error
           var auth0Lib = $injector.get('auth0Lib');
           if (!auth0Lib) {
-            throw new Error('You need to add Auth0Widget or Auth0.js dependency');
+            throw new Error('auth0Lib dependency not found. Have you called authProvider.init?');
           }
           if (!auth0Wrapper) {
-            auth0Wrapper = new Auth0Wrapper(auth0Lib, $cookieStore, $rootScope, $safeApply, $q, urlBase64Decode);
+            auth0Wrapper = new Auth0Wrapper(auth0Lib, $cookieStore, $rootScope, $q, urlBase64Decode, $timeout);
+            if (!$injector.has('parseHash')) {
+              auth0Wrapper._deserialize();
+              auth0Wrapper.getProfile(auth0Wrapper.idToken).finally(function () {
+                auth0Wrapper._loaded.resolve();
+                $rootScope.$broadcast(AUTH_EVENTS.redirectEnded);
+              });
+            }
           }
           return auth0Wrapper;
         }
       ];
     }
   ]);
-  auth0.factory('parseHash', [
+  var auth0Redirect = angular.module('auth0-redirect', ['auth0']);
+  auth0Redirect.factory('parseHash', [
     'auth',
     '$rootScope',
     '$window',
     function (auth, $rootScope, $window) {
       return function () {
         var result = auth.parseHash($window.location.hash);
-        if (result && result.id_token) {
-          // this is only used when using redirect mode
-          auth.getProfile(result.id_token).then(function () {
-            auth._serialize(result.id_token, result.access_token, result.state);
-            // this will rehydrate the "auth" object with the profile stored in $cookieStore
-            auth._deserialize();
-            $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, auth.profile);
-          }, function (err) {
-            // this will rehydrate the "auth" object with the profile stored in $cookieStore
-            auth._deserialize();
-            $rootScope.$broadcast(AUTH_EVENTS.loginFailed, err);
-          });
-        } else {
+        function onAuthSuccess() {
+          auth._serialize(result.id_token, result.access_token, result.state);
+          // this will rehydrate the "auth" object with the profile stored in $cookieStore
           auth._deserialize();
-          auth.getProfile(auth.idToken).finally(function () {
-            $rootScope.$broadcast(AUTH_EVENTS.redirectEnded);
-          });
+          $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, auth.profile);
+        }
+        function onAuthFail(err) {
+          // this will rehydrate the "auth" object with the profile stored in $cookieStore
+          auth._deserialize();
+          $rootScope.$broadcast(AUTH_EVENTS.loginFailed, err);
+        }
+        function onRedirectEnded() {
+          auth._loaded.resolve();
+          $rootScope.$broadcast(AUTH_EVENTS.redirectEnded);
+        }
+        // this will rehydrate the "auth" object with the profile stored in $cookieStore
+        auth._deserialize();
+        // already logged in
+        if (auth.idToken) {
+          auth.getProfile(auth.idToken).then(onAuthSuccess, onAuthFail).finally(onRedirectEnded);  // callback URL
+        } else if (result && result.id_token) {
+          auth.getProfile(result.id_token).then(onAuthSuccess, onAuthFail).finally(onRedirectEnded);  // page reloaded, not logged in
+        } else {
+          onRedirectEnded();
         }
       };
     }
   ]);
-  var auth0Main = angular.module('auth0', ['auth0-auth']);
-  auth0Main.run([
+  auth0Redirect.run([
     'parseHash',
     function (parseHash) {
       parseHash();
     }
   ]);
-  var authInterceptorModule = angular.module('authInterceptor', ['auth0-auth']);
+  var authInterceptorModule = angular.module('authInterceptor', ['auth0']);
   authInterceptorModule.factory('authInterceptor', [
-    'auth',
     '$rootScope',
     '$q',
     'AUTH_EVENTS',
-    function (auth, $rootScope, $q, AUTH_EVENTS) {
+    '$injector',
+    function ($rootScope, $q, AUTH_EVENTS, $injector) {
       return {
         request: function (config) {
+          // When using auth dependency is never loading, we need to do this manually
+          // This issue should be related with: https://github.com/angular/angular.js/issues/2367
+          if (!$injector.has('auth')) {
+            return config;
+          }
+          var auth = $injector.get('auth');
           config.headers = config.headers || {};
           if (auth.idToken) {
             config.headers.Authorization = 'Bearer ' + auth.idToken;

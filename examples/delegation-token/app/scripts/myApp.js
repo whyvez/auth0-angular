@@ -2,41 +2,20 @@ var myApp = angular.module('myApp', [
   'ngCookies', 'auth0', 'ngRoute', 'authInterceptor'
 ]);
 
-var loaded;
-
-myApp.run(function ($rootScope, $location, $route, AUTH_EVENTS, $q) {
-  // We will resolve this promise when page has reloaded: When login was successful,
-  // when failed or when there was no callback redirect.
-  var defer = $q.defer();
-  loaded = defer.promise;
-
+myApp.run(function ($rootScope, $location, $route, AUTH_EVENTS, $timeout) {
   $rootScope.$on('$routeChangeError', function () {
     var otherwise = $route.routes && $route.routes.null && $route.routes.null.redirectTo;
     // Access denied to a route, redirect to otherwise
-    $location.path(otherwise);
-  });
-
-  $rootScope.$on(AUTH_EVENTS.loginSuccess, function () {
-    // TODO Handle when login succeeds
-    $location.path('/');
-    defer.resolve();
-  });
-  $rootScope.$on(AUTH_EVENTS.loginFailed, function () {
-    // TODO Handle when login fails
-    window.alert('login failed');
-    defer.resolve();
-  });
-  $rootScope.$on(AUTH_EVENTS.redirectEnded, function () {
-    // TODO Handle when there was no callback redirect: Neither login success nor login failed,
-    // a simple page reload.
-    defer.resolve();
+    $timeout(function () {
+      $location.path(otherwise);
+    });
   });
 });
 
 function isAuthenticated($q, auth) {
   var deferred = $q.defer();
 
-  loaded.then(function () {
+  auth.loaded.then(function () {
     if (auth.isAuthenticated) {
       deferred.resolve();
     } else {
@@ -46,15 +25,16 @@ function isAuthenticated($q, auth) {
   return deferred.promise;
 }
 
-myApp.factory('customInterceptor', function (auth, $rootScope, $q) {
+myApp.factory('customInterceptor', function ($injector, $rootScope, $q) {
   return {
     request: function (config) {
+      var auth = $injector.get('auth');
       var targetClientId = 'vYPeq7LGf1utg2dbDlGKCwGKgy94lPH0'; // Another App
       var options = { scope: 'openid' };
       config.headers = config.headers || {};
 
       // Is this request for the secondary app?
-      if (config.url.indexOf('http://localhost:31337') === 0) {
+      if (config.url.indexOf('http://localhost:33000') === 0) {
         // Then fetch the secondary app token
         var tokenPromise = auth.getToken(targetClientId, options)
           .then(function(token) {

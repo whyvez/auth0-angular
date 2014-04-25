@@ -16,13 +16,14 @@
 
 <body>
   <div ng-app="myApp">
-    <div ng-controller="MenuCtrl">
+    <div ng-controller="MenuCtrl" ng-controller="MsgCtrl">
       <a href="" ng-controller="LoginCtrl" ng-click="auth.signin()">click to login</a>
       <br />
       <a href="" ng-click="go('/')">main</a>
       <a href="" ng-click="go('/logout')">logout</a>
     </div>
 
+    <div style="margin-top: 10px;">{{message}}</div>
     <div ng-view>
     </div>
   </div>

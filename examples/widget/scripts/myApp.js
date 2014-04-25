@@ -2,40 +2,30 @@ var myApp = angular.module('myApp', [
   'ngCookies', 'auth0-redirect', 'ngRoute', 'authInterceptor'
 ]);
 
-var loaded;
-
-myApp.run(function ($rootScope, $location, $route, AUTH_EVENTS, $q) {
-  // We will resolve this promise when page has reloaded: When login was successful,
-  // when failed or when there was no callback redirect.
-  var defer = $q.defer();
-  loaded = defer.promise;
-
+myApp.run(function ($rootScope, $location, $route, AUTH_EVENTS, $timeout, parseHash) {
   $rootScope.$on('$routeChangeError', function () {
     var otherwise = $route.routes && $route.routes.null && $route.routes.null.redirectTo;
     // Access denied to a route, redirect to otherwise
-    $location.path(otherwise);
+    $timeout(function () {
+      $location.path(otherwise);
+    });
   });
 
   $rootScope.$on(AUTH_EVENTS.loginSuccess, function () {
     // TODO Handle when login succeeds
     $location.path('/');
-    defer.resolve();
   });
   $rootScope.$on(AUTH_EVENTS.loginFailed, function () {
     // TODO Handle when login fails
     window.alert('login failed');
-    defer.resolve();
   });
-  $rootScope.$on(AUTH_EVENTS.redirectEnded, function () {
-    // TODO Handle when there was no callback redirect: Neither login success nor login failed,
-    // a simple page reload.
-    defer.resolve();
-  });
+
+  parseHash();
 });
 
 function isAuthenticated($q, auth) {
   var deferred = $q.defer();
-  loaded.then(function () {
+  auth.loaded.then(function () {
     if (auth.isAuthenticated) {
       deferred.resolve();
     } else {

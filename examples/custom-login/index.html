@@ -15,15 +15,17 @@
 </head>
 
 <body>
-  <div ng-app="myApp">
+  <div ng-app="myApp" ng-controller="MsgCtrl">
     <div ng-controller="MenuCtrl">
       <a href="" ng-click="go('/')">main</a>
       <a href="" ng-click="go('/login')">login</a>
       <a href="" ng-click="go('/logout')">logout</a>
     </div>
 
+    <div style="margin-top: 10px;">{{message}}</div>
     <div ng-view>
     </div>
+    
   </div>
 
 </body>

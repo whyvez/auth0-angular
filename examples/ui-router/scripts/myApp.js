@@ -2,38 +2,18 @@ var myApp = angular.module('myApp', [
   'ngCookies', 'auth0', 'ui.router',  'authInterceptor'
 ]);
 
-myApp.run(function ($rootScope, $state, auth, AUTH_EVENTS) {
-  $rootScope.$on(AUTH_EVENTS.loginSuccess, function () {
-    // TODO Handle when login succeeds
-    $state.go('root');
-  });
+function isAuthenticated($q, auth) {
+  var deferred = $q.defer();
 
-  $rootScope.$on(AUTH_EVENTS.loginFailed, function () {
-    // TODO Handle when login fails
-    window.alert('login failed');
-    $state.go('logout');
-  });
-
-  $rootScope.$on('$stateChangeStart', function(e, to) {
-    if ( !to || !to.data || !angular.isFunction(to.data.rule)) {
-      return;
+  auth.loaded.then(function () {
+    if (auth.isAuthenticated) {
+      deferred.resolve();
+    } else {
+      deferred.reject();
     }
-    var result = to.data.rule(auth);
-
-    if (!result) {
-      e.preventDefault();
-
-      // Optionally set option.notify to false if you don't want 
-      // to retrigger another $stateChangeStart event
-      $state.go('login', {});
-      return;
-    }
-
-    $state.go(to, {}, {notify: false});
   });
-});
-
-function isAuthenticated(auth) { return auth.isAuthenticated; }
+  return deferred.promise;
+}
 
 myApp.config(function($stateProvider, $urlRouterProvider, $httpProvider, authProvider) {
 
@@ -56,7 +36,7 @@ myApp.config(function($stateProvider, $urlRouterProvider, $httpProvider, authPro
     url: '/',
     templateUrl: 'views/root.html',
     controller: 'RootCtrl',
-    data: { rule: isAuthenticated }
+    resolve: { isAuthenticated: isAuthenticated }
   });
 
   authProvider.init({

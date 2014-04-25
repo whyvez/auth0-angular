@@ -46,7 +46,9 @@ describe('Auth0 Angular', function () {
 
     it('should allow passing a different constructor', function () {
 
-      var MyAuth0Constructor = function () { };
+      var MyAuth0Constructor = function () {
+        this.getProfile = function () {};
+      };
       executeInConfigBlock(function (authProvider) {
         authProvider.init({
           domain: 'my-domain.auth0.com',
@@ -63,29 +65,27 @@ describe('Auth0 Angular', function () {
   });
 
   describe('auth.profile and getProfile', function () {
-    var auth, $rootScope;
+    var auth, $rootScope, $timeout;
 
     beforeEach(initAuth0);
     beforeEach(module(function ($provide) {
       var getProfile = sinon.stub();
       getProfile.onCall(0).callsArgWith(1, null, {foo: 'bar', one: {two: {three: 'baz'}}});
+      getProfile.onCall(1).callsArgWith(1, null, {foo: 'bar', one: {two: {three: 'baz'}}});
 
       $provide.value('auth0Lib', {getProfile: getProfile});
     }));
-    beforeEach(inject(function (_auth_, _$rootScope_) {
+    beforeEach(inject(function (_auth_, _$rootScope_, _$timeout_) {
       auth = _auth_;
       $rootScope = _$rootScope_;
+      $timeout = _$timeout_;
     }));
 
     it('auth.profile should never be null or undefined', function () {
       expect(auth.profile).to.be.ok;
-
-      // Profile has not been loaded yet
-      expect(auth.profile.foo).not.to.be.equal('bar');
     });
     it('auth.profile and getProfile should return the same reference', function (done) {
       expect(auth.profile).to.be.ok;
-      expect(auth.profile.foo).not.to.be.equal('bar');
 
       auth.getProfile('id-token').then(function (newProfile) {
         expect(auth.profile).to.be.equal(newProfile);
@@ -93,7 +93,7 @@ describe('Auth0 Angular', function () {
         expect(auth.profile.one.two.three).to.be.equal('baz');
       })
       .then(done);
-      $rootScope.$apply();
+      $timeout.flush();
     });
     it('all auth.profile fields should be cleaned on getProfile', function (done) {
       auth.profile.hello = 'yes';
@@ -103,7 +103,7 @@ describe('Auth0 Angular', function () {
         expect(auth.profile.one.two.three).to.be.equal('baz');
       })
       .then(done);
-      $rootScope.$apply();
+      $timeout.flush();
     });
   });
 
@@ -141,7 +141,7 @@ describe('Auth0 Angular', function () {
   });
 
   describe('Token store', function () {
-    var auth, $rootScope, getDelegationToken, hasTokenExpiredOriginal;
+    var auth, $rootScope, $timeout, getDelegationToken, hasTokenExpiredOriginal;
 
     beforeEach(initAuth0);
     beforeEach(module(function ($provide) {
@@ -154,12 +154,16 @@ describe('Auth0 Angular', function () {
       getDelegationToken = sinon.stub();
       getDelegationToken.onCall(0).callsArgWith(3, null, {id_token: token});
 
-      $provide.value('auth0Lib', {getDelegationToken: getDelegationToken });
+      $provide.value('auth0Lib', {
+        getDelegationToken: getDelegationToken,
+        getProfile: function () {}
+      });
     }));
 
-    beforeEach(inject(function (_auth_, _$rootScope_) {
+    beforeEach(inject(function (_auth_, _$rootScope_, _$timeout_) {
       auth = _auth_;
       $rootScope = _$rootScope_;
+      $timeout = _$timeout_;
       hasTokenExpiredOriginal = auth.hasTokenExpired;
     }));
 
@@ -173,8 +177,9 @@ describe('Auth0 Angular', function () {
       })
       .then(done);
 
-      // Flush the promise!
+      // Flush the promise and timeout!
       $rootScope.$apply();
+      $timeout.flush();
     });
 
     it('should retrieve the token from the cache when already loaded', function (done) {
@@ -197,8 +202,9 @@ describe('Auth0 Angular', function () {
       })
       .then(done);
 
-      // Flush the promise!
+      // Flush the promise and timeout!
       $rootScope.$apply();
+      $timeout.flush();
 
     });
 
@@ -222,8 +228,9 @@ describe('Auth0 Angular', function () {
       })
       .then(done);
 
-      // Flush the promise!
+      // Flush the promise and timeout!
       $rootScope.$apply();
+      $timeout.flush();
     });
 
     it('should refresh the token when it has expired', function (done) {
@@ -246,8 +253,9 @@ describe('Auth0 Angular', function () {
       })
       .then(done);
 
-      // Flush the promise!
+      // Flush the promise and timeout!
       $rootScope.$apply();
+      $timeout.flush();
     });
 
     it('should call reject when token fetch failed', function (done) {
@@ -260,8 +268,9 @@ describe('Auth0 Angular', function () {
       })
       .then(done);
 
-      // Flush the promise!
+      // Flush the promise and timeout!
       $rootScope.$apply();
+      $timeout.flush();
     });
   });
 

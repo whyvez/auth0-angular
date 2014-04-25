@@ -1,6 +1,24 @@
+# 0.3.x
+
+## 0.3.0
+
+  * The default way of showing social connections is by using popup. If you want to use redirect mode, you may want to check the new redirect example.
+  * Renamed module `auth0-auth` to be `auth0`. Old `auth0` module is called now `auth0-redirect`.
+  * The `auth.loaded` promise, which allows the user to tell whether or not the page has loaded, was added
+  * `AUTH_EVENTS.redirectEnded` now is fired always (even after `AUTH_EVENTS.loginSuccess` and `AUTH_EVENTS.loginFailed`).
+  * Now `auth.signin` method returns a promise:
+    ```js
+      auth.signin({connection: 'my-connection'}).then(function () {
+        // When user is authenticated
+      }, function () {
+        // On invalid credentials
+      });
+    ```
+  * Replaced $safeApply with $timeout.
+
 # 0.2.x
 
-# 0.2.0
+## 0.2.0
 
  * There is only one instance of `auth.profile`. When doing `getProfile` the promise returns `auth.profile` not a new instance.
  * `auth.profile` by default starts as an empty object that will be later populated when the `getProfile` promise is resolved.
