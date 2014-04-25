@@ -320,7 +320,9 @@
       var result = auth.parseHash($window.location.hash);
 
       function onAuthSuccess () {
-        auth._serialize(result.id_token, result.access_token, result.state);
+        if (result && result.id_token) {
+          auth._serialize(result.id_token, result.access_token, result.state);
+        }
         // this will rehydrate the "auth" object with the profile stored in $cookieStore
         auth._deserialize();
 

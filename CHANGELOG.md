@@ -1,5 +1,9 @@
 # 0.3.x
 
+## 0.3.1
+
+  * Fixed redirect mode: fixing exception when reloading a page after authentication.
+
 ## 0.3.0
 
   * The default way of showing social connections is by using popup. If you want to use redirect mode, you may want to check the new redirect example.
