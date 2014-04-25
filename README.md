@@ -356,8 +356,6 @@ Advanced scenarios:
  * [RequireJS](examples/requirejs): An example of how to integrate auth0-angular with RequireJS.
 
 
-![](https://dl.dropboxusercontent.com/u/21665105/angular.gif)
-
 ---
 
 ## Tests
