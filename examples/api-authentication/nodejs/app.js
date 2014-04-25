@@ -20,5 +20,5 @@ app.get('/api/protected', function (req, res) {
   res.send(200, 'This API Rocks! - Hi ' + req.user.name );
 });
 
-app.listen(1337);
-console.log('listening on port http://localhost:1337');
+app.listen(3000);
+console.log('listening on port http://localhost:3000');

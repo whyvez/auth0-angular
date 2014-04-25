@@ -42,5 +42,5 @@ app.use('/custom-signup', function (req, res) {
   });
 });
 
-app.listen(1337);
-console.log('listening on port http://localhost:1337');
+app.listen(3000);
+console.log('listening on port http://localhost:3000');

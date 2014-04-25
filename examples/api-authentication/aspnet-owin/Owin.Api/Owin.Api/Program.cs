@@ -13,8 +13,8 @@ namespace Owin.Api
         static void Main(string[] args)
         {
             // Start OWIN host 
-            var server = WebApp.Start<Startup>(url: "http://localhost:1337/");
-            Console.WriteLine("Web API listening at http://localhost:1337/");
+            var server = WebApp.Start<Startup>(url: "http://localhost:3000/");
+            Console.WriteLine("Web API listening at http://localhost:3000/");
             Console.WriteLine("Press ENTER to terminate");
             Console.ReadLine(); 
         }

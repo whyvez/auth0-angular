@@ -24,8 +24,8 @@ app.get('/api/protected', function (req, res) {
   res.send(200, 'This API Rocks!');
 });
 
-app.listen(1337);
-console.log('Main application listening on port http://localhost:1337');
+app.listen(3000);
+console.log('Main application listening on port http://localhost:3000');
 
 var SECONDARY_APP_SECRET    = 'DLQ5dWkNMwPlUWo2jqVkbG1PFyeMvV60HEJaW0FioeI4ZxGaAW73BiqRBZmRk29v';
 var SECONDARY_APP_AUDIENCE  = 'vYPeq7LGf1utg2dbDlGKCwGKgy94lPH0'; // Another App
@@ -44,5 +44,5 @@ secondaryApp.get('/api/protected', function (req, res) {
   res.send(200, 'This API Rocks!');
 });
 
-secondaryApp.listen(31337);
-console.log('Secondary application listening on port http://localhost:31337');
+secondaryApp.listen(33000);
+console.log('Secondary application listening on port http://localhost:33000');

@@ -47,15 +47,15 @@ Update composer
 
 ### 4. Configure Angular
 
-In order to use the *Auth0 audience and secret* provided in the example, the Angular app must be hosted in [http://localhost:1337](http://localhost:1337), thus making `http://localhost:1337/callback` a valid callback. The *Laravel API* is hosted by apache, probably in a different server/port, for example we use a VM with an ubuntu server.
+In order to use the *Auth0 audience and secret* provided in the example, the Angular app must be hosted in [http://localhost:3000](http://localhost:3000), thus making `http://localhost:3000/callback` a valid callback. The *Laravel API* is hosted by apache, probably in a different server/port, for example we use a VM with an ubuntu server.
 
 To connect the client to the backend, we need to configure the angular application. On your localhost, go to the path where you have your `/path-to-gitclone/auth0-angular/examples/api-authentication/client` and edit `myApp.js` pointing to your Apache Web Server
 
     angular.module('myApp').constant('API_ENDPOINT', 'http://172.16.210.131/api/protected');
 
-Then we need to serve the static files on port *1337*. If you have python installed, you can run
+Then we need to serve the static files on port *3000*. If you have python installed, you can run
 
-    python  -m SimpleHTTPServer 1337
+    python  -m SimpleHTTPServer 3000
 
 If not, you can serve them using the node example
 
@@ -64,7 +64,7 @@ If not, you can serve them using the node example
     node app.js
 
 ### 5. Try it
-Go to [http://localhost:1337](http://localhost:1337), log in using a google account, and click on *call a secure API*
+Go to [http://localhost:3000](http://localhost:3000), log in using a google account, and click on *call a secure API*
 
 ## Things to notice
 

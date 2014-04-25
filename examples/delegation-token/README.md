@@ -11,5 +11,5 @@ After doing that, start the server by doing:
 node server.js
 ```
 
-Open your browser at [http://localhost:1337/](http://localhost:1337).
+Open your browser at [http://localhost:3000/](http://localhost:3000).
 

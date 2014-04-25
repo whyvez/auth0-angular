@@ -13,4 +13,4 @@ After doing that, start the server by doing:
 node app.js
 ```
 
-and point your browser to [http://localhost:1337/](http://localhost:1337).
+and point your browser to [http://localhost:3000/](http://localhost:3000).
