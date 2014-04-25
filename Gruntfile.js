@@ -123,7 +123,17 @@ module.exports = function (grunt) {
 
     protractor: {
       local: {
-        configFile: 'scenario/protractor.conf.js'
+        configFile: 'scenario/protractor.conf.js',
+        args: {
+          params: {
+            credentials: {
+              google: {
+                user: process.env.GOOGLE_USER,
+                pass: process.env.GOOGLE_PASSWORD
+              }
+            }
+          }
+        }
       }
     },
 

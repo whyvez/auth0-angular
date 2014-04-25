@@ -23,9 +23,19 @@ exports.config = {
 
   jasmineNodeOpts: {
     showColors: true,
-    defaultTimeoutInterval: 120000,
+    defaultTimeoutInterval: 8000,
     isVerbose: false,
     includeStackTrace: true
+  },
+
+  params: {
+    credentials: {
+      google: {
+        user: process.env.GOOGLE_USER,
+        pass: process.env.GOOGLE_PASSWORD
+      }
+    }
   }
+
 };
 
