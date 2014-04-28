@@ -4,8 +4,8 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
 
 1.  Add the following files: [Auth0 Angular module](src/auth0-angular.js) and [Javascript SDK](https://github.com/auth0/auth0.js):
     ```html
-    <script src="https://cdn.auth0.com/w2/auth0-angular-0.3.js"> </script>
     <script src="//cdn.auth0.com/w2/auth0-2.0.js"></script>
+    <script src="https://cdn.auth0.com/w2/auth0-angular-0.3.js"> </script>
     ```
 
 2. Configure routes for the Authentication flow:
@@ -46,16 +46,18 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
 4. Inject the `auth` service in your controllers and call the `signin`/`signout` methods.
   ```js
   myApp.controller('LogoutCtrl', function ($scope, auth) {
-    auth.signout();
-    $location.path('/login');
   });
   ```
 
-  `auth.signin` returns a promise:
+  Note that `auth.signin` returns a promise:
   ```js
   myApp.controller('LoginCtrl', function ($scope, auth) {
-    auth.signin()
-      .then(function () {
+    $scope.user = '';
+    $scope.pass = '';
+
+    $scope.login = function () {
+    auth.signin({ username: $scope.user, password: $scope.pass, connection: 'my-connection', popup: true })
+    .then(function () {
         // User logged in successfully
         $location.path('/');
       }, function (err) {
@@ -63,7 +65,25 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
         window.alert('Oops, invalid credentials');
         $location.path('/login');
       });
+    };
+    $scope.logout = function () {
+      auth.signout();
+      $location.path('/login');
+    };
   });
+  ```
+
+  Bind the controller to a partial:
+
+  ```html
+    <div ng-controller="LoginCtrl">
+      <a href="" ng-click="logout()">logout</a>
+      <form ng-submit="login()">
+        <input type="text" name="user" ng-model="user" />
+        <input type="password" name="pass" ng-model="pass" />
+        <button type="submit" >submit</button>
+    </form>
+  </div>
   ```
 
 6. Use the `auth.profile` object to show user attributes in the view.

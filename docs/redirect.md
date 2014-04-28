@@ -1,10 +1,10 @@
-# Getting Started: Widget
+# Getting Started: Redirect Mode
 
 For this tutorial, you need to create a new account in [Auth0](https://www.auth0.com) and setup a new application. We will then implement client side and server side auth.
 
-1.  Add the following files: [Login Widget](https://docs.auth0.com/login-widget2) and [Auth0 Angular module](src/auth0-angular.js):
+1.  Add the following files: [Auth0 Angular module](src/auth0-angular.js) and [Auth0 Angular module](src/auth0-angular.js):
     ```html
-    <script src="//cdn.auth0.com/w2/auth0-widget-3.0.js" type="text/javascript"> </script>
+    <script src="//cdn.auth0.com/w2/auth0-2.0.js"></script>
     <script src="https://cdn.auth0.com/w2/auth0-angular-0.3.js"> </script>
     ```
 
@@ -46,9 +46,19 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
 
 4. Inject the `auth` service in your controllers and call the `signin`/`signout` methods.
   ```js
-  myApp.controller('LogoutCtrl', function ($scope, auth) {
-    auth.signout();
-    $location.path('/login');
+  myApp.controller('LoginCtrl', function ($scope, auth) {
+    $scope.user = '';
+    $scope.pass = '';
+
+
+    $scope.logout = function () {
+      auth.signout();
+      $location.path('/login');
+    };
+
+    $scope.login = function () {
+      auth.signin({ connection: 'my-social-connection' });
+    };
   });
   ```
 
@@ -65,14 +75,12 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
       });
     });
     ```
-  ```js
-  myApp.controller('LoginCtrl', function (auth, $scope) {
-    $scope.auth = auth;
-  });
-  ```
   ```html
-  <!-- Include this on your index.html -->
-  <a href="" ng-controller="LoginCtrl" ng-click="auth.signin()">click to login</a>
+  <!-- Include on your view -->
+  <div ng-controller="LoginCtrl">
+    <a href="" ng-click="auth.login()">click to login</a>
+    <a href="" ng-click="auth.logout()">click to logout</a>
+  </div>
   ```
 
 6. Use the `auth.profile` object to show user attributes in the view.
@@ -98,8 +106,6 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
     <span>Welcome {{user.name}}!</span>
   </div>
   ```
-
-> More details about the parameters you can use for the [Auth0 Login Widget](https://docs.auth0.com/login-widget2) and [auth0.js](https://github.com/auth0/auth0.js).
 
 After that, you may want to send requests to your server side. That can be found in the [Server Side Authentication section](backend.md).
 
