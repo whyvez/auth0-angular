@@ -4,6 +4,7 @@ This AngularJS module will help you implement client-side and server-side (API) 
 
 [Auth0](https://www.auth0.com) is a cloud service that provides a turn-key solution for authentication, authorization and Single Sign On.
 
+
 ## Client Side Authentication
 
 There are two ways of implementing signin/singup. One is using our [JavaScript SDK](https://github.com/auth0/auth0.js) which is just a wrapper to our API so you can build your UI on top or the other one is using [Login Widget](https://docs.auth0.com/login-widget2), which is a complete Login UI ready. You can check the following getting started guides:
@@ -12,6 +13,8 @@ There are two ways of implementing signin/singup. One is using our [JavaScript S
  * [Getting Started: Login Widget](docs/widget.md)
  * [Getting Started: Redirect Mode](docs/redirect.md)
 
+Also, we have an [examples](examples) section that contains comprehensive scenarios.
+
 ## Documentation
  * [Consuming a REST API](docs/backend.md)
  * [Advanced Routing Scenarios](docs/routing.md)
@@ -19,21 +22,6 @@ There are two ways of implementing signin/singup. One is using our [JavaScript S
 
 ### Development 
  * [How to run auth0-angular tests](docs/testing.md)
-
-
-### Examples
-
-The following [examples](examples) offer a good starting point for including Auth0 in your AngularJS application:
-
- * [Custom Login](examples/custom-login): Custom login form that uses Auth0 to authenticate.
- * [Custom Signup](examples/custom-signup): Custom signup plus extra fields added to the user profile on creation.
- * [Widget](examples/widget): A simple angular app doing auth with social and username/password using the Login Widget.
- * [API Authentication](examples/api-authentication): Call your protected API in the technology you want (Java, .NET, [Node.js](examples/api-authentication/nodejs) using Auth0 generated tokens.
-
-Advanced scenarios:
- * [UI Router](examples/ui-router): A full featured example of ui-router with auth0-angular.
- * [Delegation Token](examples/delegation-token): Call two different APIs (with different client ids) from a single Angular App.
- * [RequireJS](examples/requirejs): An example of how to integrate auth0-angular with RequireJS.
 
 
 ## What is Auth0?
