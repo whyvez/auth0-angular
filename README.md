@@ -1,6 +1,8 @@
 # Auth0 and AngularJS
 
-[Auth0](https://www.auth0.com) is a cloud service that provides a turn-key solution for authentication, authorization and Single Sign On. This [AngularJS](https://angularjs.org/‎) module will help you implement client-side and server-side (API) authentication. You can use it to:
+[Auth0](https://www.auth0.com) is a cloud service that provides a turn-key solution for authentication, authorization and Single Sign On. This [AngularJS](https://angularjs.org/‎) module will help you implement client-side and server-side (API) authentication.
+
+You can use it to:
 
 * Authenticate with [multiple identity providers](https://docs.auth0.com/identityproviders) like **Google**, **Facebook**, **Twitter**, **LinkedIn**, **Microsoft Account**,  **GitHub**,  **Box**, **Salesforce**, among others; or enterprise identity systems like **Windows Azure AD**, **Google Apps**, **Active Directory**, **ADFS** or any **SAML Identity Provider**.
 * Authenticate through more traditional **[username/password databases](https://docs.auth0.com/mysql-connection-tutorial)**.
