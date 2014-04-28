@@ -1,3 +1,5 @@
+# Javascript SDK
+
 For this tutorial, you need to create a new account in [Auth0](https://www.auth0.com) and setup a new application. We will then implement client side and server side auth.
 
 1.  Add the following files: [Auth0 Angular module](src/auth0-angular.js) and [Javascript SDK](https://github.com/auth0/auth0.js):
