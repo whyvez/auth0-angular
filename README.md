@@ -10,7 +10,15 @@ There are two ways of implementing signin/singup. One is using our [JavaScript S
 
  * [Getting Started: Javascript SDK](docs/jssdk.md)
  * [Getting Started: Login Widget](docs/widget.md)
+ * [Getting Started: Redirect Mode](docs/redirect.md)
 
+## Documentation
+ * [Consuming a REST API](docs/backend.md)
+ * [Advanced Routing Scenarios](docs/routing.md)
+ * [FAQ](docs/faq.md)
+
+### Development 
+ * [How to run auth0-angular tests](docs/testing.md)
 
 
 ### Examples
