@@ -1,10 +1,10 @@
 # Auth0 and AngularJS
 
-[Auth0](https://www.auth0.com) is a cloud service that provides a turn-key solution for authentication, authorization and Single Sign On. This [AngularJS](https://angularjs.org/‎) module will help you implement client-side and server-side (API) authentication. You can use it for:
+[Auth0](https://www.auth0.com) is a cloud service that provides a turn-key solution for authentication, authorization and Single Sign On. This [AngularJS](https://angularjs.org/‎) module will help you implement client-side and server-side (API) authentication. You can use it to:
 
-* Add authentication with [multiple identity providers](https://docs.auth0.com/identityproviders) like **Google**, **Facebook**, **Twitter**, **LinkedIn**, **Microsoft Account**,  **GitHub**,  **Box**, **Salesforce**, among others; or enterprise identity systems like **Windows Azure AD**, **Google Apps**, **Active Directory**, **ADFS** or any **SAML Identity Provider**.
-* Add authentication through more traditional **[username/password databases](https://docs.auth0.com/mysql-connection-tutorial)**.
-* Add support for **[linking different user accounts](https://docs.auth0.com/link-accounts)** with the same user.
+* Authenticate with [multiple identity providers](https://docs.auth0.com/identityproviders) like **Google**, **Facebook**, **Twitter**, **LinkedIn**, **Microsoft Account**,  **GitHub**,  **Box**, **Salesforce**, among others; or enterprise identity systems like **Windows Azure AD**, **Google Apps**, **Active Directory**, **ADFS** or any **SAML Identity Provider**.
+* Authenticate through more traditional **[username/password databases](https://docs.auth0.com/mysql-connection-tutorial)**.
+* Support for **[linking different user accounts](https://docs.auth0.com/link-accounts)** with the same user.
 * Support for generating signed [Json Web Tokens](https://docs.auth0.com/jwt) to call your APIs and **flow the user identity** securely.
 * Analytics of how, when and where users are logging in.
 * Pull data from other sources and add it to the user profile, through [JavaScript rules](https://docs.auth0.com/rules).
