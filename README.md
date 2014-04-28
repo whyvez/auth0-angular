@@ -4,6 +4,23 @@ This AngularJS module will help you implement client-side and server-side (API) 
 
 [Auth0](https://www.auth0.com) is a cloud service that provides a turn-key solution for authentication, authorization and Single Sign On.
 
+```js
+function onLoginSuccess () { $location.path('/'); }
+function onLoginFailure () { $scope.message = 'invalid credentials'; }
+
+$scope.submit = function () {
+  var options = { connection: 'my-connection', username: $scope.username,  password: $scope.password }; 
+
+  auth.signin(options).then(onLoginSuccess, onLoginFailure);
+};
+
+$scope.doGoogleAuthWithPopup = function () {
+  var options = { popup: true, connection: 'google-oauth2' };
+  
+  auth.signin(options).then(onLoginSuccess, onLoginFailure);
+};
+```
+
 
 ## Client Side Authentication
 
