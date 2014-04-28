@@ -28,30 +28,6 @@ Advanced scenarios:
  * [RequireJS](examples/requirejs): An example of how to integrate auth0-angular with RequireJS.
 
 
----
-
-## Tests
-
-Install bower dependencies:
-
-```sh
-bower i
-```
-
-Install karma (test runner):
-
-```sh
-npm install -g karma-cli
-```
-
-And run by doing:
-
-```sh
-karma start
-```
-
-By default it runs on PhantomJS but more browsers can be added to the [karma.conf.js](karma.conf.js).
-
 ## What is Auth0?
 
 Auth0 helps you to:
