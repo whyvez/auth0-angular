@@ -1,8 +1,14 @@
 # Auth0 and AngularJS
 
-This AngularJS module will help you implement client-side and server-side (API) authentication. You can use it together with [Auth0](https://www.auth0.com) to add username/password authentication, support for enterprise identity like Active Directory or SAML and also for social identities like Google, Facebook or Salesforce among others to your web, API and mobile native apps.
+[Auth0](https://www.auth0.com) is a cloud service that provides a turn-key solution for authentication, authorization and Single Sign On. This [AngularJS](https://angularjs.org/‎) module will help you implement client-side and server-side (API) authentication. You can use it for:
 
-[Auth0](https://www.auth0.com) is a cloud service that provides a turn-key solution for authentication, authorization and Single Sign On.
+* Add authentication with [multiple authentication sources](https://docs.auth0.com/identityproviders), either social like **Google**, **Facebook**, **Microsoft Account**, **LinkedIn**, **GitHub**, **Twitter**, **Box**, **Salesforce, among [others](https://docs.auth0.com/identityproviders), or enterprise identity systems like **Windows Azure AD**, **Google Apps**, **Active Directory**, **ADFS** or any **SAML Identity Provider**.
+* Add authentication through more traditional **[username/password databases](https://docs.auth0.com/mysql-connection-tutorial)**.
+* Add support for **[linking different user accounts](https://docs.auth0.com/link-accounts)** with the same user.
+* Support for generating signed [Json Web Tokens](https://docs.auth0.com/jwt) to call your APIs and **flow the user identity** securely.
+* Analytics of how, when and where users are logging in.
+* Pull data from other sources and add it to the user profile, through [JavaScript rules](https://docs.auth0.com/rules).
+
 
 ## Client Side Authentication
 
@@ -12,8 +18,7 @@ There are two ways of implementing signin/singup. One is using our [JavaScript S
  * [Getting Started: Login Widget](docs/widget.md)
 
 
-
-### Examples
+## Examples
 
 The following [examples](examples) offer a good starting point for including Auth0 in your AngularJS application:
 
@@ -27,17 +32,6 @@ Advanced scenarios:
  * [Delegation Token](examples/delegation-token): Call two different APIs (with different client ids) from a single Angular App.
  * [RequireJS](examples/requirejs): An example of how to integrate auth0-angular with RequireJS.
 
-
-## What is Auth0?
-
-Auth0 helps you to:
-
-* Add authentication with [multiple authentication sources](https://docs.auth0.com/identityproviders), either social like **Google, Facebook, Microsoft Account, LinkedIn, GitHub, Twitter, Box, Salesforce, amont others**, or enterprise identity systems like **Windows Azure AD, Google Apps, Active Directory, ADFS or any SAML Identity Provider**.
-* Add authentication through more traditional **[username/password databases](https://docs.auth0.com/mysql-connection-tutorial)**.
-* Add support for **[linking different user accounts](https://docs.auth0.com/link-accounts)** with the same user.
-* Support for generating signed [Json Web Tokens](https://docs.auth0.com/jwt) to call your APIs and **flow the user identity** securely.
-* Analytics of how, when and where users are logging in.
-* Pull data from other sources and add it to the user profile, through [JavaScript rules](https://docs.auth0.com/rules).
 
 ## Create a free account in Auth0
 
