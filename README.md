@@ -16,9 +16,10 @@ There are two ways of implementing signin/singup. One is using our [JavaScript S
 Also, we have an [examples](examples) section that contains comprehensive scenarios.
 
 ## Documentation
- * [Consuming a REST API](docs/backend.md)
+ * [Consuming a protected REST API](docs/backend.md)
  * [Advanced Routing Scenarios](docs/routing.md)
  * [FAQ](docs/faq.md)
+ * [jwt.io](http://jwt.io/): Useful for debugging JWT.
 
 ### Development 
  * [How to run auth0-angular tests](docs/testing.md)
