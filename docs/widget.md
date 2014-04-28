@@ -1,3 +1,5 @@
+# Getting Started: Widget
+
 For this tutorial, you need to create a new account in [Auth0](https://www.auth0.com) and setup a new application. We will then implement client side and server side auth.
 
 1.  Add the following files: [Login Widget](https://docs.auth0.com/login-widget2) and [Auth0 Angular module](src/auth0-angular.js):
