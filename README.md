@@ -4,7 +4,7 @@ This AngularJS module will help you implement client-side and server-side (API) 
 
 [Auth0](https://www.auth0.com) is a cloud service that provides a turn-key solution for authentication, authorization and Single Sign On.
 
-This is an example of how simple to use is Auth0 Angular:
+### Usage
 
 ```js
 function onLoginSuccess () { $location.path('/'); }
