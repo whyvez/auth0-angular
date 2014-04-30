@@ -5,7 +5,7 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
 1.  Add the following files: [Auth0 Angular module](src/auth0-angular.js) and [Javascript SDK](https://github.com/auth0/auth0.js):
     ```html
     <script src="//cdn.auth0.com/w2/auth0-2.0.js"></script>
-    <script src="https://cdn.auth0.com/w2/auth0-angular-0.3.js"> </script>
+    <script src="//cdn.auth0.com/w2/auth0-angular-0.3.js"> </script>
     ```
 
 2. Configure routes for the Authentication flow:
