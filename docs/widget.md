@@ -8,7 +8,12 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
     <script src="//cdn.auth0.com/w2/auth0-angular-0.3.js"> </script>
     ```
 
-1. Configure routes for the Authentication flow:
+2. Add module dependencies:
+    ```js
+    var app = angular.module('myApp', ['ngCookies', 'ngRoute', 'auth0-redirect']);
+    ```
+
+2. Configure routes for the Authentication flow:
     ```js
     myApp.config(function ($routeProvider, authProvider) {
       ...
@@ -26,19 +31,11 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
 
   > Note: Angular's [default routing library](https://docs.angularjs.org/api/ngRoute/service/$route) is used in this example but [ui-router](https://github.com/angular-ui/ui-router) can be used too.
 
-2. Add module dependencies:
-    ```js
-    var app = angular.module('myApp', ['ngCookies', 'auth0-redirect']);
-    ```
-
 3. Inject and initiate the `auth` service in the app main config block with your `domain`, `clientID` and `callbackURL` (get them from [Auth0](https://app.auth0.com/#/) dashboard in [Application Settings](https://app.auth0.com/#/applications)).
     ```js
     myApp.config(function ($routeProvider, authProvider) {
       ...
-      authProvider.init({
-        domain: 'yourdomain.auth0.com',
-        clientID: 'YOUR_CLIENT_ID',
-        callbackURL: 'http://localhost:1337/'
+      authProvider.init({ domain: 'yourdomain.auth0.com', clientID: 'YOUR_CLIENT_ID', callbackURL: 'http://localhost:1337/'
       });
     });
   ```
