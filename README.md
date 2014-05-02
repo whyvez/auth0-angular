@@ -28,9 +28,9 @@ $scope.doGoogleAuthWithPopup = function () {
 
 There are two ways of implementing signin/singup. One is using our [JavaScript SDK](https://github.com/auth0/auth0.js) which is just a wrapper to our API so you can build your UI on top or the other one is using [Login Widget](https://docs.auth0.com/login-widget2), which is a complete Login UI ready. You can check the following getting started guides:
 
- * [Getting Started: Javascript SDK](docs/jssdk.md)
- * [Getting Started: Login Widget](docs/widget.md)
- * [Getting Started: Redirect Mode](docs/redirect.md)
+ * [Getting Started](docs/jssdk.md)
+ * [Auth0 Widget Guide](docs/widget.md)
+ * [Using Redirect Mode](docs/redirect.md)
 
 Also, we have an [examples](examples) section that contains comprehensive scenarios.
 
