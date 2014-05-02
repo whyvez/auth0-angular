@@ -2,8 +2,11 @@
 
 For this tutorial, you need to create a new account in [Auth0](https://www.auth0.com) and setup a new application. We will then implement client side and server side auth.
 
-1.  Add the following files: [Auth0 Angular module](src/auth0-angular.js) and [Auth0 Angular module](src/auth0-angular.js):
+1.  Add the following files to your project:
     ```html
+    <script src="//code.angularjs.org/1.2.16/angular.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="//code.angularjs.org/1.2.16/angular-cookies.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="//code.angularjs.org/1.2.16/angular-route.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="//cdn.auth0.com/w2/auth0-2.0.js"></script>
     <script src="https://cdn.auth0.com/w2/auth0-angular-0.3.js"> </script>
     ```
@@ -24,7 +27,7 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
     });
     ```
 
-  > Note: Angular's [default routing library](https://docs.angularjs.org/api/ngRoute/service/$route) is used in this example but [ui-router](https://github.com/angular-ui/ui-router) can be used too.
+  > Note: Angular's [default routing library](https://docs.angularjs.org/api/ngRoute/service/$route) is used in this example but [ui-router](https://github.com/angular-ui/ui-router) can be used too. Check [auth0-angular ui-router example](https://github.com/auth0/auth0-angular/tree/master/examples/ui-router).
 
 2. Add module dependencies:
     ```js
