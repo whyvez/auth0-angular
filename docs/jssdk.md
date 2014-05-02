@@ -2,15 +2,18 @@
 
 For this tutorial, you need to create a new account in [Auth0](https://www.auth0.com) and setup a new application. We will then implement client side and server side auth.
 
-1.  Add the following files: [Auth0 Angular module](src/auth0-angular.js) and [Javascript SDK](https://github.com/auth0/auth0.js):
+1.  Add the following files to your project:
     ```html
+    <script src="//code.angularjs.org/1.2.16/angular.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="//code.angularjs.org/1.2.16/angular-cookies.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="//code.angularjs.org/1.2.16/angular-route.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="//cdn.auth0.com/w2/auth0-2.0.js"></script>
     <script src="//cdn.auth0.com/w2/auth0-angular-0.3.js"> </script>
     ```
 
 2. Add module dependencies:
     ```js
-    var app = angular.module('myApp', ['ngCookies', 'auth0']);
+    var myApp = angular.module('myApp', ['ngCookies', 'ngRoute', 'auth0']);
     ```
 
 3. Configure routes for the Authentication flow:
@@ -36,11 +39,7 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
     ```js
     myApp.config(function ($routeProvider, authProvider) {
       ...
-      authProvider.init({
-        domain: 'yourdomain.auth0.com',
-        clientID: 'YOUR_CLIENT_ID',
-        callbackURL: 'http://localhost:1337/'
-      });
+      authProvider.init({ domain: 'yourdomain.auth0.com', clientID: 'YOUR_CLIENT_ID',  callbackURL: 'http://localhost:1337/' });
     });
   ```
 
