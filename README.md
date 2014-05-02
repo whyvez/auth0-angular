@@ -30,15 +30,17 @@ There are two ways of implementing signin/singup. One is using our [JavaScript S
 
  * [Getting Started](docs/jssdk.md)
     
-   ![basic_guide](https://cloud.githubusercontent.com/assets/419703/2864871/eced3bc2-d215-11e3-8aae-9ff1facb1aca.gif)
+   
+   ![basic_guide](https://cloud.githubusercontent.com/assets/419703/2867713/35ac5914-d23a-11e3-91f9-b6365a10137f.gif)
  * [Auth0 Widget Guide](docs/widget.md)
     
-   ![widget_guide](https://cloud.githubusercontent.com/assets/419703/2864869/e9b68fe4-d215-11e3-8959-be60477436f4.gif)
- * [Using Redirect Mode](docs/redirect.md)
+    
+   ![widget_guide](https://cloud.githubusercontent.com/assets/419703/2867712/3580ca60-d23a-11e3-8312-636a309d7af0.gif)
 
 Also, we have an [examples](examples) section that contains comprehensive scenarios.
 
 ## Documentation
+ * [Using Redirect Mode](docs/redirect.md) 
  * [Consuming a protected REST API](docs/backend.md)
  * [Advanced Routing Scenarios](docs/routing.md)
  * [FAQ](docs/faq.md)
