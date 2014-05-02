@@ -43,13 +43,7 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
     });
   ```
 
-4. Inject the `auth` service in your controllers and call the `signin`/`signout` methods.
-  ```js
-  myApp.controller('LogoutCtrl', function ($scope, auth) {
-  });
-  ```
-
-  Note that `auth.signin` returns a promise:
+4. Inject the `auth` service in your controllers and call the `signin`/`signout` methods. Note that `auth.signin` returns a promise:
   ```js
   myApp.controller('LoginCtrl', function ($scope, auth) {
     $scope.user = '';
