@@ -104,6 +104,4 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
   </div>
   ```
 
-> More details about the parameters you can use for the [Auth0 Login Widget](https://docs.auth0.com/login-widget2) and [auth0.js](https://github.com/auth0/auth0.js).
-
 After that, you may want to send requests to your server side. That can be found in the [Server Side Authentication section](backend.md).
