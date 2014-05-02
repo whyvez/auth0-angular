@@ -49,14 +49,14 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
   });
   ```
 
-  You will need to handle `AUTH_EVENTS.loginSuccess` and `AUTH_EVENTS.loginFailed` events as each time the user logs in the page is reloaded and the state is lost:
+  You will need to handle `AUTH_EVENTS.loginSuccess` and `AUTH_EVENTS.loginFailure` events as each time the user logs in the page is reloaded and the state is lost:
     ```js
     myApp.run(function ($rootScope, $location, AUTH_EVENTS, $timeout) {
       $rootScope.$on(AUTH_EVENTS.loginSuccess, function () {
         // TODO Handle when login succeeds
         $location.path('/');
       });
-      $rootScope.$on(AUTH_EVENTS.loginFailed, function () {
+      $rootScope.$on(AUTH_EVENTS.loginFailure, function () {
         // TODO Handle when login fails
         window.alert('login failed');
       });
