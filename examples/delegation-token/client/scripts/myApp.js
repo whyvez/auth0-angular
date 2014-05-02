@@ -80,10 +80,15 @@ myApp.config(function ($routeProvider, authProvider, $httpProvider) {
   })
   .otherwise({ redirectTo: '/login' });
 
+  // Set the URL to the popup.html file
+  var href = document.location.href;
+  var hash = document.location.hash;
+  var popupUrl = href.substring(0, href.length - (hash.length + 1)) + '/popup.html';
+
   authProvider.init({
     clientID: 'DyG9nCwIEofSy66QM3oo5xU6NFs3TmvT',
     domain: 'contoso.auth0.com',
-    callbackURL: document.location.href
+    callbackURL: popupUrl
   });
 
   $httpProvider.interceptors.push('customInterceptor');

@@ -99,7 +99,7 @@
       return true;
     }
     var d = new Date(0);
-    // The 0 there is the key, which sets the date to the epoch
+    // The 0 here is the key, which sets the date to the epoch
     d.setUTCSeconds(decoded.exp);
     if (isNaN(d)) {
       return true;

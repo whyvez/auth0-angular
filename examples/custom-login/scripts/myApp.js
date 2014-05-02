@@ -43,11 +43,15 @@ myApp.config(function ($routeProvider, authProvider, $httpProvider) {
   })
   .otherwise({ redirectTo: '/login' });
 
+  // Set the URL to the popup.html file
+  var href = document.location.href;
+  var hash = document.location.hash;
+  var popupUrl = href.substring(0, href.length - (hash.length + 1)) + '/popup.html';
+
   authProvider.init({
     domain: 'contoso.auth0.com',
     clientID: 'DyG9nCwIEofSy66QM3oo5xU6NFs3TmvT',
-    // TODO Set this to your callbackURL, for instance http://localhost:1337/examples/widget/
-    callbackURL: document.location.href
+    callbackURL: popupUrl
   });
 
   // Add a simple interceptor that will fetch all requests and add the jwt token to its authorization header.

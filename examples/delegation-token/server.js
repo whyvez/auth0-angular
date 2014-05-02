@@ -16,7 +16,7 @@ var authenticate = jwt({
 
 app.use(express.logger());
 
-app.use('/', express.static(__dirname + '/app/'));
+app.use('/', express.static(__dirname + '/client/'));
 
 app.use('/api', authenticate);
 
