@@ -1,5 +1,9 @@
 # 0.3.x
 
+## 0.3.2
+
+  * Adding event AUTH_EVENTS.loginFailed to replace AUTH_EVENTS.loginFailure. From this version, usage of AUTH_EVENTS.loginFailed is deprecated.
+
 ## 0.3.1
 
   * Fixed redirect mode: fixing exception when reloading a page after authentication.

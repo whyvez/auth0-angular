@@ -28,9 +28,10 @@
   var AUTH_EVENTS = {
       forbidden: 'auth:FORBIDDEN',
       loginSuccess: 'auth:LOGIN_SUCCESS',
-      loginFailed: 'auth:LOGIN_FAILED',
+      loginFailure: 'auth:LOGIN_FAILED',
       logout: 'auth:LOGOUT',
-      redirectEnded: 'auth:REDIRECT_ENDED'
+      redirectEnded: 'auth:REDIRECT_ENDED',
+      loginFailed: 'auth:LOGIN_FAILED'
     };
   auth0.constant('AUTH_EVENTS', AUTH_EVENTS);
   function Auth0Wrapper(auth0Lib, $cookieStore, $rootScope, $q, urlBase64Decode, $timeout) {
@@ -152,7 +153,7 @@
     var callback = function (err, profile, id_token, access_token, state) {
       that.$timeout(function () {
         if (err) {
-          that.$rootScope.$broadcast(AUTH_EVENTS.loginFailed, err);
+          that.$rootScope.$broadcast(AUTH_EVENTS.loginFailure, err);
           defer.reject(err);
           return;
         }
@@ -162,7 +163,7 @@
           that.$rootScope.$broadcast(AUTH_EVENTS.loginSuccess, that.profile);
           defer.resolve(that.profile);
         }, function (err) {
-          that.$rootScope.$broadcast(AUTH_EVENTS.loginFailed, err);
+          that.$rootScope.$broadcast(AUTH_EVENTS.loginFailure, err);
           defer.reject(err);
         });
       });
@@ -289,7 +290,7 @@
         function onAuthFail(err) {
           // this will rehydrate the "auth" object with the profile stored in $cookieStore
           auth._deserialize();
-          $rootScope.$broadcast(AUTH_EVENTS.loginFailed, err);
+          $rootScope.$broadcast(AUTH_EVENTS.loginFailure, err);
         }
         function onRedirectEnded() {
           auth._loaded.resolve();

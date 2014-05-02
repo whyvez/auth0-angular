@@ -15,7 +15,7 @@ myApp.run(function ($rootScope, $location, $route, AUTH_EVENTS, $timeout) {
     // TODO Handle when login succeeds
     $location.path('/');
   });
-  $rootScope.$on(AUTH_EVENTS.loginFailed, function () {
+  $rootScope.$on(AUTH_EVENTS.loginFailure, function () {
     // TODO Handle when login fails
     window.alert('login failed');
   });
