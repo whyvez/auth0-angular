@@ -71,12 +71,12 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
   Bind the controller to a partial:
 
   ```html
-    <div ng-controller="LoginCtrl">
-      <a href="" ng-click="logout()">logout</a>
-      <form ng-submit="login()">
-        <input type="text" name="user" ng-model="user" />
-        <input type="password" name="pass" ng-model="pass" />
-        <button type="submit" >submit</button>
+  <div ng-controller="LoginCtrl">
+    <a href="" ng-click="logout()">logout</a>
+    <form ng-submit="login()">
+      <input type="text" name="user" ng-model="user" />
+      <input type="password" name="pass" ng-model="pass" />
+      <button type="submit" >submit</button>
     </form>
   </div>
   ```
@@ -99,8 +99,7 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
   ```
   The template of that controller will be:
   ```html
-  <div>
-    <br />
+  <div ng-controller="RootCtrl">
     <span>Welcome {{user.name}}!</span>
   </div>
   ```
