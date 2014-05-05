@@ -50,6 +50,7 @@ Also, we have an [examples](examples) section that contains comprehensive scenar
  * [Advanced Routing Scenarios](docs/routing.md)
  * [FAQ](docs/faq.md)
  * [jwt.io](http://jwt.io/): Useful for debugging JWT.
+ * [Changelog](CHANGELOG.md)
 
 ### Development 
  * [How to run auth0-angular tests](docs/testing.md)
