@@ -102,5 +102,32 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
     <span>Welcome {{user.name}}!</span>
   </div>
   ```
+  
+## Social Authentication with Popup
+
+1. Add a link to authenticate using a social provider:
+  ```html
+  <div ng-controller="LoginCtrl">
+    ...
+    <a href="" ng-click="socialLogin()">Login with Google</a>
+  </div>
+  ```
+
+2. Add to the `LoginCtrl` a `socialLogin` method. There, we will specify which connection to use. In this case Google connection:
+  ```js
+  myApp.controller('LoginCtrl', function ($scope, auth) {
+    ...
+    $scope.socialLogin = function () {
+        auth.signin({connection: 'google', popup: true })
+            .then(function () {
+                // User logged in successfully with the social provider
+                $location.path('/');
+            }, function () {
+                // Oops something went wrong
+                $location.path('/login');
+            });
+    });
+  });
+  ```
 
 After that, you may want to send requests to your server side. That can be found in the [Server Side Authentication section](backend.md).
