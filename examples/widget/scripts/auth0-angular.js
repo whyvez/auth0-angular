@@ -29,9 +29,9 @@
       forbidden: 'auth:FORBIDDEN',
       loginSuccess: 'auth:LOGIN_SUCCESS',
       loginFailure: 'auth:LOGIN_FAILED',
+      loginFailed: 'auth:LOGIN_FAILED',
       logout: 'auth:LOGOUT',
-      redirectEnded: 'auth:REDIRECT_ENDED',
-      loginFailed: 'auth:LOGIN_FAILED'
+      redirectEnded: 'auth:REDIRECT_ENDED'
     };
   auth0.constant('AUTH_EVENTS', AUTH_EVENTS);
   function Auth0Wrapper(auth0Lib, $cookieStore, $rootScope, $q, urlBase64Decode, $timeout) {

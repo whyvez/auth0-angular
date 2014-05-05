@@ -19,17 +19,48 @@
   var auth0 = angular.module('auth0', ['util', 'ngCookies']);
 
   var AUTH_EVENTS = {
+    /**
+     * AUTH_EVENTS.forbidden event should be broadcasted from $rootScope by interceptors when
+     * a $http response header returns 401. See authInterceptor for an example of usage.
+     */
     forbidden:     'auth:FORBIDDEN',
 
+    /**
+     * AUTH_EVENTS.loginSuccess event is fired in two scenarios:
+     *
+     *  a) When an user signs in successfully.
+     *  b) When the page reloads and the user is currently logged in (before the
+     *  AUTH_EVENTS.redirectEnded event).
+     *
+     *  This event is broadcasted from the $rootScope.
+     */
     loginSuccess:  'auth:LOGIN_SUCCESS',
+
+    /**
+     * AUTH_EVENTS.loginFailed event is fired when an user login fails.
+     *
+     * This event is broadcasted from the $rootScope.
+     */
     loginFailure:  'auth:LOGIN_FAILED',
-
-    logout:        'auth:LOGOUT',
-
-    redirectEnded: 'auth:REDIRECT_ENDED',
-    
     /* XXX Deprecated: use AUTH_EVENTS.loginFailure instead */
     loginFailed:   'auth:LOGIN_FAILED',
+
+    /**
+     * AUTH_EVENTS.logout event is fired when calling the auth.signout method.
+     *
+     * This event is broadcasted from the $rootScope.
+     */
+    logout:        'auth:LOGOUT',
+
+    /**
+     * AUTH_EVENTS.redirectEnded event fires when the page has finished loading
+     * and the auth check has been performed (whether the user is logged in or not). 
+     * You can think about it as the auth.loaded promise but made an event.
+     *
+     * This event is broadcasted from the $rootScope.
+     */
+    redirectEnded: 'auth:REDIRECT_ENDED',
+    
 
   };
 
