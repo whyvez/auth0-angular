@@ -108,7 +108,7 @@ describe('Auth0 Angular', function () {
   });
 
   describe('Interceptor', function () {
-    var $http, $httpBackend;
+    var $http, $httpBackend, $rootScope;
 
     describe('authInterceptor', function () {
 
@@ -128,13 +128,47 @@ describe('Auth0 Angular', function () {
           $http = _$http_;
         });
 
-        $http({url: '/hello'}).then(function (res) {
-          expect(res.data).to.be.equal('hello');
-        })
-        .then(done);
+        $http({url: '/hello'}).success(function (data) {
+          expect(data).to.be.equal('hello');
+          done();
+        });
         $httpBackend.expectGET('/hello', function (headers) {
           return headers.Authorization === 'Bearer w00t';
         }).respond(200, 'hello');
+        $httpBackend.flush();
+      });
+
+      it('should intercept requests failing requests', function (done) {
+        var AUTH_EVENTS;
+
+        executeInConfigBlock(function($httpProvider, authProvider, $provide) {
+          authProvider.init({
+            clientID: 'some-client-id',
+            callbackURL: 'some-callback-URL',
+            domain: 'hello.auth0.com'
+          });
+          $httpProvider.interceptors.push('authInterceptor');
+          $provide.decorator('auth', function () { return {idToken: 'w00t'}; });
+        }, ['authInterceptor']);
+
+        inject(function (_$http_, _$httpBackend_, _$rootScope_, _AUTH_EVENTS_) {
+          $httpBackend = _$httpBackend_;
+          $http = _$http_;
+          $rootScope = _$rootScope_;
+          AUTH_EVENTS = _AUTH_EVENTS_;
+        });
+
+        var forbiddenReceived = false;
+        $rootScope.$on(AUTH_EVENTS.forbidden, function () {
+          forbiddenReceived = true;
+        });
+
+        $http({url: '/hello'}).error(function (data, status) {
+          expect(status).to.be.equal(401);
+          expect(forbiddenReceived).to.be.equal(true);
+          done();
+        });
+        $httpBackend.expectGET('/hello').respond(401);
         $httpBackend.flush();
       });
     });

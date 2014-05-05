@@ -1,5 +1,9 @@
 # 0.3.x
 
+## 0.3.3
+
+  * Fixed bug on `authInterceptor`: when `$http` request failed it executed `success` instead of `error` callback.
+
 ## 0.3.2
 
   * Adding event AUTH_EVENTS.loginFailed to replace AUTH_EVENTS.loginFailure. From this version, usage of AUTH_EVENTS.loginFailed is deprecated.

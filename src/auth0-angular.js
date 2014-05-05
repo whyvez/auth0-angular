@@ -395,7 +395,7 @@
         if (response.status === 401) {
           $rootScope.$broadcast(AUTH_EVENTS.forbidden, response);
         }
-        return response || $q.when(response);
+        return $q.reject(response);
       }
     };
   });
