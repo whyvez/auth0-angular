@@ -50,7 +50,7 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
     $scope.pass = '';
 
     $scope.login = function () {
-    auth.signin({ username: $scope.user, password: $scope.pass, connection: 'my-connection', popup: true })
+    auth.signin({ username: $scope.user, password: $scope.pass, connection: 'my-connection' })
     .then(function () {
         // User logged in successfully
         $location.path('/');
