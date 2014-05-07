@@ -60,7 +60,8 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
     };
 
     $scope.login = function () {
-      auth.signin({ connection: 'my-social-connection' });
+      auth.signin({ connection: 'google-oauth2', 
+                    scope: 'openid name email picture nickname' });
     };
   });
   ```

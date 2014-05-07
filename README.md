@@ -19,7 +19,7 @@ $scope.submit = function () {
 };
 
 $scope.doGoogleAuthWithPopup = function () {
-  var options = { popup: true, connection: 'google-oauth2' };
+  var options = { popup: true, connection: 'google-oauth2', scope: 'openid name email picture nickname' };
   
   auth.signin(options).then(onLoginSuccess, onLoginFailure);
 };

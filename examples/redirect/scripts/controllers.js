@@ -46,7 +46,7 @@ myApp.controller('LoginCtrl', function (auth, $scope, $location) {
   };
 
   $scope.doGoogleAuthWithRedirect = function () {
-    return auth.signin({connection: 'google-oauth2'});
+    return auth.signin({connection: 'google-oauth2', scope: 'openid name email picture nickname'});
   };
 
 });

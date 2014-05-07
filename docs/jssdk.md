@@ -118,7 +118,7 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
   myApp.controller('LoginCtrl', function ($scope, auth) {
     ...
     $scope.socialLogin = function () {
-        auth.signin({connection: 'google-oauth2', popup: true })
+        auth.signin({connection: 'google-oauth2', scope: 'openid name email picture nickname', popup: true })
             .then(function () {
                 // User logged in successfully with the social provider
                 $location.path('/');
@@ -129,5 +129,7 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
     });
   });
   ```
+
+> Note: the `scope` parameter specify the attributes that will be included in the token. When you call your API with that token, those attributes will be available on server side.
 
 After that, you may want to send requests to your server side. That can be found in the [Server Side Authentication section](backend.md).

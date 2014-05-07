@@ -64,7 +64,8 @@ myApp.controller('LoginCtrl', function (auth, $scope, $location) {
 
     auth.signin({
       popup: true,
-      connection: 'google-oauth2'
+      connection: 'google-oauth2',
+      scope: 'openid name email picture nickname'
     }).then(onLoginSuccess, onLoginFailed)
     .finally(function () {
       $scope.loading = false;
