@@ -44,3 +44,4 @@ Run the tests:
 grunt scenario
 ```
 
+> Note: for Google test you have to specify `GOOGLE_USER` and `GOOGLE_PASSWORD` env variable
