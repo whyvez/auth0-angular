@@ -51,7 +51,7 @@ define(['angular', './myApp'], function (angular, myApp) {
       auth.signin({
         popup: true,
         connection: 'google-oauth2',
-        scope: 'openid name email picture nickname'
+        scope: 'openid name email'
       }).then(onLoginSuccess, onLoginFailed)
       .finally(function () {
         $scope.loading = false;

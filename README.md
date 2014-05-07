@@ -13,13 +13,13 @@ function onLoginSuccess () { $location.path('/'); }
 function onLoginFailure () { $scope.message = 'invalid credentials'; }
 
 $scope.submit = function () {
-  var options = { connection: 'my-connection', username: $scope.username,  password: $scope.password }; 
+  var options = { connection: 'my-connection', username: $scope.username,  password: $scope.password, scope: 'openid name email' }; 
 
   auth.signin(options).then(onLoginSuccess, onLoginFailure);
 };
 
 $scope.doGoogleAuthWithPopup = function () {
-  var options = { popup: true, connection: 'google-oauth2', scope: 'openid name email picture nickname' };
+  var options = { popup: true, connection: 'google-oauth2', scope: 'openid name email' };
   
   auth.signin(options).then(onLoginSuccess, onLoginFailure);
 };

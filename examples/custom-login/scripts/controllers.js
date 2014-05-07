@@ -38,7 +38,8 @@ myApp.controller('LoginCtrl', function (auth, $scope, $location) {
     auth.signin({
       connection: 'Username-Password-Authentication',
       username: $scope.user,
-      password: $scope.pass
+      password: $scope.pass,
+      scope: 'openid name email'
     }).then(onLoginSuccess, onLoginFailed)
     .finally(function () {
       $scope.loading = false;
@@ -52,7 +53,7 @@ myApp.controller('LoginCtrl', function (auth, $scope, $location) {
     auth.signin({
       popup: true,
       connection: 'google-oauth2',
-      scope: 'openid name email picture nickname'
+      scope: 'openid name email'
     }).then(onLoginSuccess, onLoginFailed)
     .finally(function () {
       $scope.loading = false;

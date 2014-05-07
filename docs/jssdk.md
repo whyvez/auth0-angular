@@ -50,7 +50,7 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
     $scope.pass = '';
 
     $scope.login = function () {
-    auth.signin({ username: $scope.user, password: $scope.pass, connection: 'my-connection' })
+    auth.signin({ username: $scope.user, password: $scope.pass, connection: 'Username-Password-Authentication', scope: 'openid name email' })
     .then(function () {
         // User logged in successfully
         $location.path('/');
@@ -118,7 +118,7 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
   myApp.controller('LoginCtrl', function ($scope, auth) {
     ...
     $scope.socialLogin = function () {
-        auth.signin({connection: 'google-oauth2', scope: 'openid name email picture nickname', popup: true })
+        auth.signin({connection: 'google-oauth2', scope: 'openid name email', popup: true })
             .then(function () {
                 // User logged in successfully with the social provider
                 $location.path('/');
