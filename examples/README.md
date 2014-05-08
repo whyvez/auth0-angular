@@ -12,4 +12,5 @@ Advanced scenarios:
  * [Delegation Token](delegation-token): Call two different APIs (with different client ids) from a single Angular App.
  * [RequireJS](requirejs): An example of how to integrate auth0-angular with RequireJS.
  * [Redirect Mode](redirect): An example of how to do redirect-based social authentication (instead of popup).
+ * [Widget with Redirect Mode](widget-redirect): Example of Auth0Login Widget with redirect mode.
 
