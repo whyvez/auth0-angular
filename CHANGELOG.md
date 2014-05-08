@@ -1,5 +1,9 @@
 # 0.3.x
 
+## 0.4.0
+
+  * Adding support for Auth0 Widget with popup mode.
+
 ## 0.3.3
 
   * Fixed bug on `authInterceptor`: when `$http` request failed it executed `success` instead of `error` callback.

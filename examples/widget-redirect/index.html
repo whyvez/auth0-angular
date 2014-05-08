@@ -3,7 +3,7 @@
 <html>
 <head>
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js" type="text/javascript"> </script>
-  <script src="//cdn.auth0.com/w2/auth0-widget-3.1.js" type="text/javascript"> </script>
+  <script src="//cdn.auth0.com/w2/auth0-widget-3.0.js" type="text/javascript"> </script>
   <script src="//code.angularjs.org/1.2.16/angular-route.min.js" type="text/javascript"> </script>
   <script src="//code.angularjs.org/1.2.16/angular-cookies.min.js" type="text/javascript"> </script>
   <script src="./scripts/myApp.js" type="text/javascript"> </script>
@@ -17,7 +17,7 @@
 <body>
   <div ng-app="myApp">
     <div ng-controller="MenuCtrl" ng-controller="MsgCtrl">
-      <a href="" ng-click="login()">click to login</a>
+      <a href="" ng-controller="LoginCtrl" ng-click="auth.signin()">click to login</a>
       <br />
       <a href="" ng-click="go('/')">main</a>
       <a href="" ng-click="go('/logout')">logout</a>

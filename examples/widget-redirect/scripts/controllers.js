@@ -1,15 +1,8 @@
 var myApp = angular.module('myApp');
 
-myApp.controller('MenuCtrl', function ($scope, $location, auth) {
+myApp.controller('MenuCtrl', function ($scope, $location) {
   $scope.go = function (target) {
     $location.path(target);
-  };
-
-  $scope.login = function () {
-    auth.signin({popup: true})
-      .then(function () {
-        window.alert('hi');
-      });
   };
 });
 

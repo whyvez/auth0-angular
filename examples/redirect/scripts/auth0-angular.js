@@ -168,11 +168,18 @@
         });
       });
     };
-    // In Auth0 widget the callback to signin is executed when the widget ends
-    // loading. In that case, we should not broadcast any event.
+    // Auth0 Widget special cases
     if (typeof Auth0Widget !== 'undefined' && that.auth0Lib instanceof Auth0Widget) {
+      if (options.popup) {
+        // Auth0 widget & popup mode (popup: true) callback is the third parameter
+        that.auth0Lib.signin(options, null, callback);
+        return defer.promise;
+      }
+      // In Auth0 widget the callback to signin is executed when the widget ends
+      // loading. In that case, we should not broadcast any event.
       callback = null;
     }
+    // In Auth0 widget on popup mode (popup: true) callback is the third parameter
     that.auth0Lib.signin(options, callback);
     return defer.promise;
   };
@@ -221,8 +228,8 @@
      *
      * this.init(options, [Auth0Constructor])
      *
-     * @param options           object   Options for auth0.js or widget
-     * @param Auth0Constructor  function (optional) constructor to create auth0Lib
+     * @param {Object} options Options for auth0.js or widget
+     * @param {function} Auth0Constructor (optional) constructor used to create auth0Lib
      */
       this.init = function (options, Auth0Constructor) {
         var auth0Lib;
