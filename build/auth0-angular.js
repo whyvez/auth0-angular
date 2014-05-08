@@ -221,8 +221,8 @@
      *
      * this.init(options, [Auth0Constructor])
      *
-     * @param options           object   Options for auth0.js or widget
-     * @param Auth0Constructor  function (optional) constructor to create auth0Lib
+     * @param {Object} options Options for auth0.js or widget
+     * @param {function} Auth0Constructor (optional) constructor used to create auth0Lib
      */
       this.init = function (options, Auth0Constructor) {
         var auth0Lib;
