@@ -1,5 +1,6 @@
 (function () {
 
+  // TODO Change module name to something more neutral to avoid namespace clash
   var util = angular.module('util', []);
 
   //this is used to parse the profile
