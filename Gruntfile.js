@@ -71,10 +71,10 @@ module.exports = function (grunt) {
         files: {
           'examples/custom-signup/client/scripts/auth0-angular.js':       'build/auth0-angular.js',
           'examples/custom-login/scripts/auth0-angular.js':               'build/auth0-angular.js',
-          'examples/delegation-token/client/scripts/auth0-angular.js':       'build/auth0-angular.js',
+          'examples/delegation-token/client/scripts/auth0-angular.js':    'build/auth0-angular.js',
           'examples/api-authentication/client/scripts/auth0-angular.js':  'build/auth0-angular.js',
           'examples/widget/scripts/auth0-angular.js':                     'build/auth0-angular.js',
-          'examples/widget-redirect/scripts/auth0-angular.js':                     'build/auth0-angular.js',
+          'examples/widget-redirect/scripts/auth0-angular.js':            'build/auth0-angular.js',
           'examples/ui-router/scripts/auth0-angular.js':                  'build/auth0-angular.js',
           'examples/requirejs/scripts/auth0-angular.js':                  'build/auth0-angular.js',
           'examples/redirect/scripts/auth0-angular.js':                   'build/auth0-angular.js'
@@ -194,7 +194,5 @@ module.exports = function (grunt) {
   grunt.registerTask('scenario', ['build', 'connect:scenario_custom_login', 'protractor:local']);
   grunt.registerTask('cdn', ['build', 's3', 'maxcdn']);
   grunt.registerTask('default', ['build', 'watch']);
-
-
 
 };
