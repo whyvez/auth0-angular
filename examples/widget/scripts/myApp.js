@@ -1,8 +1,8 @@
 var myApp = angular.module('myApp', [
-  'ngCookies', 'auth0-redirect', 'ngRoute', 'authInterceptor'
+  'ngCookies', 'auth0', 'ngRoute', 'authInterceptor'
 ]);
 
-myApp.run(function ($rootScope, $location, $route, AUTH_EVENTS, $timeout, parseHash) {
+myApp.run(function ($rootScope, $location, $route, AUTH_EVENTS, $timeout) {
   $rootScope.$on('$routeChangeError', function () {
     var otherwise = $route.routes && $route.routes.null && $route.routes.null.redirectTo;
     // Access denied to a route, redirect to otherwise
@@ -10,17 +10,6 @@ myApp.run(function ($rootScope, $location, $route, AUTH_EVENTS, $timeout, parseH
       $location.path(otherwise);
     });
   });
-
-  $rootScope.$on(AUTH_EVENTS.loginSuccess, function () {
-    // TODO Handle when login succeeds
-    $location.path('/');
-  });
-  $rootScope.$on(AUTH_EVENTS.loginFailure, function () {
-    // TODO Handle when login fails
-    window.alert('login failed');
-  });
-
-  parseHash();
 });
 
 function isAuthenticated($q, auth) {
@@ -53,11 +42,15 @@ myApp.config(function ($routeProvider, authProvider, $httpProvider) {
   })
   .otherwise({ redirectTo: '/login' });
 
+  // Set the URL to the popup.html file
+  var href = document.location.href;
+  var hash = document.location.hash;
+  var popupUrl = href.substring(0, href.length - (hash.length + 1)) + '/popup.html';
+
   authProvider.init({
     domain: 'contoso.auth0.com',
     clientID: 'DyG9nCwIEofSy66QM3oo5xU6NFs3TmvT',
-    // TODO Replace with your callback URL, i.e. http://localhost:1337/widget
-    callbackURL: document.location.href
+    callbackURL: popupUrl
   });
 
   // Add a simple interceptor that will fetch all requests and add the jwt token to its authorization header.

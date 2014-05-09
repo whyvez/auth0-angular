@@ -8,7 +8,11 @@ myApp.controller('MenuCtrl', function ($scope, $location, auth) {
   $scope.login = function () {
     auth.signin({popup: true})
       .then(function () {
-        window.alert('hi');
+        // TODO Handle when login succeeds
+        $location.path('/');
+      }, function () {
+        // TODO Handle when login fails
+        window.alert('login failed');
       });
   };
 });
