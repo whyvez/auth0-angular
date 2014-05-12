@@ -1,8 +1,11 @@
-# 0.3.x
+# 0.4.x
 
 ## 0.4.0
 
   * Adding support for Auth0 Widget with popup mode.
+
+# 0.3.x
+
 
 ## 0.3.3
 
