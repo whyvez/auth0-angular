@@ -2,7 +2,7 @@
 
 ## 0.4.0
 
-  * Adding support for Auth0 Widget with popup mode.
+  * Adding support for Auth0 Widget with popup mode (only social).
 
 # 0.3.x
 
