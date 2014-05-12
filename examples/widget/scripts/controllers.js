@@ -12,7 +12,6 @@ myApp.controller('MenuCtrl', function ($scope, $location, auth) {
         $location.path('/');
       }, function () {
         // TODO Handle when login fails
-        window.alert('login failed');
       });
   };
 });
