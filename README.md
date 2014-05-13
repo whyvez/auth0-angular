@@ -50,6 +50,7 @@ Also, we have an [examples](examples) section that contains comprehensive scenar
  * [Using Redirect Mode](docs/redirect.md) 
  * [Consuming a protected REST API](docs/backend.md)
  * [Advanced Routing Scenarios](docs/routing.md)
+ * [Join or Link Accounts](docs/link-accounts.md)
  * [FAQ](docs/faq.md)
  * [jwt.io](http://jwt.io/): Useful for debugging JWT.
  * [Changelog](CHANGELOG.md)
