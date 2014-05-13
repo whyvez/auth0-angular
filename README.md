@@ -34,9 +34,13 @@ There are two ways of implementing signin/singup. One is using our [JavaScript S
     
    
    ![basic_guide](https://cloud.githubusercontent.com/assets/419703/2867713/35ac5914-d23a-11e3-91f9-b6365a10137f.gif)
+
  * [User/Password + Social Login with Auth0 Widget](docs/widget.md)
     
+   ![widget_popup](https://cloud.githubusercontent.com/assets/419703/2959883/1b7e1d9a-dab7-11e3-8060-bb14b3430e03.gif)
     
+ * [User/Password + Social Login with Auth0 Widget (redirect mode)](docs/widget-redirect.md)
+   
    ![widget_guide](https://cloud.githubusercontent.com/assets/419703/2867712/3580ca60-d23a-11e3-8312-636a309d7af0.gif)
 
  * [Social Login with Popup](docs/jssdk.md#social-authentication-with-popup)
