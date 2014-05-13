@@ -33,7 +33,7 @@
   },
   "scripts": {
     "postinstall": "bower install -s --allow-root",
-    "test": "grunt test"
+    "test": "grunt test -v"
   },
   "repository": {
     "type": "git",
