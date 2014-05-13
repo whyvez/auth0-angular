@@ -13,7 +13,7 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
 
 2. Add module dependencies:
     ```js
-    var app = angular.module('myApp', ['ngRoute', 'auth0']);
+    var app = angular.module('myApp', ['ngRoute', 'auth0-redirect']);
     ```
 
 2. Configure routes for the Authentication flow:
@@ -43,41 +43,35 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
     });
   ```
 
-4. Inject the `auth` service in your controllers and call the `signin`/`signout` methods. Note that `auth.signin` returns a promise:
+4. Inject the `auth` service in your controllers and call the `signin`/`signout` methods.
   ```js
-  myApp.controller('LoginCtrl', function ($scope, auth) {
-    $scope.user = '';
-    $scope.pass = '';
-
-    $scope.login = function () {
-    auth.signin({ popup: true, scope: 'openid name email' })
-    .then(function () {
-        // User logged in successfully
-        $location.path('/');
-      }, function (err) {
-        // Oops something went wrong
-        window.alert('Oops, invalid credentials');
-        $location.path('/login');
-      });
-    };
-    $scope.logout = function () {
-      auth.signout();
-      $location.path('/login');
-    };
+  myApp.controller('LogoutCtrl', function ($scope, auth) {
+    auth.signout();
+    $location.path('/login');
   });
   ```
 
-  Bind the controller to a partial:
-
+  You will need to handle `AUTH_EVENTS.loginSuccess` and `AUTH_EVENTS.loginFailure` events as each time the user logs in the page is reloaded and the state is lost:
+    ```js
+    myApp.run(function ($rootScope, $location, AUTH_EVENTS, $timeout) {
+      $rootScope.$on(AUTH_EVENTS.loginSuccess, function () {
+        // TODO Handle when login succeeds
+        $location.path('/');
+      });
+      $rootScope.$on(AUTH_EVENTS.loginFailure, function () {
+        // TODO Handle when login fails
+        window.alert('login failed');
+      });
+    });
+    ```
+  ```js
+  myApp.controller('LoginCtrl', function (auth, $scope) {
+    $scope.auth = auth;
+  });
+  ```
   ```html
-  <div ng-controller="LoginCtrl">
-    <a href="" ng-click="logout()">logout</a>
-    <form ng-submit="login()">
-      <input type="text" name="user" ng-model="user" />
-      <input type="password" name="pass" ng-model="pass" />
-      <button type="submit" >submit</button>
-    </form>
-  </div>
+  <!-- Include this on your index.html -->
+  <a href="" ng-controller="LoginCtrl" ng-click="auth.signin({scope: 'openid name email'})">click to login</a>
   ```
 
 6. Use the `auth.profile` object to show user attributes in the view.
@@ -98,16 +92,13 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
   ```
   The template of that controller will be:
   ```html
-  <div ng-controller="RootCtrl">
+  <div>
+    <br />
     <span>Welcome {{user.name}}!</span>
   </div>
   ```
-  
-
-> Note: the `scope` parameter specify the attributes that will be included in the token. When you call your API with that token, those attributes will be available on server side.
 
 > More details about the parameters you can use for the [Auth0 Login Widget](https://docs.auth0.com/login-widget2) and [auth0.js](https://github.com/auth0/auth0.js).
 
 After that, you may want to send requests to your server side. That can be found in the [Server Side Authentication section](backend.md).
-
 
