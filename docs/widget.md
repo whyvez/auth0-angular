@@ -4,9 +4,9 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
 
 1.  Add the following dependencies to your project:
     ```html
-    <script src="//code.angularjs.org/1.2.16/angular.min.js" type="text/javascript" charset="utf-8"></script>
-    <script src="//code.angularjs.org/1.2.16/angular-cookies.min.js" type="text/javascript" charset="utf-8"></script>
-    <script src="//code.angularjs.org/1.2.16/angular-route.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="//code.angularjs.org/1.2.16/angular.min.js"></script>
+    <script src="//code.angularjs.org/1.2.16/angular-cookies.min.js"></script>
+    <script src="//code.angularjs.org/1.2.16/angular-route.min.js"></script>
     <script src="//cdn.auth0.com/w2/auth0-widget-3.1.js" type="text/javascript"> </script>
     <script src="//cdn.auth0.com/w2/auth0-angular-0.4.js"> </script>
     ```
