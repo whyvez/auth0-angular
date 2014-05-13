@@ -71,7 +71,7 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
   ```
   ```html
   <!-- Include this on your index.html -->
-  <a href="" ng-controller="LoginCtrl" ng-click="auth.signin()">click to login</a>
+  <a href="" ng-controller="LoginCtrl" ng-click="auth.signin({scope: 'openid name email'})">click to login</a>
   ```
 
 6. Use the `auth.profile` object to show user attributes in the view.
