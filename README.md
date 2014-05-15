@@ -26,28 +26,38 @@ $scope.doGoogleAuthWithPopup = function () {
 ```
 
 
-## Client Side Authentication
+## Tutorials
 
 There are two ways of implementing signin/singup. One is using our [JavaScript SDK](https://github.com/auth0/auth0.js) which is just a wrapper to our API so you can build your UI on top or the other one is using [Login Widget](https://docs.auth0.com/login-widget2), which is a complete Login UI ready. You can check the following getting started guides:
 
- * [User/Password Login](docs/jssdk.md)
+### With the Login Widget
+
+ * [User/Password + Social Login with Auth0 Widget (popup mode)](docs/widget.md): Authenticate using the [Login Widget](https://docs.auth0.com/login-widget2) and get back a promise. Your angular app won't refresh because it uses `window.open` popup for social providers and an ajax call for user/password auth).
     
+   ![widget_popup](https://cloud.githubusercontent.com/assets/419703/2959883/1b7e1d9a-dab7-11e3-8060-bb14b3430e03.gif)
+
+  → [Read the tutorial](docs/widget.md)
+    
+ * [User/Password + Social Login with Auth0 Widget (redirect mode)](docs/widget-redirect.md): Authenticate using the [Login Widget](https://docs.auth0.com/login-widget2) and listen to an event. Your angular app will be refreshed when it comes back from Auth0 as opposed to the __popup mode__.
+   
+   ![widget_guide](https://cloud.githubusercontent.com/assets/419703/2867712/3580ca60-d23a-11e3-8312-636a309d7af0.gif)
+  
+   → [Read the tutorial](docs/widget-redirect.md)
+
+### With your UI
+
+* [User/Password Login](docs/jssdk.md): Authenticate user/passwords and get back a promise.
    
    ![basic_guide](https://cloud.githubusercontent.com/assets/419703/2867713/35ac5914-d23a-11e3-91f9-b6365a10137f.gif)
 
- * [User/Password + Social Login with Auth0 Widget](docs/widget.md)
-    
-   ![widget_popup](https://cloud.githubusercontent.com/assets/419703/2959883/1b7e1d9a-dab7-11e3-8060-bb14b3430e03.gif)
-    
- * [User/Password + Social Login with Auth0 Widget (redirect mode)](docs/widget-redirect.md)
-   
-   ![widget_guide](https://cloud.githubusercontent.com/assets/419703/2867712/3580ca60-d23a-11e3-8312-636a309d7af0.gif)
-
- * [Social Login with Popup](docs/jssdk.md#social-authentication-with-popup)
+  → [Read the tutorial](docs/jssdk.md)
+  
+* [Social Login with Popup](docs/jssdk.md#social-authentication-with-popup): Authenticate using social providers and get back a promise.
   
    ![popup_guide](https://cloud.githubusercontent.com/assets/419703/2883025/e09a9158-d495-11e3-814b-32ae41ce1cc6.gif)
 
-
+  → [Read the tutorial](docs/jssdk.md#social-authentication-with-popup)
+  
 Also, we have an [examples](examples) section that contains comprehensive scenarios.
 
 ## Documentation
