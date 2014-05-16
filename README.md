@@ -4,7 +4,7 @@ This AngularJS module will help you implement client-side and server-side (API) 
 
 [Auth0](https://www.auth0.com) is a cloud service that provides a turn-key solution for authentication, authorization and Single Sign On.
 
-> **NPM / Bower users**: Find this dependecy as `auth0-angular`.
+> **NPM / Bower users**: Find this dependecy as `auth0-angular`. Take into account that you will need to include either auth0-widget.js or auth0.js in order to run the examples using Bower or Auth0 Angular (they can be found as dependencies of this module).
 
 ### Usage
 
