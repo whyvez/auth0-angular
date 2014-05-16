@@ -1,6 +1,6 @@
 ### Examples
 
-**Note**: You can login with username: `hello@bye.com` and password: `hello` in all the examples listed below:
+**Note**: You can login with username: `hello@bye.com` and password: `hello` in all the examples listed below.
 
 The following examples offer a good starting point for including Auth0 in your AngularJS application:
 
