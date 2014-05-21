@@ -1,5 +1,6 @@
 {
   "name": "auth0-angular",
+  "main": "build/auth0-angular.js",
   "dependencies": {
     "angular": "~1.2.16",
     "angular-cookies": "~1.2.16",
