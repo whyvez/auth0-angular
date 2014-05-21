@@ -1,5 +1,9 @@
 # 0.4.x
 
+## 0.4.1
+
+  * Fixing `isAuthenticated` bug: when `idToken` expired `isAuthenticated` still was set to true.
+
 ## 0.4.0
 
   * Adding support for Auth0 Widget with popup mode (only social).
