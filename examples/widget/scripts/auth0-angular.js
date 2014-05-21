@@ -58,10 +58,12 @@
     } catch (e) {
       idToken = undefined;
     }
-    if (!idToken) {
+    if (!idToken || this.hasTokenExpired(idToken)) {
       this.isAuthenticated = false;
       this.idToken = undefined;
       this.accessToken = undefined;
+      // Serialize values if token has expired
+      this._serialize(undefined, undefined, undefined);
       return;
     }
     this.idToken = this.$cookieStore.get('idToken');
