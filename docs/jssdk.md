@@ -13,7 +13,7 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
 
 2. Add module dependencies:
     ```js
-    var myApp = angular.module('myApp', ['ngCookies', 'ngRoute', 'auth0']);
+    var myApp = angular.module('myApp', ['ngRoute', 'auth0']);
     ```
 
 3. Configure routes for the Authentication flow:
