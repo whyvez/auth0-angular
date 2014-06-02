@@ -2,7 +2,7 @@ var myApp = angular.module('myApp', [
   'ngCookies', 'auth0-redirect', 'ngRoute', 'authInterceptor'
 ]);
 
-myApp.run(function ($rootScope, $location, $route, AUTH_EVENTS, $timeout, parseHash) {
+myApp.run(function ($rootScope, $location, $route, AUTH_EVENTS, $timeout) {
   $rootScope.$on('$routeChangeError', function () {
     var otherwise = $route.routes && $route.routes.null && $route.routes.null.redirectTo;
     // Access denied to a route, redirect to otherwise
@@ -20,7 +20,6 @@ myApp.run(function ($rootScope, $location, $route, AUTH_EVENTS, $timeout, parseH
     window.alert('login failed');
   });
 
-  parseHash();
 });
 
 function isAuthenticated($q, auth) {
