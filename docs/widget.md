@@ -67,19 +67,6 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
   });
   ```
 
-  Bind the controller to a partial:
-
-  ```html
-  <div ng-controller="LoginCtrl">
-    <a href="" ng-click="logout()">logout</a>
-    <form ng-submit="login()">
-      <input type="text" name="user" ng-model="user" />
-      <input type="password" name="pass" ng-model="pass" />
-      <button type="submit" >submit</button>
-    </form>
-  </div>
-  ```
-
 6. Use the `auth.profile` object to show user attributes in the view.
   ```js
   myApp.controller('RootCtrl', function ($scope, $location, $http, auth) {
