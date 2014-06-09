@@ -41,6 +41,9 @@ Authenticate using the [Login Widget](https://docs.auth0.com/login-widget2) and 
    ![widget_popup](https://cloud.githubusercontent.com/assets/419703/2959883/1b7e1d9a-dab7-11e3-8060-bb14b3430e03.gif)
     
 #### User/Password + Social Login with Auth0 Widget (redirect mode)
+
+  → [Read the tutorial](docs/widget-redirect.md)
+
 Authenticate using the [Login Widget](https://docs.auth0.com/login-widget2) and listen to an event. Your angular app will be refreshed when it comes back from Auth0 as opposed to the __popup mode__.
    
    ![widget_guide](https://cloud.githubusercontent.com/assets/419703/2867712/3580ca60-d23a-11e3-8312-636a309d7af0.gif)
@@ -56,11 +59,12 @@ Authenticate user/passwords and get back a promise.
    ![basic_guide](https://cloud.githubusercontent.com/assets/419703/2867713/35ac5914-d23a-11e3-91f9-b6365a10137f.gif)
   
 #### Social Login with Popup
+
+  → [Read the tutorial](docs/jssdk.md#social-authentication-with-popup)
+
 Authenticate using social providers and get back a promise.
   
    ![popup_guide](https://cloud.githubusercontent.com/assets/419703/2883025/e09a9158-d495-11e3-814b-32ae41ce1cc6.gif)
-
-  → [Read the tutorial](docs/jssdk.md#social-authentication-with-popup)
   
 Also, we have an [examples](examples) section that contains comprehensive scenarios.
 
