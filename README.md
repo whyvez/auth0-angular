@@ -15,12 +15,14 @@ function onLoginFailure () { $scope.message = 'invalid credentials'; }
 $scope.submit = function () {
   var options = { connection: 'my-connection', username: $scope.username,  password: $scope.password, scope: 'openid name email' }; 
 
+  // auth should be injected in your controller
   auth.signin(options).then(onLoginSuccess, onLoginFailure);
 };
 
 $scope.doGoogleAuthWithPopup = function () {
   var options = { popup: true, connection: 'google-oauth2', scope: 'openid name email' };
   
+  // auth should be injected in your controller
   auth.signin(options).then(onLoginSuccess, onLoginFailure);
 };
 ```
