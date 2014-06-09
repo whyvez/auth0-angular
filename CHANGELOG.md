@@ -1,5 +1,9 @@
 # 0.4.x
 
+## 0.4.2
+
+  * Adding `main` attribute to `package.json`
+
 ## 0.4.1
 
   * Fixing `isAuthenticated` bug: when `idToken` expired `isAuthenticated` still was set to true.
