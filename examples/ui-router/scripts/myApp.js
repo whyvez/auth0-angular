@@ -15,6 +15,9 @@ function isAuthenticated($q, auth) {
   return deferred.promise;
 }
 
+// Make it work with minifiers
+isAuthenticated.$inject = ['$q', 'auth'];
+
 myApp.config(function($stateProvider, $urlRouterProvider, $httpProvider, authProvider) {
 
   // For any unmatched url, redirect to /login

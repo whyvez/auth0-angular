@@ -25,6 +25,9 @@ function isAuthenticated($q, auth) {
   return deferred.promise;
 }
 
+// Make it work with minifiers
+isAuthenticated.$inject = ['$q', 'auth'];
+
 myApp.factory('customInterceptor', function ($injector, $rootScope, $q) {
   return {
     request: function (config) {

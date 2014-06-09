@@ -26,6 +26,9 @@ define(['angular', 'auth0', 'auth0-angular', 'angular-cookies', 'angular-route']
     return deferred.promise;
   }
 
+  // Make it work with minifiers
+  isAuthenticated.$inject = ['$q', 'auth'];
+
   myApp.config(function ($routeProvider, authProvider, $httpProvider) {
     $routeProvider
     .when('/logout',  {

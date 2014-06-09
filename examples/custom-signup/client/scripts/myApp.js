@@ -25,6 +25,9 @@ function isAuthenticated($q, $timeout, auth) {
   return deferred.promise;
 }
 
+// Make it work with minifiers
+isAuthenticated.$inject = ['$q', 'auth'];
+
 myApp.config(function ($routeProvider, authProvider, $httpProvider) {
   $routeProvider
   .when('/logout',  {
