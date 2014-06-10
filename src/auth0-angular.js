@@ -242,7 +242,7 @@
     };
 
     // Auth0 Widget special cases
-    if (typeof Auth0Widget !== 'undefined' && that.auth0Lib instanceof Auth0Widget) {
+    if (that.auth0Lib && that.auth0Lib.constructor && that.auth0Lib.constructor.name !== 'Auth0') {
       if (options.popup) {
 
         // Auth0 widget & popup mode (popup: true) callback is the third parameter

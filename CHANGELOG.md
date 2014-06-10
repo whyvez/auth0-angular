@@ -1,5 +1,9 @@
 # 0.4.x
 
+## 0.4.3
+
+  * Fixes Auth0Widget check to be compatible with requireJS.
+
 ## 0.4.2
 
   * Adding `main` attribute to `package.json`
