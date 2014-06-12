@@ -25,7 +25,7 @@ Then, register on the `$stateChangeStart` event and check for that property:
 ```js
   myApp.run(function ($rootScope, $state, auth, AUTH_EVENTS) {
     $rootScope.$on('$stateChangeStart', function(e, to) {
-      if ( !to || !to.data || !angular.isFunction(to.data.rule)) { return; }
+      if ( !to || !to.data ) { return; }
       var rule = to.data.rule;
   
       if (rule === 'authenticated' && !auth.isAuthenticated) {
