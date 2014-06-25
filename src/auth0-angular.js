@@ -242,7 +242,10 @@
     };
 
     // Auth0 Widget special cases
-    if (that.auth0Lib && that.auth0Lib.constructor && that.auth0Lib.constructor.name !== 'Auth0') {
+    // XXX We detect the widget by asking if it has defined getClient method,
+    // this is the safest way as if using that.auth0Lib.constructor.name changes
+    // when minifying happens.
+    if (that.auth0Lib && that.auth0Lib.getClient) {
       if (options.popup) {
 
         // Auth0 widget & popup mode (popup: true) callback is the third parameter
