@@ -55,13 +55,13 @@
 
     /**
      * AUTH_EVENTS.redirectEnded event fires when the page has finished loading
-     * and the auth check has been performed (whether the user is logged in or not). 
+     * and the auth check has been performed (whether the user is logged in or not).
      * You can think about it as the auth.loaded promise but made an event.
      *
      * This event is broadcasted from the $rootScope.
      */
     redirectEnded: 'auth:REDIRECT_ENDED',
-    
+
 
   };
 
@@ -258,7 +258,7 @@
       // loading. In that case, we should not broadcast any event.
       callback = null;
     }
-    
+
 
     // In Auth0 widget on popup mode (popup: true) callback is the third parameter
     that.auth0Lib.signin(options, callback);
@@ -266,8 +266,21 @@
   };
 
   Auth0Wrapper.prototype.signout = function () {
+    var that = this;
+
     this._serialize(undefined, undefined, undefined);
     this._deserialize();
+
+    // Cleanup profile
+    Object.keys(that.profile).forEach(function (key) {
+      delete that.profile[key];
+    });
+
+    // Cleanup delegationTokens
+    Object.keys(that.delegationTokens).forEach(function (key) {
+      delete that.delegationTokens[key];
+    });
+
     this.$rootScope.$broadcast(AUTH_EVENTS.logout);
   };
 
@@ -406,7 +419,7 @@
         auth.getProfile(auth.idToken)
           .then(onAuthSuccess, onAuthFail)
           .finally(onRedirectEnded);
-      
+
       // callback URL
       } else if (result && result.id_token) {
         auth.getProfile(result.id_token)
