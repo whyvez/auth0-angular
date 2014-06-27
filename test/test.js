@@ -107,6 +107,55 @@ describe('Auth0 Angular', function () {
     });
   });
 
+  describe('signout', function () {
+    var auth, $rootScope, $timeout;
+
+    beforeEach(initAuth0);
+
+    beforeEach(inject(function (_auth_, _$rootScope_, _$timeout_) {
+      auth = _auth_;
+      $rootScope = _$rootScope_;
+      $timeout = _$timeout_;
+    }));
+
+    it('should clean all the values and flags from profile and delegatedTokens', function () {
+      // Pre-checks
+      expect(auth.profile).to.be.ok;
+      expect(auth.delegatedTokens).to.be.ok;
+
+      expect(auth.isAuthenticated).to.be.equal(false);
+      expect(auth.idToken).not.to.exist;
+      expect(auth.accessToken).not.to.exist;
+
+      // Arrange
+      var profile = auth.profile;
+      var delegatedTokens = auth.delegatedTokens;
+      auth.profile.name = 'Tim';
+      auth.profile.likes = 'Bananas';
+      auth.delegatedTokens['some-client-id'] = 'some-superpower-token';
+      auth.isAuthenticated = true;
+      auth.idToken = 'some-jwt-token';
+      auth.accessToken = 'some-access-token';
+
+      // Action signout
+      auth.signout();
+
+      // Expect objects to be the same
+      expect(profile).to.be.equal(auth.profile);
+      expect(delegatedTokens).to.be.equal(auth.delegatedTokens);
+
+      // ... and also to be clean
+      expect(Object.keys(auth.profile).length).to.be.equal(0);
+      expect(Object.keys(auth.delegatedTokens).length).to.be.equal(0);
+
+      // ... and flags to be reset
+      expect(auth.isAuthenticated).to.be.equal(false);
+      expect(auth.idToken).not.to.exist;
+      expect(auth.accessToken).not.to.exist;
+
+    });
+  });
+
   describe('Interceptor', function () {
     var $http, $httpBackend, $rootScope;
 
