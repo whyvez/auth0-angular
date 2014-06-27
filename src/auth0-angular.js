@@ -276,9 +276,9 @@
       delete that.profile[key];
     });
 
-    // Cleanup delegationTokens
-    Object.keys(that.delegationTokens).forEach(function (key) {
-      delete that.delegationTokens[key];
+    // Cleanup delegatedTokens
+    Object.keys(that.delegatedTokens).forEach(function (key) {
+      delete that.delegatedTokens[key];
     });
 
     this.$rootScope.$broadcast(AUTH_EVENTS.logout);
