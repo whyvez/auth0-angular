@@ -1,5 +1,9 @@
 # 0.4.x
 
+## 0.4.5
+
+  * Now on `logout` we are disposing properly `profile` and `delegatedTokens`.
+
 ## 0.4.4
 
   * Fixes issues with Auth0 and Auth0Widget minified versions: When on 0.4.3 it was made compatible with RequireJS a check to `constructor.name` was used to make sure the name of the constructor instance. When tested against the minified versions that value was the name of the minified constructor name (so it always executed the code for the widget which receives callback as third parameter). Now this check is performed by asserting getClient method to be present (part of Auth0 Widget but not Auth0.js).
