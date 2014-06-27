@@ -38,4 +38,12 @@ var tokenPromise = auth.getToken(targetClientId, options)
 For more information, check the [delegation token](examples/delegation-token) example.
 
 
+### How to refresh a token?
 
+In order to refresh a token call:
+```js
+auth.getToken(yourClientId).then(function (newToken) {
+// Replace the token with a new one
+auth.idToken = newToken;
+});
+```
