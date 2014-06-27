@@ -190,8 +190,17 @@
     return defer.promise;
   };
   Auth0Wrapper.prototype.signout = function () {
+    var that = this;
     this._serialize(undefined, undefined, undefined);
     this._deserialize();
+    // Cleanup profile
+    Object.keys(that.profile).forEach(function (key) {
+      delete that.profile[key];
+    });
+    // Cleanup delegatedTokens
+    Object.keys(that.delegatedTokens).forEach(function (key) {
+      delete that.delegatedTokens[key];
+    });
     this.$rootScope.$broadcast(AUTH_EVENTS.logout);
   };
   Auth0Wrapper.prototype.parseHash = function (locationHash) {
