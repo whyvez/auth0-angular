@@ -43,7 +43,7 @@ For more information, check the [delegation token](examples/delegation-token) ex
 In order to refresh a token call:
 ```js
 auth.getToken(yourClientId).then(function (newToken) {
-// Replace the token with a new one
-auth.idToken = newToken;
+  // Replace the token with a new one
+  auth.idToken = newToken;
 });
 ```
