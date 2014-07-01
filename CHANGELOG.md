@@ -1,5 +1,8 @@
 # 0.4.x
 
+## 0.4.6
+  * Added signin parameter `auth0jscall` for SSO.
+
 ## 0.4.5
 
   * Now on `logout` we are disposing properly `profile` and `delegatedTokens`.
