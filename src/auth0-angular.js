@@ -259,9 +259,15 @@
       callback = null;
     }
 
+    if (options.auth0jscall) {
+      var caller = that.auth0Lib.getClient ? that.auth0Lib.getClient() : that.auth0lib;
+      caller.signin(options, callback);
+    } else {
+      // In Auth0 widget on popup mode (popup: true) callback is the third parameter
+      that.auth0Lib.signin(options, callback);
+    }
 
-    // In Auth0 widget on popup mode (popup: true) callback is the third parameter
-    that.auth0Lib.signin(options, callback);
+
     return defer.promise;
   };
 
