@@ -1,7 +1,7 @@
 # 0.4.x
 
-## 0.4.6
-  * Added signin parameter `auth0jscall` for SSO.
+## 0.4.7
+  * Added `state` to `auth` when getting values from hash or cookies.
 
 ## 0.4.5
 
