@@ -217,10 +217,10 @@
         }
         // Start auth service
         auth.config = config;
-        var checkHandlers = function (popup) {
+        var checkHandlers = function (options) {
           var successHandlers = getHandlers('loginSuccess');
-          if (!popup && (!successHandlers || successHandlers.length === 0)) {
-            throw new Error('You must define a login success handler if not using popup mode');
+          if (!options.popup && !options.username && (!successHandlers || successHandlers.length === 0)) {
+            throw new Error('You must define a loginSuccess handler' + 'if not using popup mode or not doing ro call because that means you are doing a redirect');
           }
         };
         auth.hasTokenExpired = function (token) {
@@ -275,7 +275,7 @@
         };
         auth.signin = function (options) {
           options = options || {};
-          checkHandlers(options.popup);
+          checkHandlers(options);
           var onPopupSignin = function (defered) {
             return function (err, profile, idToken, accessToken, state) {
               if (err) {
