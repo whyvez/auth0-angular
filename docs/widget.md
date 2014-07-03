@@ -22,13 +22,21 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
       ...
       $routeProvider
       //  Here where you are going to display some restricted content.
-      .when('/',        { templateUrl: 'views/root.html',     controller: 'RootCtrl'    })
+      .when('/',        { 
+        templateUrl: 'views/root.html',     
+        controller: 'RootCtrl',
+        requiresLogin: true
+      })
       // Where the user will follow in order to close their session.
-      .when('/logout',  { templateUrl: 'views/logout.html',   controller: 'LogoutCtrl'  })
+      .when('/logout',  { 
+        templateUrl: 'views/logout.html',   
+        controller: 'LogoutCtrl'
+      })
       // Where the user will input their credentials.
-      .when('/login',   { templateUrl: 'views/login.html',    controller: 'LoginCtrl'   })
-
-      .otherwise({ redirectTo: '/login' });
+      .when('/login',   { 
+        templateUrl: 'views/login.html',    
+        controller: 'LoginCtrl'
+     });
     });
     ```
 

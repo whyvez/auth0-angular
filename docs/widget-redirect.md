@@ -8,12 +8,12 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
     <script src="//code.angularjs.org/1.2.16/angular-cookies.min.js"></script>
     <script src="//code.angularjs.org/1.2.16/angular-route.min.js"></script>
     <script src="//cdn.auth0.com/w2/auth0-widget-3.1.js"> </script>
-    <script src="//cdn.auth0.com/w2/auth0-angular-0.4.js"> </script>
+    <script src="//cdn.auth0.com/w2/auth0-angular-1.0.js"> </script>
     ```
 
 2. Add module dependencies:
     ```js
-    var app = angular.module('myApp', ['ngRoute', 'auth0-redirect']);
+    var app = angular.module('myApp', ['ngRoute', 'auth0']);
     ```
 
 2. Configure routes for the Authentication flow:
@@ -22,13 +22,21 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
       ...
       $routeProvider
       //  Here where you are going to display some restricted content.
-      .when('/',        { templateUrl: 'views/root.html',     controller: 'RootCtrl'    })
+      .when('/',        { 
+        templateUrl: 'views/root.html',     
+        controller: 'RootCtrl',
+        requiresLogin: true
+      })
       // Where the user will follow in order to close their session.
-      .when('/logout',  { templateUrl: 'views/logout.html',   controller: 'LogoutCtrl'  })
+      .when('/logout',  { 
+        templateUrl: 'views/logout.html',   
+        controller: 'LogoutCtrl'
+      })
       // Where the user will input their credentials.
-      .when('/login',   { templateUrl: 'views/login.html',    controller: 'LoginCtrl'   })
-
-      .otherwise({ redirectTo: '/login' });
+      .when('/login',   { 
+        templateUrl: 'views/login.html',    
+        controller: 'LoginCtrl'
+     });
     });
     ```
 
@@ -51,14 +59,14 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
   });
   ```
 
-  You will need to handle `AUTH_EVENTS.loginSuccess` and `AUTH_EVENTS.loginFailure` events as each time the user logs in the page is reloaded and the state is lost:
+  You will need to handle `loginSuccess` and `loginFailure` events as each time the user logs in the page is reloaded and the state is lost. You should do that on the `config` method of your app:
     ```js
-    myApp.run(function ($rootScope, $location, AUTH_EVENTS, $timeout) {
-      $rootScope.$on(AUTH_EVENTS.loginSuccess, function () {
+    myApp.config(function (authProvider) {
+      authProvider.on('loginSuccess', function () {
         // TODO Handle when login succeeds
         $location.path('/');
       });
-      $rootScope.$on(AUTH_EVENTS.loginFailure, function () {
+      authProvider.on('loginFailure', function () {
         // TODO Handle when login fails
         window.alert('login failed');
       });
@@ -77,16 +85,6 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
 6. Use the `auth.profile` object to show user attributes in the view.
   ```js
   myApp.controller('RootCtrl', function ($scope, $location, $http, auth) {
-    if (!auth.isAuthenticated) {
-      // Reject the user
-      $location.path('/login');
-      return;
-    }
-
-
-    // User is logged in at this point
-    ...
-
     $scope.user = auth.profile;
   };
   ```

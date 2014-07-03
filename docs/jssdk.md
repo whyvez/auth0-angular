@@ -8,7 +8,7 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
     <script src="//code.angularjs.org/1.2.16/angular-cookies.min.js"></script>
     <script src="//code.angularjs.org/1.2.16/angular-route.min.js"></script>
     <script src="//cdn.auth0.com/w2/auth0-2.1.js"></script>
-    <script src="//cdn.auth0.com/w2/auth0-angular-0.4.js"> </script>
+    <script src="//cdn.auth0.com/w2/auth0-angular-1.0.js"> </script>
     ```
 
 2. Add module dependencies:
@@ -22,13 +22,22 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
       ...
       $routeProvider
       //  Here where you are going to display some restricted content.
-      .when('/',        { templateUrl: 'views/root.html',     controller: 'RootCtrl'    })
+      .when('/',        { 
+        templateUrl: 'views/root.html',     
+        controller: 'RootCtrl',
+        requiresLogin: true
+      })
       // Where the user will follow in order to close their session.
-      .when('/logout',  { templateUrl: 'views/logout.html',   controller: 'LogoutCtrl'  })
+      .when('/logout',  { 
+        templateUrl: 'views/logout.html',   
+        controller: 'LogoutCtrl'
+      })
       // Where the user will input their credentials.
-      .when('/login',   { templateUrl: 'views/login.html',    controller: 'LoginCtrl'   })
+      .when('/login',   { 
+        templateUrl: 'views/login.html',    
+        controller: 'LoginCtrl'
+     });
 
-      .otherwise({ redirectTo: '/login' });
     });
     ```
 
@@ -39,7 +48,12 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
     ```js
     myApp.config(function ($routeProvider, authProvider) {
       ...
-      authProvider.init({ domain: 'yourdomain.auth0.com', clientID: 'YOUR_CLIENT_ID',  callbackURL: 'http://localhost:1337/' });
+      authProvider.init({ 
+        domain: 'yourdomain.auth0.com', 
+        clientID: 'YOUR_CLIENT_ID',  
+        callbackURL: 'http://localhost:1337/',
+        loginUrl: '/login' //To redirect if user wants to access forbidden area 
+      });
     });
   ```
 
@@ -50,7 +64,7 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
     $scope.pass = '';
 
     $scope.login = function () {
-    auth.signin({ username: $scope.user, password: $scope.pass, connection: 'Username-Password-Authentication', scope: 'openid name email' })
+    auth.signin({ popup: true, username: $scope.user, password: $scope.pass, connection: 'Username-Password-Authentication', scope: 'openid name email' })
     .then(function () {
         // User logged in successfully
         $location.path('/');
@@ -83,16 +97,6 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
 6. Use the `auth.profile` object to show user attributes in the view.
   ```js
   myApp.controller('RootCtrl', function ($scope, $location, $http, auth) {
-    if (!auth.isAuthenticated) {
-      // Reject the user
-      $location.path('/login');
-      return;
-    }
-
-
-    // User is logged in at this point
-    ...
-
     $scope.user = auth.profile;
   };
   ```

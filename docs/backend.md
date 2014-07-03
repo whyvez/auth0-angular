@@ -2,11 +2,11 @@
 
 Now that the user was authenticated on the client side, you want to make sure that every time an API is called, the user attributes are sent in a secure way. The `auth` service that you used before also provides a `token` which is a signed [JSON Web Token](http://tools.ietf.org/html/draft-jones-json-web-token). This token can be sent through an HTTP header and the backedn API can validaate it without any extra roundtrip (since the token has been signed with a secret that is shared between the API and Auth0).
 
-1. Add to your application the `authInterceptor` module:
+1. Add to your application the `auth0` module:
 
   ```js
   var myApp = angular.module('myApp', [
-    'ngCookies', 'auth0', /* or 'auth0-redirect' */ 'authInterceptor'
+    'ngCookies', 'auth0'
   ]);
 
   
@@ -33,10 +33,9 @@ Now that the user was authenticated on the client side, you want to make sure th
 3. If the JSON Web Token (`JWT`) has expired or has been tampered, you can handle the case with this event here:
 
     ```js
-        $rootScope.$on(AUTH_EVENTS.forbidden, function (event, response) {
-            // handle the case where the JWT is not valid (401 status code)
-            auth.signout();
-            $location.path('/login');
+        authProvider.on('forbidden', function(response) {
+          auth.signout(); 
+          $location.path('/login');
         });
     ```
 > Note: the JWT expiration can be controlled from the Auth0 dashboard
