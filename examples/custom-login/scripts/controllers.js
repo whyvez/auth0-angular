@@ -7,10 +7,7 @@ myApp.controller('MenuCtrl', function ($scope, $location) {
 });
 
 myApp.controller('MsgCtrl', function ($scope, auth) {
-  $scope.message = 'loading...';
-  auth.loaded.then(function () {
-    $scope.message = '';
-  });
+  $scope.message = '';
 });
 
 myApp.controller('RootCtrl', function (auth, $scope) {
@@ -38,6 +35,7 @@ myApp.controller('LoginCtrl', function (auth, $scope, $location) {
     auth.signin({
       connection: 'Username-Password-Authentication',
       username: $scope.user,
+      popup: true,
       password: $scope.pass,
       scope: 'openid name email'
     }).then(onLoginSuccess, onLoginFailed)

@@ -1,24 +1,8 @@
 var myApp = angular.module('myApp', [
-  'ngCookies', 'auth0', 'ui.router',  'authInterceptor'
+  'ngCookies', 'auth0', 'ui.router'
 ]);
 
-function isAuthenticated($q, auth) {
-  var deferred = $q.defer();
-
-  auth.loaded.then(function () {
-    if (auth.isAuthenticated) {
-      deferred.resolve();
-    } else {
-      deferred.reject();
-    }
-  });
-  return deferred.promise;
-}
-
-// Make it work with minifiers
-isAuthenticated.$inject = ['$q', 'auth'];
-
-myApp.config(function($stateProvider, $urlRouterProvider, $httpProvider, authProvider) {
+myApp.config(function($stateProvider, $urlRouterProvider, $httpProvider, authProvider, $locationProvider) {
 
   // For any unmatched url, redirect to /login
   $urlRouterProvider.otherwise('/login');
@@ -39,19 +23,19 @@ myApp.config(function($stateProvider, $urlRouterProvider, $httpProvider, authPro
     url: '/',
     templateUrl: 'views/root.html',
     controller: 'RootCtrl',
-    resolve: { isAuthenticated: isAuthenticated }
+    data: {
+      requiresLogin: true
+    }
   });
 
-  // Set the URL to the popup.html file
-  var href = document.location.href;
-  var hash = document.location.hash;
-  var popupUrl = href.substring(0, href.length - (hash.length + 1)) + '/popup.html';
+  $locationProvider.hashPrefix('!');
+
 
   authProvider.init({
     domain: 'contoso.auth0.com',
     clientID: 'DyG9nCwIEofSy66QM3oo5xU6NFs3TmvT',
-    // TODO Set this to your callbackURL, for instance http://localhost:1337/examples/widget/
-    callbackURL: popupUrl
+    callbackURL: location.href,
+    loginState: 'login'
   });
   $httpProvider.interceptors.push('authInterceptor');
 });

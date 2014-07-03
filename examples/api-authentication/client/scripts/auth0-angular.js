@@ -133,7 +133,8 @@
       '$injector',
       'authStorage',
       '$window',
-      function ($rootScope, $q, $injector, authStorage, $window) {
+      '$location',
+      function ($rootScope, $q, $injector, authStorage, $window, $location) {
         var auth = { isAuthenticated: false };
         var getHandlers = function (anEvent) {
           return config.eventHandlers[anEvent];
@@ -195,6 +196,25 @@
         $rootScope.$on('auth0.forbidden', function (e, response) {
           callHandler('forbidden', { response: response });
         });
+        if (config.loginUrl) {
+          $rootScope.$on('$routeChangeStart', function (e, nextRoute) {
+            if (nextRoute.$$route && nextRoute.$$route.requiresLogin) {
+              if (!auth.isAuthenticated) {
+                $location.path(config.loginUrl);
+              }
+            }
+          });
+        }
+        if (config.loginState) {
+          $rootScope.$on('$stateChangeStart', function (e, to) {
+            if (to.data && to.data.requiresLogin) {
+              if (!auth.isAuthenticated) {
+                e.preventDefault();
+                $injector.get('$state').go(config.loginState);
+              }
+            }
+          });
+        }
         // Start auth service
         auth.config = config;
         var checkHandlers = function (popup) {
