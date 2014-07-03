@@ -111,6 +111,7 @@
 
     this.idToken = this.$cookieStore.get('idToken');
     this.accessToken = this.$cookieStore.get('accessToken');
+    this.state = this.$cookieStore.get('state');
     this.isAuthenticated = true;
   };
 
