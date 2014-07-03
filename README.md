@@ -1,32 +1,10 @@
 # Auth0 and AngularJS
 
-This AngularJS module will help you implement client-side and server-side (API) authentication. You can use it together with [Auth0](https://www.auth0.com) to add username/password authentication, support for enterprise identity like Active Directory or SAML and also for social identities like Google, Facebook or Salesforce among others to your web, API and mobile native apps.
+This AngularJS module will help you implement client-side and server-side (API) authentication. You can use it together with [Auth0](https://www.auth0.com) to add support for sername/password authentication, enterprise identity providers like Active Directory or SAML and also for social identity providers like Google, Facebook or Salesforce among others to your web, API and mobile native apps.
 
 [Auth0](https://www.auth0.com) is a cloud service that provides a turn-key solution for authentication, authorization and Single Sign On.
 
 > **NPM / Bower users**: Find this dependecy as `auth0-angular`. Take into account that you will need to include either auth0-widget.js or auth0.js in order to run the examples using Bower or Auth0 Angular (they can be found as dependencies of this module).
-
-### Usage
-
-```js
-function onLoginSuccess () { $location.path('/'); }
-function onLoginFailure () { $scope.message = 'invalid credentials'; }
-
-$scope.submit = function () {
-  var options = { connection: 'my-connection', username: $scope.username,  password: $scope.password, scope: 'openid name email' }; 
-
-  // auth should be injected in your controller
-  auth.signin(options).then(onLoginSuccess, onLoginFailure);
-};
-
-$scope.doGoogleAuthWithPopup = function () {
-  var options = { popup: true, connection: 'google-oauth2', scope: 'openid name email' };
-  
-  // auth should be injected in your controller
-  auth.signin(options).then(onLoginSuccess, onLoginFailure);
-};
-```
-
 
 ## Tutorials
 
@@ -38,21 +16,22 @@ There are two ways of implementing signin/singup.
 
 The following guides will help you getting started:
 
-#### User/Password + Social Login with Auth0 Widget (popup mode)
-
-Authenticate using the [Login Widget](https://docs.auth0.com/login-widget2) and get back a promise. Your angular app won't refresh because it uses `window.open` popup for social providers and an ajax call for user/password auth).
-    
-  → [Read the tutorial](docs/widget.md)    
-    
-   ![widget_popup](https://cloud.githubusercontent.com/assets/419703/2959883/1b7e1d9a-dab7-11e3-8060-bb14b3430e03.gif)
-    
 #### User/Password + Social Login with Auth0 Widget (redirect mode)
 
-Authenticate using the [Login Widget](https://docs.auth0.com/login-widget2) and listen to an event. Your angular app will be refreshed when it comes back from Auth0 as opposed to the __popup mode__.
+Authenticate using the [Login Widget](https://docs.auth0.com/login-widget2) and listen to an event. Your angular app will be refreshed when it comes back from Auth0 as opposed to the __popup mode__. 
 
   → [Read the tutorial](docs/widget-redirect.md)
    
    ![widget_guide](https://cloud.githubusercontent.com/assets/419703/2867712/3580ca60-d23a-11e3-8312-636a309d7af0.gif)
+
+#### User/Password + Social Login with Auth0 Widget (popup mode)
+
+Authenticate using the [Login Widget](https://docs.auth0.com/login-widget2) and get back a promise. Your angular app won't refresh because it uses `window.open` popup for social providers and an ajax call for user/password auth).
+    
+  → [Read the tutorial](docs/widget-popup.md)    
+    
+   ![widget_popup](https://cloud.githubusercontent.com/assets/419703/2959883/1b7e1d9a-dab7-11e3-8060-bb14b3430e03.gif)
+    
 
 ### With your own UI
 
@@ -64,11 +43,11 @@ Authenticate user/passwords and get back a promise.
    
    ![basic_guide](https://cloud.githubusercontent.com/assets/419703/2867713/35ac5914-d23a-11e3-91f9-b6365a10137f.gif)
   
-#### Social Login with Popup
+#### Social Login
 
-Authenticate using social providers and get back a promise.
+Authenticate using social providers
 
-  → [Read the tutorial](docs/jssdk.md#social-authentication-with-popup)
+  → [Read the tutorial](docs/jssdk.md#social-authentication)
   
    ![popup_guide](https://cloud.githubusercontent.com/assets/419703/2883025/e09a9158-d495-11e3-814b-32ae41ce1cc6.gif)
   
