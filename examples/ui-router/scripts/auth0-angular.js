@@ -318,7 +318,7 @@
             auth.profile = profile;
             defered.resolve(profile);
           };
-          config.auth0lib.getProfile(idToken, applied(onProfile));
+          config.auth0lib.getProfile(idToken || auth.idToken, applied(onProfile));
           return defered.promise;
         };
         return auth;
