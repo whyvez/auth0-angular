@@ -1,3 +1,16 @@
+# 1.0.X
+
+## 1.0.0
+  * We've refactored the code to improve code quality
+  * We've improved `redirect` feature of the SDK. Now, the `redirect` feature parses the hash with the `accessToken` as part of Angular's URL changing process
+  * We've added `requiresLogin` paramter to routes to specify if a route is protected or not. If a user tries to get to a protected route, he'll be redirected to the login page
+  * We've added the `refreshToken` method to easily refresh the JWT token that we have
+  * We've added a better way to subscribe to events like `loginSuccess`  and `loginFailure`. This events now receive all the properties from authentication and you can inject any AngularJS service in there to use.
+  * We've extracted the token saving module to `auth0.storage` module so that if you want to implement your own storage instead of using `ngCookies`  you easily can if you use `authStorage` interface.
+  * Now you just need to add one `auth0` module to your project and it'll work for either `redirect`, `poppup` and it includes the `$httpInterceptor`  that sends the JWT.
+  * All the examples and documentation have been updated for this new interface
+  * Lots of other small bug and fixes
+
 # 0.4.x
 
 ## 0.4.7
