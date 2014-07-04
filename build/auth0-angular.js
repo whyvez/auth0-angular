@@ -64,7 +64,9 @@
       this.store = function (idToken, accessToken, state) {
         $cookieStore.put('idToken', idToken);
         $cookieStore.put('accessToken', accessToken);
-        $cookieStore.put('state', state);
+        if (state) {
+          $cookieStore.put('state', state);
+        }
       };
       this.get = function () {
         return {
@@ -155,12 +157,15 @@
           }
         };
         var applied = function (fn) {
-          return function () {
+          // Adding arguments just due to a bug in Auth0.js.
+          /*jshint ignore:start */
+          return function (err, response) {
+            /*jshint ignore:end */
             var argsCall = arguments;
             safeApply(function () {
               fn.apply(null, argsCall);
-            });
-          };
+            });  /*jshint ignore:start */
+          };  /*jshint ignore:end */
         };
         // SignIn
         // Generic things

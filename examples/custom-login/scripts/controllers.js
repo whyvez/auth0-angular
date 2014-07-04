@@ -7,12 +7,18 @@ myApp.controller('MenuCtrl', function ($scope, $location) {
 });
 
 myApp.controller('MsgCtrl', function ($scope, auth) {
-  $scope.message = '';
+  $scope.message = {text: ''};
 });
 
 myApp.controller('RootCtrl', function (auth, $scope) {
-  $scope.$parent.message = 'Welcome ' + auth.profile.name + '!';
   $scope.auth = auth;
+  $scope.$watch('auth.profile.name', function(name) {
+    if (!name) {
+      return;
+    }
+    $scope.message.text = 'Welcome ' + auth.profile.name + '!';
+  });
+
 });
 
 myApp.controller('LoginCtrl', function (auth, $scope, $location) {
@@ -20,22 +26,20 @@ myApp.controller('LoginCtrl', function (auth, $scope, $location) {
   $scope.pass = '';
 
   function onLoginSuccess() {
-    $scope.$parent.message = '';
+    $scope.message.text = '';
     $location.path('/');
   }
 
   function onLoginFailed() {
-    $scope.$parent.message = 'invalid credentials';
+    $scope.message.text = 'invalid credentials';
   }
 
   $scope.submit = function () {
-    $scope.$parent.message = 'loading...';
+    $scope.message.text = 'loading...';
     $scope.loading = true;
-
     auth.signin({
       connection: 'Username-Password-Authentication',
       username: $scope.user,
-      popup: true,
       password: $scope.pass,
       scope: 'openid name email'
     }).then(onLoginSuccess, onLoginFailed)
@@ -45,7 +49,7 @@ myApp.controller('LoginCtrl', function (auth, $scope, $location) {
   };
 
   $scope.doGoogleAuthWithPopup = function () {
-    $scope.$parent.message = 'loading...';
+    $scope.message.text = 'loading...';
     $scope.loading = true;
 
     auth.signin({
