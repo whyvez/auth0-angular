@@ -53,6 +53,26 @@ Authenticate using social providers
   
 Also, we have an [examples](examples) section that contains comprehensive scenarios.
 
+### Using SSO
+
+You can now use `sso`. If you have multiple Angular apps in different domains, you can have your users Log in to one if they're logged in to another one. It's important that you **DON'T** use `popup` mode with this:
+
+````js
+// in the config method
+authProvider.init({
+  clientID: '1234',
+  callbackURL: location.href,
+  domain: 'gonto.auth0.com',
+  sso: true
+});
+
+authProvider.on('loginSuccess', function($location) {
+  // This will get called after successful login 
+  // and also after successful SSO automatic login
+  $location.path('/');
+})
+````
+
 ## Documentation
  * [Using Redirect Mode](docs/redirect.md) 
  * [Consuming a protected REST API](docs/backend.md)

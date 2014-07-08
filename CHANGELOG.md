@@ -1,5 +1,8 @@
 # 1.0.X
 
+## 1.0.1
+* Added `sso` configuration to the `authProvider` to use `SSO`.
+
 ## 1.0.0
   * We've refactored the code to improve code quality
   * We've improved `redirect` feature of the SDK. Now, the `redirect` feature parses the hash with the `accessToken` as part of Angular's URL changing process
