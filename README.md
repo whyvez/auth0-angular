@@ -22,7 +22,7 @@ Authenticate using the [Login Widget](https://docs.auth0.com/login-widget2) and 
 
   → [Read the tutorial](docs/widget-redirect.md)
    
-   ![widget_guide](https://cloud.githubusercontent.com/assets/419703/2867712/3580ca60-d23a-11e3-8312-636a309d7af0.gif)
+   ![widget_guide](https://cloudup.com/ctj4-5kRNFf+)
 
 #### User/Password + Social Login with Auth0 Widget (popup mode)
 
@@ -30,7 +30,7 @@ Authenticate using the [Login Widget](https://docs.auth0.com/login-widget2) and 
     
   → [Read the tutorial](docs/widget-popup.md)    
     
-   ![widget_popup](https://cloud.githubusercontent.com/assets/419703/2959883/1b7e1d9a-dab7-11e3-8060-bb14b3430e03.gif)
+   ![widget_popup](https://cloudup.com/cg8u9kVV5Vh+)
     
 
 ### With your own UI
@@ -41,7 +41,7 @@ Authenticate user/passwords and get back a promise.
 
   → [Read the tutorial](docs/jssdk.md)
    
-   ![basic_guide](https://cloud.githubusercontent.com/assets/419703/2867713/35ac5914-d23a-11e3-91f9-b6365a10137f.gif)
+   ![basic_guide](https://cloudup.com/cmaeJKX7LEM+)
   
 #### Social Login
 
@@ -49,7 +49,7 @@ Authenticate using social providers
 
   → [Read the tutorial](docs/jssdk.md#social-authentication)
   
-   ![popup_guide](https://cloud.githubusercontent.com/assets/419703/2883025/e09a9158-d495-11e3-814b-32ae41ce1cc6.gif)
+   ![popup_guide](https://cloudup.com/cKpVNpR4s9y+)
   
 Also, we have an [examples](examples) section that contains comprehensive scenarios.
 
