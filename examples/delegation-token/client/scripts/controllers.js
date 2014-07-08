@@ -7,14 +7,10 @@ myApp.controller('MenuCtrl', function ($scope, $location) {
 });
 
 myApp.controller('MsgCtrl', function ($scope, auth) {
-  $scope.message = 'loading...';
-  auth.loaded.then(function () {
-    $scope.message = '';
-  });
+  $scope.message = '';
 });
 
 myApp.controller('RootCtrl', function (auth, $scope, $location, $http) {
-  $scope.$parent.message = 'Welcome ' + auth.profile.name + '!';
   $scope.auth = auth;
 
   $scope.sendProtectedMessage = function () {
@@ -46,8 +42,7 @@ myApp.controller('LoginCtrl', function (auth, $scope, $location) {
   }
 
   $scope.submit = function () {
-    $scope.$parent.message = 'loading...';
-    $scope.loading = true;    
+    $scope.loading = true;
     auth.signin({
       connection: 'Username-Password-Authentication',
       username: $scope.user,
@@ -60,7 +55,6 @@ myApp.controller('LoginCtrl', function (auth, $scope, $location) {
   };
 
   $scope.doGoogleAuthWithPopup = function () {
-    $scope.$parent.message = 'loading...';
     $scope.loading = true;
 
     auth.signin({
@@ -77,6 +71,6 @@ myApp.controller('LoginCtrl', function (auth, $scope, $location) {
 
 myApp.controller('LogoutCtrl', function (auth, $scope, $location) {
   auth.signout();
-  $scope.$parent.message = '';  
+  $scope.$parent.message = '';
   $location.path('/login');
 });

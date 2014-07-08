@@ -1,41 +1,8 @@
 var myApp = angular.module('myApp', [
-  'ngCookies', 'auth0-redirect', 'ngRoute', 'authInterceptor'
+  'ngCookies', 'auth0', 'ngRoute'
 ]);
 
-myApp.run(function ($rootScope, $location, $route, AUTH_EVENTS, $timeout) {
-  $rootScope.$on('$routeChangeError', function () {
-    var otherwise = $route.routes && $route.routes.null && $route.routes.null.redirectTo;
-    // Access denied to a route, redirect to otherwise
-    $timeout(function () {
-      $location.path(otherwise);
-    });
-  });
 
-  $rootScope.$on(AUTH_EVENTS.loginSuccess, function () {
-    // TODO Handle when login succeeds
-    $location.path('/');
-  });
-  $rootScope.$on(AUTH_EVENTS.loginFailure, function () {
-    // TODO Handle when login fails
-    window.alert('login failed');
-  });
-
-});
-
-function isAuthenticated($q, auth) {
-  var deferred = $q.defer();
-  auth.loaded.then(function () {
-    if (auth.isAuthenticated) {
-      deferred.resolve();
-    } else {
-      deferred.reject();
-    }
-  });
-  return deferred.promise;
-}
-
-// Make it work with minifiers
-isAuthenticated.$inject = ['$q', 'auth'];
 
 myApp.config(function ($routeProvider, authProvider, $httpProvider) {
   $routeProvider
@@ -51,19 +18,22 @@ myApp.config(function ($routeProvider, authProvider, $httpProvider) {
     templateUrl: 'views/root.html',
     controller: 'RootCtrl',
     /* isAuthenticated will prevent user access to forbidden routes */
-    resolve: { isAuthenticated: isAuthenticated }
-  })
-  .otherwise({ redirectTo: '/login' });
+    requiresLogin: true
+  });
 
   authProvider.init({
     domain: 'contoso.auth0.com',
     clientID: 'DyG9nCwIEofSy66QM3oo5xU6NFs3TmvT',
-    // TODO Replace with your callback URL, i.e. http://localhost:1337/widget
-    callbackURL: document.location.href
+    callbackURL: location.href,
+    loginUrl: '/login'
+  });
+
+  authProvider.on('loginSuccess', function($location) {
+    $location.path('/');
   });
 
   // Add a simple interceptor that will fetch all requests and add the jwt token to its authorization header.
-  // NOTE: in case you are calling APIs which expect a token signed with a different secret, you might 
+  // NOTE: in case you are calling APIs which expect a token signed with a different secret, you might
   // want to check the delegation-token example
   $httpProvider.interceptors.push('authInterceptor');
 });

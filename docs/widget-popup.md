@@ -7,7 +7,7 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
     <script src="//code.angularjs.org/1.2.16/angular.min.js"></script>
     <script src="//code.angularjs.org/1.2.16/angular-cookies.min.js"></script>
     <script src="//code.angularjs.org/1.2.16/angular-route.min.js"></script>
-    <script src="//cdn.auth0.com/w2/auth0-2.1.js"> </script>
+    <script src="//cdn.auth0.com/w2/auth0-widget-3.1.js"> </script>
     <script src="//cdn.auth0.com/w2/auth0-angular-1.0.js"> </script>
     ```
 
@@ -48,33 +48,17 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
     });
   ```
 
-4. Configure the `loginSuccess` and `loginFailure` events to handle the login. You can inject any `angularjs` service to the handler as well as `idToken`, `profile` and `authToken`.
+4. Inject the `auth` service in your controllers and call the `signin`/`signout` methods. You need to specify the `popup: true` option when calling the signin. You can then handle the `loginSuccess` and `loginFailure` either [the same way as with redirect](docs/widget-redirect) (check step 4), or using promises like below:
 
-  ```js
-      myApp.config(function (authProvider) {
-        ...
-        authProvider.on('loginSuccess', function($location) {
-          // See how we injected $location here
-          $location.path('/');
-        });
-
-        authProvider.on('loginFailure', function($window) {
-          $window.alert('Error logging in');
-        })
-      });
-    ```
-
-
-4. Inject the `auth` service in your controllers and call the `signin`/`signout` methods.
   ```js
   myApp
-    .controller('LoginCtrl', function ($scope, auth) {
+    .controller('LoginCtrl', function ($scope, auth, $location) {
       $scope.login = function() {
         // This will show the widget to choose how to authenticate
-        auth.signin({
-          username: $scope.username,
-          password: $scope.password,
-          connection: 'Username-Password-Authentication'
+        auth.signin({popup: true}).then(function() {
+          $location.path('/');
+        }, function() {
+          alert('error');
         });
       }
     })
@@ -87,10 +71,6 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
 
   ```html
   <!-- Include this on your login.html -->
-  <div>
-    <label>Username</label><input type="text" ng-model="username" />
-    <label>Password</label><input type="text" ng-model="password" />
-  </div>
   <a href="" ng-click="signin()">click to login</a>
 
   <!-- Include this on your main.html -->
@@ -114,23 +94,4 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
 > More details about the parameters you can use for the [Auth0 Login Widget](https://docs.auth0.com/login-widget2) and [auth0.js](https://github.com/auth0/auth0.js).
 
 After that, you may want to send requests to your server side. That can be found in the [Server Side Authentication section](backend.md).
-
-## Social Authentication
-To add Social authentication follow these steps:
-
-1. Add the a button to login with Google in your `login.html`
-  ````html
-  <input type="button" ng-click="loginWithGoogle()" />
-  ````
-2. Add the code to login with Google in `LoginCtrl`
-  ````js
-  $scope.loginWithGoogle = function() {
-    auth.signin({
-      connection: 'google-oauth2'
-      // add popup: true if you want the google page to open in a popup
-      // instead of doing a redirect
-      // popup: true
-    });
-  }
-  ````
 

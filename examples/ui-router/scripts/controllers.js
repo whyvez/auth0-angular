@@ -1,10 +1,8 @@
 var myApp = angular.module('myApp');
 
 myApp.controller('MsgCtrl', function ($scope, auth) {
-  $scope.message = 'loading...';
-  auth.loaded.then(function () {
-    $scope.message = '';
-  });
+  $scope.message = '';
+
 });
 
 myApp.controller('RootCtrl', function (auth, $scope) {
@@ -32,6 +30,7 @@ myApp.controller('LoginCtrl', function (auth, $scope, $cookies, $state) {
     auth.signin({
       connection: 'Username-Password-Authentication',
       username: $scope.user,
+      popup: true,
       password: $scope.pass,
       scope: 'openid name email'
     }).then(onLoginSuccess, onLoginFailed)

@@ -6,10 +6,7 @@ define(['angular', './myApp'], function (angular, myApp) {
   });
 
   myApp.controller('MsgCtrl', function ($scope, auth) {
-    $scope.message = 'loading...';
-    auth.loaded.then(function () {
-      $scope.message = '';
-    });
+    $scope.message = '';
   });
 
   myApp.controller('RootCtrl', function (auth, $scope) {
@@ -37,6 +34,7 @@ define(['angular', './myApp'], function (angular, myApp) {
       auth.signin({
         connection: 'Username-Password-Authentication',
         username: $scope.user,
+        popup: true,
         password: $scope.pass
      }).then(onLoginSuccess, onLoginFailed)
      .finally(function () {
@@ -46,12 +44,13 @@ define(['angular', './myApp'], function (angular, myApp) {
 
     $scope.doGoogleAuthWithPopup = function () {
       $scope.$parent.message = 'loading...';
-      $scope.loading = true;      
+      $scope.loading = true;
 
       auth.signin({
         popup: true,
         connection: 'google-oauth2',
-        scope: 'openid name email'
+        scope: 'openid name email',
+        popup: true
       }).then(onLoginSuccess, onLoginFailed)
       .finally(function () {
         $scope.loading = false;

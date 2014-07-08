@@ -7,14 +7,10 @@ myApp.controller('MenuCtrl', function ($scope, $location) {
 });
 
 myApp.controller('MsgCtrl', function ($scope, auth) {
-  $scope.message = 'loading...';
-  auth.loaded.then(function () {
-    $scope.message = '';
-  });
+  $scope.message = '';
 });
 
 myApp.controller('RootCtrl', function (auth, $scope) {
-  $scope.$parent.message = 'Welcome ' + auth.profile.name + '!';
   $scope.auth = auth;
 });
 
@@ -23,17 +19,15 @@ myApp.controller('LoginCtrl', function (auth, $scope, $location, $http) {
   $scope.pass = '';
 
   function onLoginSuccess() {
-    $scope.$parent.message = '';
     $location.path('/');
   }
 
   function onLoginFailed() {
-    $scope.$parent.message = 'invalid credentials';
+    alert('Login failed');
   }
 
   $scope.signup = {user: '', pass: '', favColor: 'red'};
   $scope.doLogin = function () {
-    $scope.$parent.message = 'loading...';
     $scope.loading = true;
 
     auth.signin({
@@ -69,13 +63,12 @@ myApp.controller('LoginCtrl', function (auth, $scope, $location, $http) {
       }
     })
     .error(function (data, status, headers, config) {
-      $scope.$parent.message = 'Error creating account for user ' + $scope.signup.user + ': '  + data;
+      alert('Error creating account for user ' + $scope.signup.user + ': '  + data);
     });
   };
 });
 
 myApp.controller('LogoutCtrl', function (auth, $scope, $location) {
   auth.signout();
-  $scope.$parent.message = '';
   $location.path('/login');
 });

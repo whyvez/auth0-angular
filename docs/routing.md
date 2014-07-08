@@ -15,53 +15,28 @@ myApp.config(function($stateProvider, $urlRouterProvider, $httpProvider, authPro
   $stateProvider
   .state('logout', { url: '/logout', templateUrl: 'views/logout.html', controller: 'LogoutCtrl' })
   .state('login', { url: '/login', templateUrl: 'views/login.html', controller: 'LoginCtrl' })
-  .state('root', { url: '/', templateUrl: 'views/root.html', controller: 'RootCtrl', data: { rule: 'authenticated' } });
+  .state('root', { url: '/', templateUrl: 'views/root.html', controller: 'RootCtrl', data: { requiresLogin: true } });
 
 });
 ```
 
-Then, register on the `$stateChangeStart` event and check for that property:
+Then, when configuring the `authProvider` just set the `loginState` to the name of the state to redirect to if the user doesn't have access to a certain webpage:
 
 ```js
-  myApp.run(function ($rootScope, $state, auth, AUTH_EVENTS) {
-    $rootScope.$on('$stateChangeStart', function(e, to) {
-      if ( !to || !to.data ) { return; }
-      var rule = to.data.rule;
-  
-      if (rule === 'authenticated' && !auth.isAuthenticated) {
-        // Stop redirect
-        e.preventDefault();
-  
-        // Send user to login state
-        $state.go('login', {});
-        return;
-      }
-  
-      $state.go(to, {}, {notify: false});
+  myApp.config(function (authProvider) {
+    authProvider.init({ 
+      domain: 'yourdomain.auth0.com', 
+      clientID: 'YOUR_CLIENT_ID',  
+      callbackURL: 'http://localhost:1337/',
+      loginState: 'login' // matches login state
     });
+    
   });
 ```
 
 #### ngRoute (Angular default routes)
 
-Angular default routes can be restricted using promises.
-
-Let's create a function that returns a promise that wraps `auth.isAuthenticated`:
-```js
-function isAuthenticated($q, $timeout, auth) {
-  var deferred = $q.defer();
-  $timeout(function () {
-    if (auth.isAuthenticated) {
-      deferred.resolve();
-    } else {
-      deferred.reject();
-    }
-  }, 0);
-  return deferred.promise;
-}
-```
-
-Then, add that function to the `resolve` field of the route we want to restrict:
+Then, add the `requiresLogin` property in the route that requires the user to be logged in:
 
 ```js
 myApp.config(function ($routeProvider) {
@@ -78,22 +53,21 @@ myApp.config(function ($routeProvider) {
     templateUrl: 'views/root.html',
     controller: 'RootCtrl',
     /* isAuthenticated will prevent user access to forbidden routes */
-    resolve: { isAuthenticated: isAuthenticated }
+    requiresLogin: true
   })
-  .otherwise({ redirectTo: '/login' });
 });
 ```
 
-Intercept the `$routeChangeError` event and redirect to the otherwise route:
+Then, when configuring the `authProvider` just set the `loginUrl` to the name of the state to redirect to if the user doesn't have access to a certain webpage:
 
 ```js
-myApp.run(function ($rootScope, $location) {
-  $rootScope.$on('$routeChangeError', function () {
-    var otherwise = $route.routes && $route.routes.null && $route.routes.null.redirectTo;
-    // Access denied to a route, redirect to otherwise
-    $timeout(function () {
-      $location.path(otherwise);
+  myApp.config(function (authProvider) {
+    authProvider.init({ 
+      domain: 'yourdomain.auth0.com', 
+      clientID: 'YOUR_CLIENT_ID',  
+      callbackURL: 'http://localhost:1337/',
+      loginUrl: '/login' // matches login url
     });
+    
   });
-});
 ```

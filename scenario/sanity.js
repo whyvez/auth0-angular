@@ -24,8 +24,8 @@ function findAnchorByContent(content, cb) {
 }
 
 describe('custom login example', function() {
-  var logoutButton; 
-  
+  var logoutButton;
+
   beforeEach(function () {
     browser.get('/');
     findAnchorByContent('logout', function (button) {
@@ -44,15 +44,15 @@ describe('custom login example', function() {
 
       element(by.css('button')).click();
 
-      expect(element(by.binding('message')).getText()).toEqual('loading...');
+      expect(element(by.css('.message')).getText()).toEqual('loading...');
 
       browser.driver.wait(function() {
-        return element(by.binding('message')).getText().then(function (text) {
+        return element(by.css('.message')).getText().then(function (text) {
           return 'Welcome hello@bye.com!' === text;
         });
       });
 
-      expect(element(by.binding('message')).getText()).toEqual('Welcome hello@bye.com!');
+      expect(element(by.css('.message')).getText()).toEqual('Welcome hello@bye.com!');
 
       element(by.css('pre > code')).getText().then(function (text) {
         var obj = JSON.parse(text);
@@ -67,15 +67,15 @@ describe('custom login example', function() {
 
       element(by.css('button')).click();
 
-      expect(element(by.binding('message')).getText()).toEqual('loading...');
+      expect(element(by.css('.message')).getText()).toEqual('loading...');
 
       browser.driver.wait(function() {
-        return element(by.binding('message')).getText().then(function (text) {
+        return element(by.css('.message')).getText().then(function (text) {
           return 'invalid credentials' === text;
         });
       });
 
-      expect(element(by.binding('message')).getText()).toEqual('invalid credentials');
+      expect(element(by.css('.message')).getText()).toEqual('invalid credentials');
     });
 
     it('should keep working after reload', function () {
@@ -85,12 +85,12 @@ describe('custom login example', function() {
       element(by.css('button')).click();
 
       browser.driver.wait(function() {
-        return element(by.binding('message')).getText().then(function (text) {
+        return element(by.css('.message')).getText().then(function (text) {
           return 'Welcome hello@bye.com!' === text;
         });
       });
 
-      element(by.binding('message')).getText().then(function (text) {
+      element(by.css('.message')).getText().then(function (text) {
         expect(text).toEqual('Welcome hello@bye.com!');
       });
 
@@ -103,7 +103,7 @@ describe('custom login example', function() {
       browser.get('/');
 
       browser.driver.wait(function() {
-        return element(by.binding('message')).getText().then(function (text) {
+        return element(by.css('.message')).getText().then(function (text) {
           return 'Welcome hello@bye.com!' === text;
         });
       });
@@ -113,7 +113,7 @@ describe('custom login example', function() {
         logoutButton = button;
       });
 
-      element(by.binding('message')).getText().then(function (text) {
+      element(by.css('.message')).getText().then(function (text) {
         expect(text).toEqual('Welcome hello@bye.com!');
       });
 
@@ -130,12 +130,12 @@ describe('custom login example', function() {
       element(by.css('button')).click();
 
       browser.driver.wait(function() {
-        return element(by.binding('message')).getText().then(function (text) {
+        return element(by.css('.message')).getText().then(function (text) {
           return 'Welcome hello@bye.com!' === text;
         });
       });
 
-      element(by.binding('message')).getText().then(function (text) {
+      element(by.css('.message')).getText().then(function (text) {
         expect(text).toEqual('Welcome hello@bye.com!');
       });
 
@@ -145,7 +145,7 @@ describe('custom login example', function() {
       });
 
       logoutButton.click();
-      
+
       expect(element(by.model('user')).getText()).toEqual('');
       expect(element(by.model('pass')).getText()).toEqual('');
 
@@ -162,12 +162,12 @@ describe('custom login example', function() {
           var popupHandle = handles[1];
 
           browser.switchTo().window(popupHandle);
-        
+
           browser.close();
-          
+
           browser.switchTo().window(handles[0]);
 
-          expect(element(by.binding('message')).getText()).toEqual('invalid credentials');
+          expect(element(by.css('.message')).getText()).toEqual('invalid credentials');
 
         });
       });
@@ -192,12 +192,12 @@ describe('custom login example', function() {
           browser.switchTo().window(handles[0]);
 
           browser.driver.wait(function() {
-            return element(by.binding('message')).getText().then(function (text) {
+            return element(by.css('.message')).getText().then(function (text) {
               return 'Welcome Auth0 Tests!' === text;
             });
           });
 
-          element(by.binding('message')).getText().then(function (text) {
+          element(by.css('.message')).getText().then(function (text) {
             expect(text).toEqual('Welcome Auth0 Tests!');
           });
 
