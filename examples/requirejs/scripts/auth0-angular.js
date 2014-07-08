@@ -95,6 +95,7 @@
       this.loginUrl = options.loginUrl;
       this.loginState = options.loginState;
       this.clientID = options.clientID;
+      this.sso = options.sso;
       var Constructor = Auth0Constructor;
       if (!Constructor && typeof Auth0Widget !== 'undefined') {
         Constructor = Auth0Widget;
@@ -191,10 +192,22 @@
           if (!auth.isAuthenticated) {
             if (hashResult && hashResult.id_token) {
               onSigninOk(hashResult.id_token, hashResult.access_token, hashResult.state, e);
+              return;
             }
             var storedValues = authStorage.get();
             if (storedValues && storedValues.idToken) {
               onSigninOk(storedValues.idToken, storedValues.accessToken, storedValues.state, e);
+              return;
+            }
+            if (config.sso) {
+              config.auth0js.getSSOData(applied(function (err, ssoData) {
+                if (ssoData.sso) {
+                  auth.signin({
+                    popup: false,
+                    connection: ssoData.lastUsedConnection.strategy
+                  }, config.auth0js);
+                }
+              }));
             }
           }
         });
@@ -278,7 +291,7 @@
         auth.refreshToken = function (options) {
           return auth.getToken(config.clientID, options);
         };
-        auth.signin = function (options) {
+        auth.signin = function (options, lib) {
           options = options || {};
           checkHandlers(options);
           var onPopupSignin = function (defered) {
@@ -298,10 +311,11 @@
             };
           };
           var defered = $q.defer();
+          var auth0lib = lib || config.auth0lib;
           if (config.isWidget) {
-            config.auth0lib.signin(options, null, applied(onPopupSignin(defered)));
+            auth0lib.signin(options, null, applied(onPopupSignin(defered)));
           } else {
-            config.auth0lib.signin(options, applied(onPopupSignin(defered)));
+            auth0lib.signin(options, applied(onPopupSignin(defered)));
           }
           return defered.promise;
         };
