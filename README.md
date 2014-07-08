@@ -55,7 +55,7 @@ Also, we have an [examples](examples) section that contains comprehensive scenar
 
 ### Using SSO
 
-You can now use `sso`. If you have multiple Angular apps in different domains, you can have your users Log in to one if they're logged in to another one. It's important that you **DON'T** use `popup` mode with this:
+You can now use `sso`. If you have multiple Angular apps in different domains, you can have your users be automatically logged in to one of your apps if they're logged in to the another one. It's important that you **DON'T** use `popup` mode with this:
 
 ````js
 // in the config method
