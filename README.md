@@ -73,6 +73,8 @@ authProvider.on('loginSuccess', function($location) {
 })
 ````
 
+You can [Check out the example here](https://github.com/auth0/auth0-angular/tree/master/examples/sso)
+
 ## Documentation
  * [Using Redirect Mode](docs/redirect.md) 
  * [Consuming a protected REST API](docs/backend.md)
