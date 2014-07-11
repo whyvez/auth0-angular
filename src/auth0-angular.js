@@ -254,7 +254,7 @@
       var checkHandlers = function(options) {
         var successHandlers = getHandlers('loginSuccess');
         if (!options.popup && !options.username && (!successHandlers || successHandlers.length === 0)) {
-            throw new Error('You must define a loginSuccess handler' +
+            throw new Error('You must define a loginSuccess handler ' +
               'if not using popup mode or not doing ro call because that means you are doing a redirect');
           }
       };
