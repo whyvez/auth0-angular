@@ -1,4 +1,4 @@
-# 1.0.X
+# 1.1.x
 
 ## 1.1.0
   * Better popup handling (powered by Winchan).
@@ -7,6 +7,8 @@
 
 ## 1.0.1
   * Added `sso` configuration to the `authProvider` to use `SSO`.
+
+# 1.0.x
 
 ## 1.0.0
   * We've refactored the code to improve code quality
