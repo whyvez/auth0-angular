@@ -4,7 +4,7 @@ require.config({
         'angular-route':    '//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-route',
         'angular-cookies':  '//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-cookies',
         'auth-angular':     './auth0-angular',
-        'auth0':            '//cdn.auth0.com/w2/auth0-2.0'
+        'auth0':            '//cdn.auth0.com/w2/auth0-3.1'
     },
     shim: {
         'angular':{ exports:'angular' },

@@ -167,7 +167,15 @@ describe('custom login example', function() {
 
           browser.switchTo().window(handles[0]);
 
-          expect(element(by.css('.message')).getText()).toEqual('invalid credentials');
+          browser.driver.wait(function() {
+            return element(by.css('.message')).getText().then(function (text) {
+              return 'invalid credentials' === text;
+            });
+          });
+
+          element(by.css('.message')).getText().then(function (text) {
+            expect(text).toEqual('invalid credentials');
+          });
 
         });
       });
