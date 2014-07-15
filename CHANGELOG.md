@@ -1,7 +1,12 @@
 # 1.0.X
 
+## 1.1.0
+  * Better popup handling (powered by Winchan).
+  * Phonegap support.
+  * updated examples: Auth0.js to 3.1 and Widget to 5.0.
+
 ## 1.0.1
-* Added `sso` configuration to the `authProvider` to use `SSO`.
+  * Added `sso` configuration to the `authProvider` to use `SSO`.
 
 ## 1.0.0
   * We've refactored the code to improve code quality
