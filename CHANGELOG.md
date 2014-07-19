@@ -1,3 +1,9 @@
+# 1.1.X
+
+## 1.1.1
+* Added `hookEvents` method in `auth` to hook all events once the app is started.
+* Calling `logout` event once signout is done
+
 # 1.0.X
 
 ## 1.0.1
