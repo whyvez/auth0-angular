@@ -73,6 +73,7 @@ module.exports = function (grunt) {
           'examples/delegation-token/client/scripts/auth0-angular.js':    'build/auth0-angular.js',
           'examples/custom-signup/client/scripts/auth0-angular.js':       'build/auth0-angular.js',
           'examples/api-authentication/client/scripts/auth0-angular.js':  'build/auth0-angular.js',
+          'examples/html5mode/public/auth0-angular.js':                   'build/auth0-angular.js',
           'examples/widget/scripts/auth0-angular.js':                     'build/auth0-angular.js',
           'examples/sso/scripts/auth0-angular.js':                        'build/auth0-angular.js',
           'examples/widget-redirect/scripts/auth0-angular.js':            'build/auth0-angular.js',

@@ -241,6 +241,8 @@
             throw new Error('You must define a loginSuccess handler' + 'if not using popup mode or not doing ro call because that means you are doing a redirect');
           }
         };
+        auth.hookEvents = function () {
+        };
         auth.hasTokenExpired = function (token) {
           if (!token) {
             return true;
@@ -326,6 +328,7 @@
           auth.state = null;
           auth.accessToken = null;
           auth.isAuthenticated = false;
+          callHandler('logout');
         };
         auth.getProfile = function (idToken) {
           var defered = $q.defer();

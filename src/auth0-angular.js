@@ -259,6 +259,10 @@
           }
       };
 
+      auth.hookEvents = function() {
+        // Does nothing. Hook events on application's run
+      };
+
 
       auth.hasTokenExpired = function (token) {
         if (!token) {
@@ -364,6 +368,7 @@
         auth.state = null;
         auth.accessToken = null;
         auth.isAuthenticated = false;
+        callHandler('logout');
       };
 
       auth.getProfile = function(idToken) {

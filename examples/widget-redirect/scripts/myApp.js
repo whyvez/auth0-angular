@@ -32,6 +32,10 @@ myApp.config(function ($routeProvider, authProvider, $httpProvider) {
     $location.path('/');
   });
 
+  authProvider.on('logout', function() {
+    console.log("Logged out");
+  })
+
   // Add a simple interceptor that will fetch all requests and add the jwt token to its authorization header.
   // NOTE: in case you are calling APIs which expect a token signed with a different secret, you might
   // want to check the delegation-token example
