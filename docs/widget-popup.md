@@ -45,7 +45,11 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
         callbackURL: location.href,
         loginUrl: '/login'
       });
-    });
+    })
+    .run(function(auth) {
+      // This hooks al auth events to check everything as soon as the app starts
+      auth.hookEvents();
+    });;
   ```
 
 4. Inject the `auth` service in your controllers and call the `signin`/`signout` methods. You need to specify the `popup: true` option when calling the signin. You can then handle the `loginSuccess` and `loginFailure` either [the same way as with redirect](docs/widget-redirect) (check step 4), or using promises like below:

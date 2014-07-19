@@ -45,6 +45,10 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
         callbackURL: location.href,
         loginUrl: '/login'
       });
+    })
+    .run(function(auth) {
+      // This hooks al auth events to check everything as soon as the app starts
+      auth.hookEvents();
     });
   ```
 

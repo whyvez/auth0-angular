@@ -45,7 +45,11 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
         callbackURL: location.href,
         loginUrl: '/login'
       });
-    });
+    })
+    .run(function(auth) {
+      // This hooks al auth events to check everything as soon as the app starts
+      auth.hookEvents();
+    });;
   ```
 
 4. Configure the `loginSuccess` and `loginFailure` events to handle the login. You can inject any `angularjs` service to the handler as well as `idToken`, `profile` and `authToken`.
