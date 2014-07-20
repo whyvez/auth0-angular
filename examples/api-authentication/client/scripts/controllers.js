@@ -1,26 +1,30 @@
 var myApp = angular.module('myApp');
 
-myApp.controller('MenuCtrl', function ($scope, $location) {
+myApp.controller('MenuCtrl', function ($scope, $location, auth) {
+  $scope.auth = auth;
   $scope.go = function (target) {
     $location.path(target);
   };
 });
 
 myApp.controller('MsgCtrl', function ($scope, auth) {
-  $scope.message = 'loading...';
-  auth.loaded.then(function () {
-    $scope.message = '';
-  });
+  $scope.message = {text: ''};
 });
 
 myApp.controller('RootCtrl', function (auth, $scope, $location, $http, API_ENDPOINT) {
-  $scope.$parent.message = 'Welcome ' + auth.profile.name + '!';
   $scope.auth = auth;
+  $scope.$watch('auth.profile', function(profile) {
+    if (!profile) return;
+
+    $scope.message.text = 'Welcome ' + auth.profile.name + '!';
+  });
+
+
 
   $scope.sendProtectedMessage = function () {
     $http({method: 'GET', url: API_ENDPOINT})
       .success(function (data, status, headers, config) {
-        $scope.$parent.message = 'Protected data was: ' + data;
+        $scope.message.text = 'Protected data was: ' + data;
       });
   };
 });
@@ -28,18 +32,19 @@ myApp.controller('RootCtrl', function (auth, $scope, $location, $http, API_ENDPO
 myApp.controller('LoginCtrl', function (auth, $scope, $location) {
   $scope.user = '';
   $scope.pass = '';
+  $scope.message.text = '';
 
   function onLoginSuccess() {
-    $scope.$parent.message = '';
+    $scope.message.text = '';
     $location.path('/');
   }
 
   function onLoginFailed() {
-    $scope.$parent.message = 'invalid credentials';
+    $scope.message.text = 'invalid credentials';
   }
 
   $scope.submit = function () {
-    $scope.$parent.message = 'loading...';
+    $scope.message.text = 'loading...';
     $scope.loading = true;
 
     auth.signin({
@@ -54,8 +59,8 @@ myApp.controller('LoginCtrl', function (auth, $scope, $location) {
   };
 
   $scope.doGoogleAuthWithPopup = function () {
-    $scope.$parent.message = 'loading...';
-    $scope.loading = true;    
+    $scope.message.text = 'loading...';
+    $scope.loading = true;
 
     auth.signin({
       popup: true,
@@ -71,6 +76,6 @@ myApp.controller('LoginCtrl', function (auth, $scope, $location) {
 
 myApp.controller('LogoutCtrl', function (auth, $scope, $location) {
   auth.signout();
-  $scope.$parent.message = '';
+  $scope.message.text
   $location.path('/login');
 });
