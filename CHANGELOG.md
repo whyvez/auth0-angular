@@ -1,5 +1,9 @@
 # 1.1.x
 
+## 1.1.2
+* Added `signup` and `reset` functions to trigger the widget in those modes
+
+
 ## 1.1.1
 * Added `hookEvents` method in `auth` to hook all events once the app is started.
 * Calling `logout` event once signout is done
