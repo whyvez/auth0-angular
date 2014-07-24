@@ -5,6 +5,24 @@ myApp.controller('MenuCtrl', function ($scope, $location, auth) {
     $location.path(target);
   };
 
+  $scope.signup = function() {
+    auth.signup({popup:  true, auto_login: false})
+      .then(function() {
+        $location.path('/');
+      })
+  }
+
+  $scope.reset = function () {
+    auth.reset({popup: true})
+      .then(function () {
+        // TODO Handle when login succeeds
+        console.log("OK");
+      }, function () {
+        console.log("FAIL");
+        // TODO Handle when login fails
+      });
+  };
+
   $scope.login = function () {
     auth.signin({popup: true})
       .then(function () {

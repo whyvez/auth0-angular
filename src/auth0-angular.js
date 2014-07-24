@@ -377,6 +377,30 @@
         });
       };
 
+      auth.signup = function(options) {
+        options = options || {};
+        checkHandlers(options);
+
+        var auth0lib = config.auth0lib;
+        var signupPromisify = authUtils.promisify(auth0lib.signup, auth0lib);
+        var signupAsync = config.isWidget ? signupPromisify(options, null) : signupPromisify(options);
+
+        return signupAsync.spread(function (profile, idToken, accessToken, state) {
+          return onSigninOk(idToken, accessToken, state);
+        })['catch'](function (err) {
+          callHandler('loginFailure', { error: err });
+          throw err;
+        });
+      };
+
+      auth.reset = function(options) {
+        options = options || {};
+
+        var auth0lib = config.auth0lib;
+        var resetPromisify = authUtils.promisify(auth0lib.reset, auth0lib);
+        return config.isWidget ? resetPromisify(options, null) : resetPromisify(options);
+      };
+
       auth.signout = function() {
         authStorage.remove();
         auth.profile = null;
