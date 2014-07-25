@@ -231,7 +231,7 @@ module.config(function($stateProvider) {
       requiresLogin: true   
     }
   }).
-  when('login', {
+  state('login', {
     url: '/login'
     tempalteUrl: 'login.html',
     controller: 'LoginCtrl'  
