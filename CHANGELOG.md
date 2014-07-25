@@ -1,5 +1,9 @@
 # 1.1.x
 
+## 1.1.5
+* Updated documentation to add custom storage
+* When forbiden, deleting stored values
+
 ## 1.1.3
 * Implemented token expired functionality. Fixes #54
 * Updated all documentation
