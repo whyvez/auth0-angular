@@ -231,6 +231,7 @@
       };
 
       function forbidden() {
+        authStorage.remove();
         if (config.loginUrl) {
           $location.path(config.loginUrl);
         } else if (config.loginState) {

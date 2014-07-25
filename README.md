@@ -341,6 +341,10 @@ This is the list of all of the available tutorials.
 **[Click here to see the ngRoute example](https://github.com/auth0/auth0-angular/tree/master/examples/widget-redirect)**
 **[Click here to see the html5mode example](https://github.com/auth0/auth0-angular/tree/master/examples/html5mode)**
 
+### Using your custom storage
+
+**[Click here to learn how to use your custom storage to store the tokens instead of ngCookies](docs/custom-storage.md)**
+
 ### Delegation Token
 
 **[Click here to see the delegation token example](https://github.com/auth0/auth0-angular/tree/master/examples/delegation-token)**
