@@ -25,7 +25,7 @@ angular.module( 'sample', [
   authProvider.init({
     domain: AUTH0_DOMAIN,
     clientID: AUTH0_CLIENT_ID,
-    callbackURL: lAUTH0_CALLBACK_URL,
+    callbackURL: AUTH0_CALLBACK_URL,
     loginUrl: '/login'
   });
 
