@@ -239,6 +239,15 @@
               }
               var storedValues = authStorage.get();
               if (storedValues && storedValues.idToken) {
+                if (auth.hasTokenExpired(storedValues.idToken)) {
+                  if (config.loginUrl) {
+                    $location.path(config.loginUrl);
+                  } else if (config.loginState) {
+                    $injector.get('$state').go(config.loginState);
+                  } else {
+                    callHandler('forbidden', { idToken: storedValues.idToken });
+                  }
+                }
                 onSigninOk(storedValues.idToken, storedValues.accessToken, storedValues.state, e);
                 return;
               }

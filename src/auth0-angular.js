@@ -230,6 +230,15 @@
           return profilePromise;
       };
 
+      function forbidden() {
+        if (config.loginUrl) {
+          $location.path(config.loginUrl);
+        } else if (config.loginState) {
+          $injector.get('$state').go(config.loginState);
+        } else {
+          callHandler('forbidden');
+        }
+      }
 
       // Redirect mode
       $rootScope.$on('$locationChangeStart', function(e) {
@@ -241,6 +250,10 @@
           }
           var storedValues = authStorage.get();
           if (storedValues && storedValues.idToken) {
+            if (auth.hasTokenExpired(storedValues.idToken)) {
+              forbidden();
+              return;
+            }
             onSigninOk(storedValues.idToken, storedValues.accessToken, storedValues.state, e);
             return;
           }
@@ -258,7 +271,7 @@
       });
 
       $rootScope.$on('auth0.forbidden', function(e, response) {
-        callHandler('forbidden', {response: response});
+        forbidden();
       });
 
       if (config.loginUrl) {
