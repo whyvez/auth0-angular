@@ -150,7 +150,8 @@ module.config(function(authProvider) {
     $location.path('/error');
   });
 });
-
+````
+````js
 // LoginCtrl.js
 auth.signin(
   // popup: false. This is the default
@@ -181,7 +182,7 @@ This property contains the profile from the user. **This will be filled after th
 
 This flag returns wether there's a user authenticated or not.
 
-#### `auth.id_token`, `auth.access_token`, `auth.state`
+#### auth.id_token, auth.access_token, auth.state
 
 This property contains the tokens returned after the user is logged in. Mostly for internal usage.
 
