@@ -270,7 +270,7 @@
         }
       });
 
-      $rootScope.$on('auth0.forbidden', function(e, response) {
+      $rootScope.$on('auth0.forbidden', function() {
         forbidden();
       });
 

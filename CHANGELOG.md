@@ -1,5 +1,9 @@
 # 1.1.x
 
+## 1.1.3
+* Implemented token expired functionality. Fixes #54
+* Updated all documentation
+
 ## 1.1.2
 * Added `signup` and `reset` functions to trigger the widget in those modes
 
