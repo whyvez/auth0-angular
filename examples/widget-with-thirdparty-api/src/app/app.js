@@ -24,9 +24,9 @@ angular.module( 'sample', [
     $locationProvider.hashPrefix('!');
 
   authProvider.init({
-    domain: 'samples.auth0.com',
-    clientID: 'BUIJSW9x60sIHBw8Kd9EmCbj8eDIFxDC',
-    callbackURL: location.href,
+    domain: AUTH0_DOMAIN,
+    clientID: AUTH0_CLIENT_ID,
+    callbackURL: lAUTH0_CALLBACK_URL,
     loginUrl: '/login'
   });
 })
