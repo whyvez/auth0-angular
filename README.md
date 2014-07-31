@@ -145,7 +145,7 @@ If you've set the `username` and `password` options, then a CORS call to `/ro` w
 auth.signin({
   username: $scope.username,
   password: $scope.password,
-  connection: ['Username-Password']
+  connection: ['Username-Password-Authentication']
 }).then(function(
   // All good
   $location.path('/');
