@@ -154,7 +154,7 @@ auth.signin({
 })
 ````
 
-**If you set `popup` option to `false`** (**this is the default value**) ** and you don't set username and pasword as options**, redirect mode will be used. As Angular page is realoded, you **cannot use promises** to handle login success and failure. You'll need to use `events` to handle them:
+**If you set `popup` option to `false`** (**this is the default value**) **and you don't set username and pasword as options**, redirect mode will be used. As Angular page is realoded, you **cannot use promises** to handle login success and failure. You'll need to use `events` to handle them:
 
 ````js
 // app.js
