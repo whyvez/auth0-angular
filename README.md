@@ -95,7 +95,8 @@ angular.module('myCoolApp').controller('UserInfoCtrl', function(auth) {
 
 ### Preface: Authentication Modes
 
-There're 2 modes to handle authentication with all the Providers (Facebook, Linkedin, Github, AD, LDAP, etc.) that Auth0 can handle. **Redirect mode** implies that the page you're seeing is going to get redirected to the page of the provider so that you can login. **Popup mode** implies that your angular app will open a popup window which will go to the provider website so that you can login and then close itself to show the Angular app again. This is really important to your app because if you use Redirect Mode, it means that your angular app will get **reloaded completely** after the user is authenticated with the provider. In Popup mode, the angular app will **remain open**.
+There're 3 modes to handle authentication with all the Providers (Facebook, Linkedin, Github, AD, LDAP, etc.) that Auth0 can handle. **Redirect mode** implies that the page you're seeing is going to get redirected to the page of the provider so that you can login. **Popup mode** implies that your angular app will open a popup window which will go to the provider website so that you can login and then close itself to show the Angular app again. This is really important to your app because if you use Redirect Mode, it means that your angular app will get **reloaded completely** after the user is authenticated with the provider. In Popup mode, the angular app will **remain open**.
+The third mode is just doing a CORS call to `/ro` to authenticate the user. This is only used for `Database-Password` connections. In this case, the website will not refresh either.
 
 ### Dependencies
 
@@ -137,7 +138,23 @@ auth.signin({popup: true}).then(function(
 })
 ````
 
-**If you set `popup` option to `false`** (**this is the default value**), redirect mode will be used. As Angular page is realoded, you **cannot use promises** to handle login success and failure. You'll need to use `events` to handle them:
+**If you set `popup` option to `false`** (**this is the default value**), there're 2 posibilities. 
+If you've set the `username` and `password` options, then a CORS call to `/ro` will be done and you can use a promise to handle this case.  
+
+````js
+auth.signin({
+  username: $scope.username,
+  password: $scope.password,
+  connection: ['Username-Password']
+}).then(function(
+  // All good
+  $location.path('/');
+), function(error) {
+  // Error
+})
+````
+
+****If you set `popup` option to `false`** (**this is the default value**) ** and you don't set username and pasword as options**, redirect mode will be used. As Angular page is realoded, you **cannot use promises** to handle login success and failure. You'll need to use `events` to handle them:
 
 ````js
 // app.js
