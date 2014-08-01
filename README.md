@@ -67,7 +67,7 @@ angular.module('myCoolApp', ['auth0'])
 // LoginCtrl.js
 angular.module('myCoolApp').controller('LoginCtrl', function(auth) {
   $scope.signin = function() {
-    auth.signin({popup: true}).then(function() {
+    auth.signin({popup: true}, function() {
       $location.path('/user-info')
     }, function(err) {
       console.log("Error :(", err);
@@ -127,10 +127,10 @@ This is the API for the SDK. `[]` means optional parameter.
 
 This method does the signin for you. If you're using `auth0-widget`, it'll display Auth0's widget, otherwise it'll just do the login with the Identity provider that you ask for. 
 
-The most important option is the **`popup` option. If set to `true`**, popup mode will be used and as the Angular page will not reload, **you can use a promise to handle the sigin success and failure**.
+The most important option is the **`popup` option. If set to `true`**, popup mode will be used and as the Angular page will not reload, **you can use callbacks to handle the sigin success and failure**. **We don't use promises since once the widget is openned, the user can enter the password wrong several times and then enter it ok. We cannot fullfill a promise (with success or failure) more than once unfortunately**.
 
 ````js
-auth.signin({popup: true}).then(function(
+auth.signin({popup: true}, function(
   // All good
   $location.path('/');
 ), function(error) {
@@ -146,7 +146,7 @@ auth.signin({
   username: $scope.username,
   password: $scope.password,
   connection: ['Username-Password-Authentication']
-}).then(function(
+}, function(
   // All good
   $location.path('/');
 ), function(error) {
@@ -154,7 +154,7 @@ auth.signin({
 })
 ````
 
-**If you set `popup` option to `false`** (**this is the default value**) **and you don't set username and pasword as options**, redirect mode will be used. As Angular page is realoded, you **cannot use promises** to handle login success and failure. You'll need to use `events` to handle them:
+**If you set `popup` option to `false`** (**this is the default value**) **and you don't set username and pasword as options**, redirect mode will be used. As Angular page is realoded, you **cannot use callbacks nor promises** to handle login success and failure. You'll need to use `events` to handle them:
 
 ````js
 // app.js
@@ -193,7 +193,7 @@ This signouts the user. Deletes the token from the client storage.
 
 #### auth.profile
 
-This property contains the profile from the user. **This will be filled after the user has logged in successfully**. If you want to use information from `auth.profile` only after the user is logged in, you can just do a `$watch` on this property to wait until it's set.
+This property contains the profile from the user. **This will be filled after the user has logged in successfully**. If you want to use information from `auth.profile` only after the user is logged in, you can just do a `$watch` on this property to wait until it's set. **Returns a promise**.
 
 #### auth.isAuthenticated
 
@@ -207,7 +207,7 @@ This property contains the tokens returned after the user is logged in. Mostly f
 
 You can configure your token to expire after certain time. If you don't want your user to login again, you can just refresh the current token, which means getting a new token that will be valid for a certain amount of time.
 
-For example, let's imagine you have a token valid for 10 hours. After 9 hours, you can refresh the token to get a new token that's going to be valid for another 10 hours. You just need to call this method in that case and we'll handle everything for you.
+For example, let's imagine you have a token valid for 10 hours. After 9 hours, you can refresh the token to get a new token that's going to be valid for another 10 hours. You just need to call this method in that case and we'll handle everything for you. **Returns a promise**.
 
 #### auth.hookEvents()
 
@@ -275,7 +275,7 @@ To learn more about routing and using `ngRoute` or `ui-router` with your app, pl
 
 #### auth.getToken(targetClientId)
 
-This method does a Delegation Token request. Imagine you have 2 APIs. The user in your angular app is loged in to your angular app that uses API #1. If you want to use API #2, you need to exchange the token you have for the API #1 for a valid one for API #2. This is what this method does. The `targetClientId` parameter is just the identifier of the API #2 in this case.
+This method does a Delegation Token request. Imagine you have 2 APIs. The user in your angular app is loged in to your angular app that uses API #1. If you want to use API #2, you need to exchange the token you have for the API #1 for a valid one for API #2. This is what this method does. The `targetClientId` parameter is just the identifier of the API #2 in this case. **Returns a promise**.
 
 To learn more about delegated access [please click here](https://docs.auth0.com/auth-api#delegated).
 
