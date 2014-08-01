@@ -1,3 +1,9 @@
+# 2.0.X
+
+## 2.0.0
+
+* We've removed promised for `signin`, `signup` and `reset`. Promises can only be fullfilled once. Therefore, if a person would open the signin widget and put the wrong password 3 times and then put it ok, the promise was never notified of the success. That's why we changed only for these 3 to callbacks. This is a breaking change and that's why we're releasing 2.0.0.
+
 # 1.1.x
 
 ## 1.1.5
