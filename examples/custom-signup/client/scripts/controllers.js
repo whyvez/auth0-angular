@@ -19,10 +19,12 @@ myApp.controller('LoginCtrl', function (auth, $scope, $location, $http) {
   $scope.pass = '';
 
   function onLoginSuccess() {
+    $scope.loading = false;
     $location.path('/');
   }
 
   function onLoginFailed() {
+    $scope.loading = false;
     alert('Login failed');
   }
 
@@ -34,11 +36,7 @@ myApp.controller('LoginCtrl', function (auth, $scope, $location, $http) {
       connection: 'Username-Password-Authentication',
       username:   $scope.user,
       password:   $scope.pass
-    })
-    .then(onLoginSuccess, onLoginFailed)
-    .finally(function () {
-      $scope.loading = false;
-    });
+    }, onLoginSuccess, onLoginFailed);
   };
 
   $scope.doSignup = function () {
@@ -55,11 +53,7 @@ myApp.controller('LoginCtrl', function (auth, $scope, $location, $http) {
           connection: 'Username-Password-Authentication',
           username:   $scope.signup.user,
           password:   $scope.signup.pass
-        })
-        .then(onLoginSuccess, onLoginFailed)
-        .finally(function () {
-          $scope.loading = false;
-        });
+        }, onLoginSuccess, onLoginFailed);
       }
     })
     .error(function (data, status, headers, config) {

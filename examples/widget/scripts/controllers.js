@@ -13,8 +13,7 @@ myApp.controller('MenuCtrl', function ($scope, $location, auth) {
   }
 
   $scope.reset = function () {
-    auth.reset({popup: true})
-      .then(function () {
+    auth.reset({popup: true}, function () {
         // TODO Handle when login succeeds
         console.log("OK");
       }, function () {
@@ -24,8 +23,7 @@ myApp.controller('MenuCtrl', function ($scope, $location, auth) {
   };
 
   $scope.login = function () {
-    auth.signin({popup: true})
-      .then(function () {
+    auth.signin({popup: true}, function () {
         // TODO Handle when login succeeds
         $location.path('/');
       }, function () {

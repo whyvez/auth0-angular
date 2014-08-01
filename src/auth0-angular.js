@@ -39,6 +39,25 @@
           }
         };
 
+        authUtils.callbackify = function (nodeback, success, error, self) {
+        if (angular.isFunction(nodeback)) {
+          return function (args) {
+            args = Array.prototype.slice.call(arguments);
+            var callback = function (err, response, etc) {
+              if (err) {
+                error(err);
+              }
+              // if more arguments then turn into an array for .spread()
+              etc = Array.prototype.slice.call(arguments, 1);
+              success.apply(null, etc);
+            };
+
+            args.push(authUtils.applied(callback));
+            nodeback.apply(self, args);
+          };
+        }
+      };
+
         authUtils.promisify = function (nodeback, self) {
         if (angular.isFunction(nodeback)) {
           return function (args) {
@@ -375,44 +394,54 @@
         return auth.getToken(config.clientID, options);
       };
 
-      auth.signin = function(options, lib) {
+      auth.signin = function(options, successCallback, errorCallback, lib) {
         options = options || {};
         checkHandlers(options);
 
         var auth0lib = lib || config.auth0lib;
-        var signinPromisify = authUtils.promisify(auth0lib.signin, auth0lib);
-        var signinAsync = config.isWidget ? signinPromisify(options, null) : signinPromisify(options);
-
-        return signinAsync.spread(function (profile, idToken, accessToken, state) {
-          return onSigninOk(idToken, accessToken, state);
-        })['catch'](function (err) {
+        var signinCall = authUtils.callbackify(auth0lib.signin, function(profile, idToken, accessToken, state) {
+          onSigninOk(idToken, accessToken, state).then(function(profile) {
+            successCallback(profile);
+          });
+        }, function(err) {
           callHandler('loginFailure', { error: err });
-          throw err;
-        });
+          errorCallback(err);
+        }, auth0lib);
+
+        if (config.isWidget) {
+          signinCall(options, null);
+        } else {
+          signinCall(options);
+        }
       };
 
-      auth.signup = function(options) {
+      auth.signup = function(options, successCallback, errorCallback) {
         options = options || {};
         checkHandlers(options);
 
         var auth0lib = config.auth0lib;
-        var signupPromisify = authUtils.promisify(auth0lib.signup, auth0lib);
-        var signupAsync = config.isWidget ? signupPromisify(options, null) : signupPromisify(options);
-
-        return signupAsync.spread(function (profile, idToken, accessToken, state) {
-          return onSigninOk(idToken, accessToken, state);
-        })['catch'](function (err) {
+        var signupCall = authUtils.callbackify(auth0lib.signup, function(profile, idToken, accessToken, state) {
+          onSigninOk(idToken, accessToken, state).then(function(profile) {
+            successCallback(profile);
+          });
+        }, function(err) {
           callHandler('loginFailure', { error: err });
-          throw err;
-        });
+          errorCallback(err);
+        }, auth0lib);
+
+        if (config.isWidget) {
+          signupCall(options, null);
+        } else {
+          signupCall(options);
+        }
       };
 
-      auth.reset = function(options) {
+      auth.reset = function(options, successCallback, errorCallback) {
         options = options || {};
 
         var auth0lib = config.auth0lib;
-        var resetPromisify = authUtils.promisify(auth0lib.reset, auth0lib);
-        return config.isWidget ? resetPromisify(options, null) : resetPromisify(options);
+        var resetCall = authUtils.callbackify(auth0lib.reset, successCallback, errorCallback, auth0lib);
+        config.isWidget ? resetCall(options, null) : resetCall(options);
       };
 
       auth.signout = function() {

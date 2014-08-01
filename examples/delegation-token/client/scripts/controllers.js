@@ -34,10 +34,12 @@ myApp.controller('LoginCtrl', function (auth, $scope, $location) {
 
   function onLoginSuccess() {
     $scope.$parent.message = '';
+    $scope.loading = false;
     $location.path('/');
   }
 
   function onLoginFailed() {
+    $scope.loading = false;
     $scope.$parent.message = 'invalid credentials';
   }
 
@@ -48,10 +50,7 @@ myApp.controller('LoginCtrl', function (auth, $scope, $location) {
       username: $scope.user,
       password: $scope.pass,
       scope: 'openid name email'
-    }).then(onLoginSuccess, onLoginFailed)
-    .finally(function () {
-      $scope.loading = false;
-     });
+    }, onLoginSuccess, onLoginFailed);
   };
 
   $scope.doGoogleAuthWithPopup = function () {
@@ -61,10 +60,7 @@ myApp.controller('LoginCtrl', function (auth, $scope, $location) {
       popup: true,
       connection: 'google-oauth2',
       scope: 'openid name email'
-    }).then(onLoginSuccess, onLoginFailed)
-    .finally(function () {
-      $scope.loading = false;
-    });
+    }, onLoginSuccess, onLoginFailed);
   };
 
 });

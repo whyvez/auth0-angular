@@ -21,10 +21,12 @@ define(['angular', './myApp'], function (angular, myApp) {
     function onLoginSuccess() {
       $scope.$parent.message = '';
       $location.path('/');
+      $scope.loading = false;
     }
 
     function onLoginFailed() {
       $scope.$parent.message = 'invalid credentials';
+      $scope.loading = false;
     }
 
     $scope.submit = function () {
@@ -36,10 +38,7 @@ define(['angular', './myApp'], function (angular, myApp) {
         username: $scope.user,
         popup: true,
         password: $scope.pass
-     }).then(onLoginSuccess, onLoginFailed)
-     .finally(function () {
-        $scope.loading = false;
-      });
+     }, onLoginSuccess, onLoginFailed);
     };
 
     $scope.doGoogleAuthWithPopup = function () {
@@ -51,10 +50,7 @@ define(['angular', './myApp'], function (angular, myApp) {
         connection: 'google-oauth2',
         scope: 'openid name email',
         popup: true
-      }).then(onLoginSuccess, onLoginFailed)
-      .finally(function () {
-        $scope.loading = false;
-      });
+      }, onLoginSuccess, onLoginFailed);
     };
   });
 
