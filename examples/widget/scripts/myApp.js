@@ -21,8 +21,8 @@ myApp.config(function ($routeProvider, authProvider, $httpProvider, $locationPro
   $locationProvider.hashPrefix('!');
 
   authProvider.init({
-    domain: 'contoso.auth0.com',
-    clientID: 'DyG9nCwIEofSy66QM3oo5xU6NFs3TmvT',
+    domain: 'samples.auth0.com',
+    clientID: 'BUIJSW9x60sIHBw8Kd9EmCbj8eDIFxDC',
     callbackURL: location.href,
     loginUrl: '/login'
   });
