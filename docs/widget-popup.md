@@ -52,14 +52,14 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
     });;
   ```
 
-4. Inject the `auth` service in your controllers and call the `signin`/`signout` methods. You need to specify the `popup: true` option when calling the signin. You can then handle the `loginSuccess` and `loginFailure` either [the same way as with redirect](docs/widget-redirect) (check step 4), or using promises like below:
+4. Inject the `auth` service in your controllers and call the `signin`/`signout` methods. You need to specify the `popup: true` option when calling the signin. You can then handle the `loginSuccess` and `loginFailure` either [the same way as with redirect](docs/widget-redirect) (check step 4), or using callbacks like below:
 
   ```js
   myApp
     .controller('LoginCtrl', function ($scope, auth, $location) {
       $scope.login = function() {
         // This will show the widget to choose how to authenticate
-        auth.signin({popup: true}).then(function() {
+        auth.signin({popup: true}), function() {
           $location.path('/');
         }, function() {
           alert('error');
