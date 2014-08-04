@@ -400,11 +400,15 @@
         var auth0lib = lib || config.auth0lib;
         var signinCall = authUtils.callbackify(auth0lib.signin, function(profile, idToken, accessToken, state) {
           onSigninOk(idToken, accessToken, state).then(function(profile) {
-            successCallback(profile);
+            if (successCallback) {
+              successCallback(profile);
+            }
           });
         }, function(err) {
           callHandler('loginFailure', { error: err });
-          errorCallback(err);
+          if (errorCallback) {
+            errorCallback(err);
+          }
         }, auth0lib);
 
         if (config.isWidget) {
@@ -421,11 +425,15 @@
         var auth0lib = config.auth0lib;
         var signupCall = authUtils.callbackify(auth0lib.signup, function(profile, idToken, accessToken, state) {
           onSigninOk(idToken, accessToken, state).then(function(profile) {
-            successCallback(profile);
+            if (successCallback) {
+              successCallback(profile);
+            }
           });
         }, function(err) {
           callHandler('loginFailure', { error: err });
-          errorCallback(err);
+          if (errorCallback) {
+            errorCallback(err);
+          }
         }, auth0lib);
 
         if (config.isWidget) {
@@ -446,6 +454,7 @@
       auth.signout = function() {
         authStorage.remove();
         auth.profile = null;
+        auth.profilePromise = null;
         auth.idToken = null;
         auth.state = null;
         auth.accessToken = null;
@@ -455,8 +464,8 @@
 
       auth.getProfile = function(idToken) {
         var getProfilePromisify = authUtils.promisify(config.auth0lib.getProfile, config.auth0lib);
-
-        return getProfilePromisify(idToken || auth.idToken).then(function(profile) {
+        auth.profilePromise = getProfilePromisify(idToken || auth.idToken);
+        return auth.profilePromise.then(function(profile) {
           auth.profile = profile;
           return profile;
         });

@@ -1,5 +1,9 @@
 # 2.0.X
 
+## 2.0.2
+* Fixed bug with redirect mode and callbacks
+* Added `auth.profilePromise` field for using promises.
+
 ## 2.0.1
 * Fixed bug with Username-Password not working when using minified auth0-angular.js
 

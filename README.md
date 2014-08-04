@@ -193,7 +193,12 @@ This signouts the user. Deletes the token from the client storage.
 
 #### auth.profile
 
-This property contains the profile from the user. **This will be filled after the user has logged in successfully**. If you want to use information from `auth.profile` only after the user is logged in, you can just do a `$watch` on this property to wait until it's set. **Returns a promise**.
+This property contains the profile from the user. **This will be filled after the user has logged in successfully**. If you want to use information from `auth.profile` only after the user is logged in, you can just do a `$watch` on this property to wait until it's set. 
+
+#### auth.profilePromise
+
+Same as the `auth.profile` but it's actually a promise that you can check. It might be null or a promise. Null is even before the user tries to log in.
+
 
 #### auth.isAuthenticated
 
