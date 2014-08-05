@@ -1,5 +1,9 @@
 # 2.0.X
 
+## 2.0.3
+
+* Added new delegation methods according to new `auth0.js` release.
+
 ## 2.0.2
 * Fixed bug with redirect mode and callbacks
 * Added `auth.profilePromise` field for using promises.
