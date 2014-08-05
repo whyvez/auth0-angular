@@ -208,12 +208,6 @@ This flag returns wether there's a user authenticated or not.
 
 This property contains the tokens returned after the user is logged in. Mostly for internal usage.
 
-#### auth.refreshToken()
-
-You can configure your token to expire after certain time. If you don't want your user to login again, you can just refresh the current token, which means getting a new token that will be valid for a certain amount of time.
-
-For example, let's imagine you have a token valid for 10 hours. After 9 hours, you can refresh the token to get a new token that's going to be valid for another 10 hours. You just need to call this method in that case and we'll handle everything for you. **Returns a promise**.
-
 #### auth.hookEvents()
 
 auth0-angular takes care of checking that **unauthenticated users canoot access restricted resources**. For that, auth0-angular hooks to internal angular events so that we can redirect the user to the login page if he doesn't have the right permission to access a page. For that, you need to hook auth0-angular to all of this events on application run
@@ -278,11 +272,41 @@ module.run(function(auth) {
 
 To learn more about routing and using `ngRoute` or `ui-router` with your app, please [read this tutorial](docs/routing.md)
 
-#### auth.getToken(targetClientId)
+#### auth.getToken(options)
 
-This method does a Delegation Token request. Imagine you have 2 APIs. The user in your angular app is loged in to your angular app that uses API #1. If you want to use API #2, you need to exchange the token you have for the API #1 for a valid one for API #2. This is what this method does. The `targetClientId` parameter is just the identifier of the API #2 in this case. **Returns a promise**.
+This method does a Delegation Token request, which means exchanging current token for another one.
+
+There're 2 options:
+
+1) Auth0 has several Addons which let you get new tokens based on Auth0 one. Imagine you have Firebase or AWS. You want to get the token for Firebase, then you can call the following:
+
+````js
+auth.getDelegationToken({
+  api: 'firebase' // By default it's going to be the first active addonn in the list of addons
+})
+````
+
+2) Imagine you have 2 APIs. The user in your angular app is loged in to your angular app that uses API #1. If you want to use API #2, you need to exchange the token you have for the API #1 for a valid one for API #2. The `targetClientId` parameter is just the identifier of the API #2 in this case. **Returns a promise**.
+
+````js
+auth.getDelegationToken({
+  targetClientId: 'other client id',
+  api: 'auth0' // We want the Auth0 ID_token of the other API
+})
+````
 
 To learn more about delegated access [please click here](https://docs.auth0.com/auth-api#delegated).
+
+#### auth.renewIdToken()
+
+You can configure your token to expire after certain time. If you don't want your user to login again, you can just refresh the current token, which means getting a new token that will be valid for a certain amount of time.
+
+For example, let's imagine you have a token valid for 10 hours. After 9 hours, you can refresh the token to get a new token that's going to be valid for another 10 hours. You just need to call this method in that case and we'll handle everything for you. **Returns a promise**.
+
+
+#### auth.refreshToken(refresh_token)
+
+Given a **expired** `id_token`, you can use the `refresh_token` to get a new and valid `id_token`
 
 #### auth.hasTokenExpired(token)
 
