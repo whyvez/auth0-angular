@@ -218,7 +218,7 @@ describe('Auth0 Angular', function () {
   });
 
   describe('Token store', function () {
-    var auth, $rootScope, $timeout, getDelegationToken, hasTokenExpiredOriginal;
+    var auth, $rootScope, $timeout, getDelegationToken, hasTokenExpiredOriginal, refreshToken, renewIdToken;
 
     beforeEach(initAuth0);
 
@@ -235,9 +235,16 @@ describe('Auth0 Angular', function () {
       ];
       token = token.join('.');
       getDelegationToken = sinon.stub();
-      getDelegationToken.onCall(0).callsArgWith(3, null, {id_token: token});
+      getDelegationToken.onCall(0).callsArgWith(1, null, {id_token: token});
+
+      refreshToken = sinon.stub();
+      refreshToken.onCall(0).callsArgWith(1, null, {id_token: token});
+      renewIdToken = sinon.stub();
+      renewIdToken.onCall(0).callsArgWith(1, null, {id_token: token});
       auth.config.auth0js = {
         getDelegationToken: getDelegationToken,
+        refreshToken: refreshToken,
+        renewIdToken: renewIdToken,
         getProfile: function() {}
       };
     }));
@@ -257,13 +264,37 @@ describe('Auth0 Angular', function () {
       $timeout.flush();
     });
 
+    it('should refresh the token OK', function (done) {
+      auth.refreshToken('refresh_token').then(function (token) {
+        expect(token).to.be.ok;
+      })
+      .then(done);
+
+      // Flush the promise and timeout!
+      $rootScope.$apply();
+      $timeout.flush();
+    });
+
+    it('should renew the id_token OK', function (done) {
+      auth.renewIdToken().then(function (token) {
+        expect(token).to.be.ok;
+      })
+      .then(done);
+
+      // Flush the promise and timeout!
+      $rootScope.$apply();
+      $timeout.flush();
+    });
+
 
     it('should call reject when token fetch failed', function (done) {
-      getDelegationToken.onCall(0).callsArgWith(3, {error: 'An error ocurred'}, null);
+      getDelegationToken.onCall(0).callsArgWith(1, {error: 'An error ocurred'}, null);
 
       var clientId = 'client-id';
 
-      auth.getToken(clientId).then(null, function (err) {
+      auth.getToken({
+        targetClientId: clientId
+      }).then(null, function (err) {
         expect(err.error).to.be.ok;
       })
       .then(done);
