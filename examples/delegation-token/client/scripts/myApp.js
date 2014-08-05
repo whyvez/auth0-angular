@@ -13,7 +13,9 @@ myApp.factory('customInterceptor', function ($injector, $rootScope, $q) {
       // Is this request for the secondary app?
       if (config.url.indexOf('http://localhost:33000') === 0) {
         // Then fetch the secondary app token
-        var tokenPromise = auth.getToken(targetClientId, options)
+        var tokenPromise = auth.getToken({
+          targetClientId: targetClientId
+        }, options)
           .then(function(token) {
             config.headers.Authorization = 'Bearer ' + token;
             return config;

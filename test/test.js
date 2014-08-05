@@ -235,7 +235,7 @@ describe('Auth0 Angular', function () {
       ];
       token = token.join('.');
       getDelegationToken = sinon.stub();
-      getDelegationToken.onCall(0).callsArgWith(3, null, {id_token: token});
+      getDelegationToken.onCall(0).callsArgWith(1, null, {id_token: token});
       auth.config.auth0js = {
         getDelegationToken: getDelegationToken,
         getProfile: function() {}
@@ -259,11 +259,13 @@ describe('Auth0 Angular', function () {
 
 
     it('should call reject when token fetch failed', function (done) {
-      getDelegationToken.onCall(0).callsArgWith(3, {error: 'An error ocurred'}, null);
+      getDelegationToken.onCall(0).callsArgWith(1, {error: 'An error ocurred'}, null);
 
       var clientId = 'client-id';
 
-      auth.getToken(clientId).then(null, function (err) {
+      auth.getToken({
+        targetClientId: clientId
+      }).then(null, function (err) {
         expect(err.error).to.be.ok;
       })
       .then(done);
