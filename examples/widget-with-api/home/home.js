@@ -1,7 +1,7 @@
 angular.module( 'sample.home', [
 'auth0'
 ])
-.controller( 'HomeCtrl', function HomeController( $scope, auth, $http ) {
+.controller( 'HomeCtrl', function HomeController( $scope, auth, $http, $location ) {
 
   $scope.auth = auth;
 
@@ -15,6 +15,11 @@ angular.module( 'sample.home', [
     }, function() {
       alert("Please download the API seed so that you can call it.");
     });
+  }
+
+  $scope.logout = function() {
+    auth.signout();
+    $location.path('/login');
   }
 
 });

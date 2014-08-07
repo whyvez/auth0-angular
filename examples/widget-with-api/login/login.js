@@ -4,7 +4,9 @@ angular.module( 'sample.login', [
 .controller( 'LoginCtrl', function HomeController( $scope, auth, $location ) {
 
   $scope.login = function() {
-        auth.signin();
-    }
+    auth.signin({
+      // popup: true to use popup instead of redirect
+    });
+  }
 
 });
