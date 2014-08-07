@@ -1,36 +1,45 @@
 angular.module( 'sample', [
-  'templates-app',
   'auth0',
   'ngRoute',
-  'templates-common',
   'sample.home',
   'sample.login'
 ])
-
 .config( function myAppConfig ( $routeProvider, authProvider, $httpProvider, $locationProvider) {
   $routeProvider
     .when( '/', {
       controller: 'HomeCtrl',
-      templateUrl: 'home/home.tpl.html',
+      templateUrl: 'home/home.html',
       pageTitle: 'Homepage',
       requiresLogin: true
     })
     .when( '/login', {
       controller: 'LoginCtrl',
-      templateUrl: 'login/login.tpl.html',
+      templateUrl: 'login/login.html',
       pageTitle: 'Login'
     });
 
-    $locationProvider.hashPrefix('!');
 
   authProvider.init({
     domain: AUTH0_DOMAIN,
     clientID: AUTH0_CLIENT_ID,
-    callbackURL: AUTH0_CALLBACK_URL,
+    callbackURL: location.href,
     loginUrl: '/login'
   });
-})
 
+  authProvider.on('loginSuccess', function($location) {
+    // Using a firebase token for this example
+    // Replace here with your client token
+    auth.getToken('IckaP4QRfGSRGuVZfP9VJBUdlXtgcS4o').then(function(firebaseToken) {
+      // Setting the Firebase token for all requests as default one
+      $http.defaults.headers.common.Authorization =  'Bearer '+ auth.idToken;
+      $location.path('/');
+    });
+  });
+
+  authProvider.on('loginFailure', function($log, error) {
+    $log('Error logging in', error);
+  });
+})
 .run(function(auth) {
   auth.hookEvents();
 })
