@@ -1,23 +1,20 @@
 angular.module( 'sample', [
-  'templates-app',
   'auth0',
   'ngRoute',
-  'templates-common',
   'sample.home',
   'sample.login'
 ])
-
 .config( function myAppConfig ( $routeProvider, authProvider, $httpProvider, $locationProvider) {
   $routeProvider
     .when( '/', {
       controller: 'HomeCtrl',
-      templateUrl: 'home/home.tpl.html',
+      templateUrl: 'home/home.html',
       pageTitle: 'Homepage',
       requiresLogin: true
     })
     .when( '/login', {
       controller: 'LoginCtrl',
-      templateUrl: 'login/login.tpl.html',
+      templateUrl: 'login/login.html',
       pageTitle: 'Login'
     });
 
@@ -25,11 +22,17 @@ angular.module( 'sample', [
   authProvider.init({
     domain: AUTH0_DOMAIN,
     clientID: AUTH0_CLIENT_ID,
-    callbackURL: AUTH0_CALLBACK_URL,
+    callbackURL: location.href,
     loginUrl: '/login'
   });
 
-  $locationProvider.hashPrefix('!');
+  authProvider.on('loginSuccess', function($location) {
+    $location.path('/');
+  });
+
+  authProvider.on('loginFailure', function($log, error) {
+    $log('Error logging in', error);
+  });
 
   $httpProvider.interceptors.push('authInterceptor');
 })

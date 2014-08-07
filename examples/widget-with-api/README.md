@@ -6,21 +6,10 @@ If you want to connect to a third party API like Firebase or Amazon, please chec
 
 ## Running the example
 
-In order to run the example you need to have `npm`, `bower` and `grunt` installed.
+In order to run the example you need to just start a server. What we suggest is doing the following:
 
-If you don't have `bower` or `grunt` installed please run:
+1. Install node
+1. run npm install -g serve
+1. run serve in the directory of this project.
 
-````js
-npm install -g bower
-npm install -g grunt-cli
-````
-
-Then, in the project main folder run the following commands:
-
-````js
-npm install
-bower install
-grunt watch
-````
-
-Go to `http://localhost:3000` and you'll see the app running :).
+Go to [http://localhost:3000](http://localhost:3000) and you'll see the app running :).

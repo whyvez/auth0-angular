@@ -1,8 +1,8 @@
 body{
-	font-family: "proxima-nova",sans-serif;
-	text-align: center;
-	font-size: 300%;
-	font-weight: 100;
+  font-family: "proxima-nova",sans-serif;
+  text-align: center;
+  font-size: 300%;
+  font-weight: 100;
 }
 
 input[type=checkbox],
@@ -40,64 +40,64 @@ input[type=checkbox]:focus + label:before {
 }
 
 .btn{
-	font-size: 140%;
-	text-transform: uppercase;
-	letter-spacing: 1px;
-	border: 0;
-	background-color: #16214D;
-	color: white;
+  font-size: 140%;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border: 0;
+  background-color: #16214D;
+  color: white;
 
-	&:hover{
-		background-color: #44C7F4;
-	}
+  &:hover{
+    background-color: #44C7F4;
+  }
 
-	&:focus{
-		outline: none !important;
-	}
+  &:focus{
+    outline: none !important;
+  }
 
-	&.btn-lg{
-		padding: 20px 30px;
-	}
+  &.btn-lg{
+    padding: 20px 30px;
+  }
 
-	&:disabled{
-		background-color: #333;
-		color: #666;
-	}
+  &:disabled{
+    background-color: #333;
+    color: #666;
+  }
 }
 
 h1,h2,h3{
-	font-weight: 100;
+  font-weight: 100;
 }
 
 #logo img{
-	width: 300px;
-	margin-bottom: 60px;
+  width: 300px;
+  margin-bottom: 60px;
 }
 
 .home-description{
-	font-weight: 100;
-	margin: 100px 0;
+  font-weight: 100;
+  margin: 100px 0;
 }
 
 h2.ng-binding{
-	margin-top: 30px;
-	margin-bottom: 40px;
-	font-size: 200%
+  margin-top: 30px;
+  margin-bottom: 40px;
+  font-size: 200%
 }
 
 label.ng-binding{
-	font-size: 100%;
-	font-weight: 300;
+  font-size: 100%;
+  font-weight: 300;
 }
 
 .btn-next{
-	margin-top: 30px
+  margin-top: 30px
 }
 
 .answer{
-	width: 70%;
-	margin: auto;
-	text-align: left;
-	padding-left: 10%;
-	margin-bottom: 20px;
+  width: 70%;
+  margin: auto;
+  text-align: left;
+  padding-left: 10%;
+  margin-bottom: 20px;
 }
