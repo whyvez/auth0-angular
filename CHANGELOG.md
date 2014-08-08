@@ -1,5 +1,8 @@
 # 2.0.X
 
+## 2.0.4
+* Fixed error when signin was failling with auth0.js and still saving undefined cookies.
+
 ## 2.0.3
 
 * Added new delegation methods according to new `auth0.js` release.
