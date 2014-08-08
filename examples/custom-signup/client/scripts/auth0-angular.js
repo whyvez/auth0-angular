@@ -55,6 +55,7 @@
               var callback = function (err, response, etc) {
                 if (err) {
                   error(err);
+                  return;
                 }
                 // if more arguments then turn into an array for .spread()
                 etc = Array.prototype.slice.call(arguments, 1);
@@ -73,6 +74,7 @@
               var callback = function (err, response, etc) {
                 if (err) {
                   dfd.reject(err);
+                  return;
                 }
                 // if more arguments then turn into an array for .spread()
                 etc = Array.prototype.slice.call(arguments, 1);
