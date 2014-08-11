@@ -185,7 +185,10 @@ This shows the widget but in `signup` mode. It has the same options and paramete
 
 #### auth.reset(options)
 
-This will show the Forgot your password window. It returns a promise that will tell you if the change was done successfully or not.
+This will perform the "Forgot your password" flow. 
+If you're using `auth0.js` it will send the email to confirm the password change. [See the documentation here](https://github.com/auth0/auth0.js#change-password-database-connections)
+If you're using `auth0-widget.js`, it will open the widget in the reset password more. It can receive in that case the same parameters as the `signin` method.
+This method receives 2 extra parameters to handle the success and failure callbacks similar to `signin`.
 
 #### auth.signout()
 

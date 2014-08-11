@@ -36,6 +36,14 @@ myApp.controller('LoginCtrl', function (auth, $scope, $location) {
     $scope.loading = false;
   }
 
+  $scope.reset = function() {
+    auth.reset({
+      email: 'hello@bye.com',
+      password: 'hello',
+      connection: 'Username-Password-Authentication'
+    });
+  }
+
   $scope.submit = function () {
     $scope.message.text = 'loading...';
     $scope.loading = true;

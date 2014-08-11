@@ -45,12 +45,12 @@
             args = Array.prototype.slice.call(arguments);
             var callback = function (err, response, etc) {
               if (err) {
-                error(err);
+                error && error(err);
                 return;
               }
               // if more arguments then turn into an array for .spread()
               etc = Array.prototype.slice.call(arguments, 1);
-              success.apply(null, etc);
+              success && success.apply(null, etc);
             };
 
             args.push(authUtils.applied(callback));
@@ -465,8 +465,14 @@
         options = options || {};
 
         var auth0lib = config.auth0lib;
-        var resetCall = authUtils.callbackify(auth0lib.reset, successCallback, errorCallback, auth0lib);
-        config.isWidget ? resetCall(options, null) : resetCall(options);
+        var resetCall;
+        if (config.isWidget) {
+          resetCall = authUtils.callbackify(auth0lib.reset, successCallback, errorCallback, auth0lib);
+        } else {
+          resetCall = authUtils.callbackify(auth0lib.changePassword, successCallback, errorCallback, auth0lib);
+        }
+
+        resetCall(options);
       };
 
       auth.signout = function() {
