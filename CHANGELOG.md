@@ -1,5 +1,9 @@
 # 2.0.X
 
+## 2.0.7
+* Fixed error when no callback was added
+* Added `changePassowrd` behaviour for `reset` call if auth0.js is injected
+
 ## 2.0.4
 * Fixed error when signin was failling with auth0.js and still saving undefined cookies.
 
