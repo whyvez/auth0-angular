@@ -135,33 +135,57 @@
 
   angular.module('auth0.storage', ['ngCookies'])
     .service('authStorage', function($cookieStore) {
+      // Sets storage to use
+      var put, get, remove = null;
+      if (localStorage) {
+        put = function(what, value) {
+          return localStorage.setItem(what, value);
+        };
+        get = function(what) {
+          return localStorage.getItem(what);
+        };
+        remove = function(what) {
+          return localStorage.removeItem(what);
+        };
+      } else {
+        put = function(what, value) {
+          return $cookieStore.put(what, value);
+        };
+        get = function(what) {
+          return $cookieStore.get(what);
+        };
+        remove = function(what) {
+          return $cookieStore.remove(what);
+        };
+      }
+
       this.store = function(idToken, accessToken, state, refreshToken) {
-        $cookieStore.put('idToken', idToken);
+        put('idToken', idToken);
         if (accessToken) {
-          $cookieStore.put('accessToken', accessToken);
+          put('accessToken', accessToken);
         }
         if (state) {
-          $cookieStore.put('state', state);
+          put('state', state);
         }
         if (refreshToken) {
-         $cookieStore.put('refreshToken', refreshToken);
+         put('refreshToken', refreshToken);
         }
       };
 
       this.get = function() {
         return {
-          idToken: $cookieStore.get('idToken'),
-          accessToken: $cookieStore.get('accessToken'),
-          state: $cookieStore.get('state'),
-          refreshToken: $cookieStore.get('refreshToken')
+          idToken: get('idToken'),
+          accessToken: get('accessToken'),
+          state: get('state'),
+          refreshToken: get('refreshToken')
         };
       };
 
       this.remove = function() {
-        $cookieStore.remove('idToken');
-        $cookieStore.remove('accessToken');
-        $cookieStore.remove('state');
-        $cookieStore.remove('refreshToken');
+        remove('idToken');
+        remove('accessToken');
+        remove('state');
+        remove('refreshToken');
       };
     });
 
