@@ -398,7 +398,7 @@ This is the list of all of the available tutorials.
 
 ### Using your custom storage
 
-**[Click here to learn how to use your custom storage to store the tokens instead of ngCookies](docs/custom-storage.md)**
+**[Click here to learn how to use your custom storage to store the tokens instead of localStorage or ngCookies](docs/custom-storage.md)**
 
 ### Delegation Token
 
