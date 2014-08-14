@@ -404,11 +404,15 @@
             checkHandlers(options);
             var auth0lib = config.auth0lib;
             var signupCall = authUtils.callbackify(auth0lib.signup, function (profile, idToken, accessToken, state) {
-                onSigninOk(idToken, accessToken, state).then(function (profile) {
-                  if (successCallback) {
-                    successCallback(profile);
-                  }
-                });
+                if (!angular.isUndefined(options.auto_login) && !options.auto_login) {
+                  successCallback();
+                } else {
+                  onSigninOk(idToken, accessToken, state).then(function (profile) {
+                    if (successCallback) {
+                      successCallback(profile);
+                    }
+                  });
+                }
               }, function (err) {
                 callHandler('loginFailure', { error: err });
                 if (errorCallback) {
