@@ -78,6 +78,7 @@ module.exports = function (grunt) {
           'examples/sso/scripts/auth0-angular.js':                        'build/auth0-angular.js',
           'examples/widget-redirect/scripts/auth0-angular.js':            'build/auth0-angular.js',
           'examples/ui-router/scripts/auth0-angular.js':                  'build/auth0-angular.js',
+          'examples/refresh-token/auth0-angular.js':                  'build/auth0-angular.js',
           'examples/requirejs/scripts/auth0-angular.js':                  'build/auth0-angular.js'
          }
       },

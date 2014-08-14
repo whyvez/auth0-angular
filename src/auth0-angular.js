@@ -135,11 +135,16 @@
 
   angular.module('auth0.storage', ['ngCookies'])
     .service('authStorage', function($cookieStore) {
-      this.store = function(idToken, accessToken, state) {
+      this.store = function(idToken, accessToken, state, refreshToken) {
         $cookieStore.put('idToken', idToken);
-        $cookieStore.put('accessToken', accessToken);
+        if (accessToken) {
+          $cookieStore.put('accessToken', accessToken);
+        }
         if (state) {
           $cookieStore.put('state', state);
+        }
+        if (refreshToken) {
+         $cookieStore.put('refreshToken', refreshToken);
         }
       };
 
@@ -147,7 +152,8 @@
         return {
           idToken: $cookieStore.get('idToken'),
           accessToken: $cookieStore.get('accessToken'),
-          state: $cookieStore.get('state')
+          state: $cookieStore.get('state'),
+          refreshToken: $cookieStore.get('refreshToken')
         };
       };
 
@@ -155,6 +161,7 @@
         $cookieStore.remove('idToken');
         $cookieStore.remove('accessToken');
         $cookieStore.remove('state');
+        $cookieStore.remove('refreshToken');
       };
     });
 
@@ -176,6 +183,7 @@
       this.loginState = options.loginState;
       this.clientID = options.clientID;
       this.sso = options.sso;
+      this.minutesToRenewToken = options.minutesToRenewToken || 120;
 
       var Constructor = Auth0Constructor;
       if (!Constructor && typeof Auth0Widget !== 'undefined') {
@@ -229,8 +237,8 @@
 
       // SignIn
 
-      var onSigninOk = function(idToken, accessToken, state, locationEvent) {
-          authStorage.store(idToken, accessToken, state);
+      var onSigninOk = function(idToken, accessToken, state, refreshToken, locationEvent) {
+          authStorage.store(idToken, accessToken, state, refreshToken);
 
           var profilePromise = auth.getProfile(idToken);
 
@@ -238,6 +246,7 @@
             idToken: idToken,
             accessToken: accessToken,
             state: state,
+            refreshToken: refreshToken,
             isAuthenticated: true
           };
 
@@ -262,20 +271,37 @@
       }
 
       // Redirect mode
+      var refreshingToken = null;
       $rootScope.$on('$locationChangeStart', function(e) {
         var hashResult = config.auth0lib.parseHash($window.location.hash);
         if (!auth.isAuthenticated) {
           if (hashResult && hashResult.id_token) {
-            onSigninOk(hashResult.id_token, hashResult.access_token, hashResult.state, e);
+            onSigninOk(hashResult.id_token, hashResult.access_token, hashResult.state, hashResult.refresh_token, e);
             return;
           }
           var storedValues = authStorage.get();
           if (storedValues && storedValues.idToken) {
             if (auth.hasTokenExpired(storedValues.idToken)) {
-              forbidden();
+              if (storedValues.refreshToken) {
+                refreshingToken = auth.refreshToken(storedValues.refreshToken);
+                refreshingToken.then(function(idToken) {
+                  onSigninOk(idToken, storedValues.accessToken, storedValues.state, storedValues.refreshToken, e);
+                }, function() {
+                  forbidden();
+                });
+              } else {
+                forbidden();
+              }
               return;
+            } else {
+              var expireDate = auth.getTokenExpirationDate(storedValues.idToken);
+              if (new Date().valueOf() - expireDate.valueOf() <= auth.config.minutesToRenewToken * 60 * 1000) {
+                auth.renewIdToken(storedValues.idToken).then(function(token) {
+                  auth.idToken = token;
+                });
+              }
             }
-            onSigninOk(storedValues.idToken, storedValues.accessToken, storedValues.state, e);
+            onSigninOk(storedValues.idToken, storedValues.accessToken, storedValues.state, storedValues.refreshToken, e);
             return;
           }
           if (config.sso) {
@@ -298,7 +324,7 @@
       if (config.loginUrl) {
         $rootScope.$on('$routeChangeStart', function(e, nextRoute) {
           if (nextRoute.$$route && nextRoute.$$route.requiresLogin) {
-            if (!auth.isAuthenticated) {
+            if (!auth.isAuthenticated && !refreshingToken) {
               $location.path(config.loginUrl);
             }
           }
@@ -309,7 +335,7 @@
       if (config.loginState) {
         $rootScope.$on('$stateChangeStart', function(e, to) {
           if (to.data && to.data.requiresLogin) {
-            if (!auth.isAuthenticated) {
+            if (!auth.isAuthenticated && !refreshingToken) {
               e.preventDefault();
               $injector.get('$state').go(config.loginState);
             }
@@ -338,11 +364,7 @@
       };
 
 
-      auth.hasTokenExpired = function (token) {
-        if (!token) {
-          return true;
-        }
-
+      auth.getTokenExpirationDate = function(token) {
         var parts = token.split('.');
 
         if (parts.length !== 3) {
@@ -366,6 +388,16 @@
 
         var d = new Date(0); // The 0 here is the key, which sets the date to the epoch
         d.setUTCSeconds(decoded.exp);
+
+        return d;
+      };
+
+      auth.hasTokenExpired = function (token) {
+        if (!token) {
+          return true;
+        }
+
+        var d = auth.getTokenExpirationDate(token);
 
         if (isNaN(d)) {
           return true;
@@ -416,8 +448,8 @@
         checkHandlers(options);
 
         var auth0lib = lib || config.auth0lib;
-        var signinCall = authUtils.callbackify(auth0lib.signin, function(profile, idToken, accessToken, state) {
-          onSigninOk(idToken, accessToken, state).then(function(profile) {
+        var signinCall = authUtils.callbackify(auth0lib.signin, function(profile, idToken, accessToken, state, refreshToken) {
+          onSigninOk(idToken, accessToken, state, refreshToken).then(function(profile) {
             if (successCallback) {
               successCallback(profile);
             }
@@ -441,11 +473,11 @@
         checkHandlers(options);
 
         var auth0lib = config.auth0lib;
-        var signupCall = authUtils.callbackify(auth0lib.signup, function(profile, idToken, accessToken, state) {
+        var signupCall = authUtils.callbackify(auth0lib.signup, function(profile, idToken, accessToken, state, refreshToken) {
           if (!angular.isUndefined(options.auto_login) && !options.auto_login) {
             successCallback();
           } else {
-            onSigninOk(idToken, accessToken, state).then(function(profile) {
+            onSigninOk(idToken, accessToken, state, refreshToken).then(function(profile) {
               if (successCallback) {
                 successCallback(profile);
               }

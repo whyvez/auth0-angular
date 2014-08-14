@@ -325,6 +325,7 @@ You use this method to configure the auth service. You must set the following op
 * **sso**: If you have more than one application and you want Single Sign On on your apps, just set this to true. This will mean that if a user signs in to app 1, when he tries to use app2, he will be already logged in
 * **loginUrl**: Set this to the login url **if you're using ngRoute**
 * **loginState**: Set this to the login state **if you're using ui-router**
+* **minutesToRenewToken**: Renew the `idToken` when it expired in less than N minutes. By default, it's 120 minutes.
 
 #### authProvider.on(event, handler)
 
@@ -374,6 +375,11 @@ This is the list of all of the available tutorials.
 
 ![popup_guide](https://cloudup.com/cKpVNpR4s9y+)
   
+
+### Refresh tokens
+
+**[Click here to read the tutorial](docs/refreshToken.md)**
+
 ### Consuming a protected REST API
 
 **[Click here to read the tutorial](docs/backend.md)**
