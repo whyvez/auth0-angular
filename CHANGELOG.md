@@ -1,3 +1,8 @@
+# 2.1.X
+
+## 2.1.0
+* Added Refresh Token behaviour mostly for usage in Mobile apps. More info [here](https://github.com/auth0/auth0-angular/blob/master/docs/refreshToken.md)
+
 # 2.0.X
 
 ## 2.0.7
