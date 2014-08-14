@@ -12,5 +12,5 @@ auth.signin({
 });
 ````
 
-> **Warning**: The `refreshToken` gets saved in the whatever is implemented in [Auth Storage](docs/custom-storage.md), which by default is a client cookie. Be aware that if this is a security concern for you, to never ask for the `refreshToken`.
+> **Warning**: The `refreshToken` gets saved in the whatever is implemented in [Auth Storage](custom-storage.md), which by default is a client cookie. Be aware that if this is a security concern for you, to never ask for the `refreshToken`.
 
