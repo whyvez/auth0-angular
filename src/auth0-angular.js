@@ -133,8 +133,8 @@
     };
   });
 
-  angular.module('auth0.storage', ['ngCookies'])
-    .service('authStorage', function($cookieStore) {
+  angular.module('auth0.storage', [])
+    .service('authStorage', function($injector) {
       // Sets storage to use
       var put, get, remove = null;
       if (localStorage) {
@@ -148,6 +148,7 @@
           return localStorage.removeItem(what);
         };
       } else {
+        var $cookieStore = $injector.get('$cookieStore');
         put = function(what, value) {
           return $cookieStore.put(what, value);
         };
