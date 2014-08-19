@@ -1,5 +1,8 @@
 # 2.2.X
 
+## 2.2.1
+* Small BugFix for Refresh Token
+
 ## 2.2.0
 * Default storage service is now `localStorage`. It can fallback to `ngCookies`. More info [here](https://github.com/auth0/auth0-angular/blob/master/docs/custom-storage.md)
 
