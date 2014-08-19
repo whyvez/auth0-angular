@@ -1,6 +1,6 @@
 # 2.2.X
 
-## 2.2.1
+## 2.2.2
 * Small BugFix for Refresh Token
 
 ## 2.2.0
