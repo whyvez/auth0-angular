@@ -310,6 +310,8 @@
                       onSigninOk(idToken, storedValues.accessToken, storedValues.state, storedValues.refreshToken, e);
                     }, function () {
                       forbidden();
+                    }).finally(function () {
+                      refreshingToken = null;
                     });
                   } else {
                     forbidden();
