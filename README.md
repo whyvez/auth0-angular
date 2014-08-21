@@ -35,6 +35,8 @@ npm install auth0-angular
 <script type="text/javascript" src="//cdn.auth0.com/w2/auth0-angular-1.js"></script>
 ````
 
+> **Warning**: If you use a CDN or get the script manually, please be sure to include `auth0-widget` or `auth0.js` that matches the versions [specified on the `bower.json`](https://github.com/auth0/auth0-angular/blob/master/bower.json#L7-L8)
+
 ## TL;DR: Quick start guide
 
 ### Add module dependency and configure it
