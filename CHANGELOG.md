@@ -1,5 +1,8 @@
 # 2.2.X
 
+## 2.2.3
+* Fixed bug with email not recognized as possible parameter to do /ro
+
 ## 2.2.2
 * Small BugFix for Refresh Token
 
