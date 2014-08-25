@@ -123,7 +123,7 @@ If you're using `bower` or `npm`, this 2 scripts are set as a dependency of auth
 
 This is the API for the SDK. `[]` means optional parameter.
 
-#### auth.signin(options)
+#### auth.signin(options[, successCallback, errorCallback])
 
 This method does the signin for you. If you're using `auth0-widget`, it'll display Auth0's widget, otherwise it'll just do the login with the Identity provider that you ask for. 
 
@@ -179,11 +179,11 @@ You can read **a more extensive tutorial on how to use auth0-angular with [popup
 
 The rest of the **options that can be sent can be [checked here](https://docs.auth0.com/login-widget2#4)**.
 
-#### auth.signup(options)
+#### auth.signup(options[, successCallback, errorCallback])
 
 This shows the widget but in `signup` mode. It has the same options and parameters as the login. It's important to note that it'll perform a login after a successful signup.
 
-#### auth.reset(options)
+#### auth.reset(options[, successCallback, errorCallback])
 
 This will perform the "Forgot your password" flow. 
 If you're using `auth0.js` it will send the email to confirm the password change. [See the documentation here](https://github.com/auth0/auth0.js#change-password-database-connections)
