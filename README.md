@@ -106,8 +106,6 @@ auth0-angular depends on either `auth0.js` or `auth0-widget.js`.
 
 If you want to use Auth0's beautiful Widget UI, you need to include `auth0-widget.js`. This lets you configure Title and Icons, but the UI is taken care for you. For all the customization properties, please check out [tihs link](https://docs.auth0.com/login-widget2#4)
 
-![widget](http://cl.ly/image/2k3i2c3t3s2W/Screen%20Shot%202014-07-24%20at%2017.51.32.png)
-
 Otherwise, if you'll use a custom UI, you need to include `auth0.js`. 
 
 **It's important to note that this scripts must be included before auth0-angular**.
@@ -349,15 +347,15 @@ This is the list of all of the available tutorials.
 
 #### Redirect mode
 
-**[Click here to read the tutorial](docs/widget-redirect.md)**
-**[Click here to see the tutorial](https://github.com/auth0/auth0-angular/tree/master/examples/widget-redirect)**
+* **[Click here to read the tutorial](docs/widget-redirect.md)**
+* **[Click here to see the tutorial](https://github.com/auth0/auth0-angular/tree/master/examples/widget-redirect)**
 
 ![Widget redirect](http://cl.ly/image/2o423i362s2P/WidgetRedirect.gif)
 
 #### Popup mode
 
-**[Clcik here to read the tutorial](docs/widget-popup.md)**
-**[Click here to see the example](https://github.com/auth0/auth0-angular/tree/master/examples/widget)**
+* **[Clcik here to read the tutorial](docs/widget-popup.md)**
+* **[Click here to see the example](https://github.com/auth0/auth0-angular/tree/master/examples/widget)**
 
 ![Widget Popup](https://cloudup.com/cg8u9kVV5Vh+)
 
@@ -365,54 +363,54 @@ This is the list of all of the available tutorials.
 
 #### User/Password Login
 
-**[Click here to read the tutorial](docs/jssdk.md)**
-**[Click here to see the example](https://github.com/auth0/auth0-angular/tree/master/examples/custom-login)**
+* **[Click here to read the tutorial](docs/jssdk.md)**
+* **[Click here to see the example](https://github.com/auth0/auth0-angular/tree/master/examples/custom-login)**
    
 ![basic_guide](https://cloudup.com/cmaeJKX7LEM+)
   
 #### Social Login
 
-**[Click here to read the tutorial](docs/jssdk.md#social-authentication)**
-**[Click here to see the example](https://github.com/auth0/auth0-angular/tree/master/examples/custom-login)**
+* **[Click here to read the tutorial](docs/jssdk.md#social-authentication)**
+* **[Click here to see the example](https://github.com/auth0/auth0-angular/tree/master/examples/custom-login)**
 
 ![popup_guide](https://cloudup.com/cKpVNpR4s9y+)
   
 
 ### Refresh tokens
 
-**[Click here to read the tutorial](docs/refreshToken.md)**
+* **[Click here to read the tutorial](docs/refreshToken.md)**
 
 ### Consuming a protected REST API
 
-**[Click here to read the tutorial](docs/backend.md)**
-**[Click here to see the example](https://github.com/auth0/auth0-angular/tree/master/examples/api-authentication)**
+* **[Click here to read the tutorial](docs/backend.md)**
+* **[Click here to see the example](https://github.com/auth0/auth0-angular/tree/master/examples/api-authentication)**
 
 ### Join or Link accounts
 
-**[Click here to read the tutorial](docs/link-accounts.md)**
+* **[Click here to read the tutorial](docs/link-accounts.md)**
 
 ### Integrating to routes (ui-router and ngRoute)
 
-**[Click here to read the tutorial](docs/routing.md)**
-**[Click here to see the ui-router example](https://github.com/auth0/auth0-angular/tree/master/examples/ui-router)**
-**[Click here to see the ngRoute example](https://github.com/auth0/auth0-angular/tree/master/examples/widget-redirect)**
-**[Click here to see the html5mode example](https://github.com/auth0/auth0-angular/tree/master/examples/html5mode)**
+* **[Click here to read the tutorial](docs/routing.md)**
+* **[Click here to see the ui-router example](https://github.com/auth0/auth0-angular/tree/master/examples/ui-router)**
+* **[Click here to see the ngRoute example](https://github.com/auth0/auth0-angular/tree/master/examples/widget-redirect)**
+* **[Click here to see the html5mode example](https://github.com/auth0/auth0-angular/tree/master/examples/html5mode)**
 
 ### Using your custom storage
 
-**[Click here to learn how to use your custom storage to store the tokens instead of localStorage or ngCookies](docs/custom-storage.md)**
+* **[Click here to learn how to use your custom storage to store the tokens instead of localStorage or ngCookies](docs/custom-storage.md)**
 
 ### Delegation Token
 
-**[Click here to see the delegation token example](https://github.com/auth0/auth0-angular/tree/master/examples/delegation-token)**
+* **[Click here to see the delegation token example](https://github.com/auth0/auth0-angular/tree/master/examples/delegation-token)**
 
 ### Signup with custom fields (Besides Email & Password)
 
-**[Click here to see the delegation token example](https://github.com/auth0/auth0-angular/tree/master/examples/custom-signup)**
+* **[Click here to see the delegation token example](https://github.com/auth0/auth0-angular/tree/master/examples/custom-signup)**
 
 ### SSO
 
-**[Click here to see the SSO example](https://github.com/auth0/auth0-angular/tree/master/examples/sso)**
+* **[Click here to see the SSO example](https://github.com/auth0/auth0-angular/tree/master/examples/sso)**
 
 ## Changelog
 
