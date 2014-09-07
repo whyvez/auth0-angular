@@ -1,4 +1,4 @@
-# Getting Started: Widget Redirect
+# Getting Started: Widget Popup
 
 For this tutorial, you need to create a new account in [Auth0](https://www.auth0.com) and setup a new application. We will then implement client side and server side auth.
 
