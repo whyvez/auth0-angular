@@ -50,7 +50,7 @@ angular.module('myCoolApp', ['auth0'])
 
     authProvider.init({
       domain: 'mydomain.auth0.com',
-      clientId: 'myClientId',
+      clientID: 'myClientID',
       loginUrl: '/login',
       callbackUrl: location.href
     });
