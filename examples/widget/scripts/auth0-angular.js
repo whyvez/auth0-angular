@@ -209,7 +209,7 @@
         }
         this.loginUrl = options.loginUrl;
         this.loginState = options.loginState;
-        this.clientID = options.clientID;
+        this.clientID = options.clientID || options.clientId;
         this.sso = options.sso;
         this.minutesToRenewToken = options.minutesToRenewToken || 120;
         var Constructor = Auth0Constructor;
@@ -366,7 +366,7 @@
           auth.config = config;
           var checkHandlers = function (options) {
             var successHandlers = getHandlers('loginSuccess');
-            if (!options.popup && (!options.username || !options.email) && (!successHandlers || successHandlers.length === 0)) {
+            if (!options.popup && !options.username && !options.email && (!successHandlers || successHandlers.length === 0)) {
               throw new Error('You must define a loginSuccess handler ' + 'if not using popup mode or not doing ro call because that means you are doing a redirect');
             }
           };
