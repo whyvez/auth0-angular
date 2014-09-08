@@ -206,7 +206,7 @@
       }
       this.loginUrl = options.loginUrl;
       this.loginState = options.loginState;
-      this.clientID = options.clientID;
+      this.clientID = options.clientID || options.clientId;
       this.sso = options.sso;
       this.minutesToRenewToken = options.minutesToRenewToken || 120;
 

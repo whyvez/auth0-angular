@@ -7,7 +7,7 @@ This AngularJS module will help you implement client-side and server-side (API) 
 ## Key Features
 
 * **User Login & Signup**: This module lets you easily sign in and sign up your users with any Social Provider, Enterprise Provider or Username and password. You can use the UI already made by Auth0 or create your own
-* **Persistent user authentication**: We'll take care of keeping the user logged in after page refresh, browser closed and so on. 
+* **Persistent user authentication**: We'll take care of keeping the user logged in after page refresh, browser closed and so on.
 * **Authenticated API calls**: We'll take care of automatically adding the `JWT` in every request that is made to your API after the user is authenticated
 * **Events/Promise based services**: Our service supports both Events based actions as well as promise based ones
 * **Token management**: We'll handle the token storage and configuration all the time. You don't even need to know there's a token.
@@ -25,7 +25,7 @@ bower install auth0-angular
 ### NPM
 
 ````bash
-npm install auth0-angular 
+npm install auth0-angular
 ````
 
 ### CDN
@@ -106,7 +106,7 @@ auth0-angular depends on either `auth0.js` or `auth0-widget.js`.
 
 If you want to use Auth0's beautiful Widget UI, you need to include `auth0-widget.js`. This lets you configure Title and Icons, but the UI is taken care for you. For all the customization properties, please check out [tihs link](https://docs.auth0.com/login-widget2#4)
 
-Otherwise, if you'll use a custom UI, you need to include `auth0.js`. 
+Otherwise, if you'll use a custom UI, you need to include `auth0.js`.
 
 **It's important to note that this scripts must be included before auth0-angular**.
 
@@ -125,7 +125,7 @@ This is the API for the SDK. `[]` means optional parameter.
 
 #### auth.signin(options[, successCallback, errorCallback])
 
-This method does the signin for you. If you're using `auth0-widget`, it'll display Auth0's widget, otherwise it'll just do the login with the Identity provider that you ask for. 
+This method does the signin for you. If you're using `auth0-widget`, it'll display Auth0's widget, otherwise it'll just do the login with the Identity provider that you ask for.
 
 The most important option is the **`popup` option. If set to `true`**, popup mode will be used and as the Angular page will not reload, **you can use callbacks to handle the sigin success and failure**. **We don't use promises since once the widget is openned, the user can enter the password wrong several times and then enter it ok. We cannot fullfill a promise (with success or failure) more than once unfortunately**.
 
@@ -138,8 +138,8 @@ auth.signin({popup: true}, function(
 })
 ````
 
-**If you set `popup` option to `false`** (**this is the default value**), there're 2 posibilities. 
-If you've set the `username` and `password` options, then a CORS call to `/ro` will be done and you can use a promise to handle this case.  
+**If you set `popup` option to `false`** (**this is the default value**), there're 2 posibilities.
+If you've set the `username` and `password` options, then a CORS call to `/ro` will be done and you can use a promise to handle this case.
 
 ````js
 auth.signin({
@@ -185,7 +185,7 @@ This shows the widget but in `signup` mode. It has the same options and paramete
 
 #### auth.reset(options[, successCallback, errorCallback])
 
-This will perform the "Forgot your password" flow. 
+This will perform the "Forgot your password" flow.
 If you're using `auth0.js` it will send the email to confirm the password change. [See the documentation here](https://github.com/auth0/auth0.js#change-password-database-connections)
 If you're using `auth0-widget.js`, it will open the widget in the reset password more. It can receive in that case the same parameters as the `signin` method.
 This method receives 2 extra parameters to handle the success and failure callbacks similar to `signin`.
@@ -196,7 +196,7 @@ This signouts the user. Deletes the token from the client storage.
 
 #### auth.profile
 
-This property contains the profile from the user. **This will be filled after the user has logged in successfully**. If you want to use information from `auth.profile` only after the user is logged in, you can just do a `$watch` on this property to wait until it's set. 
+This property contains the profile from the user. **This will be filled after the user has logged in successfully**. If you want to use information from `auth.profile` only after the user is logged in, you can just do a `$watch` on this property to wait until it's set.
 
 #### auth.profilePromise
 
@@ -224,19 +224,19 @@ module.config(function($routeProvider) {
   when('/info', {
     templateUrl: 'info.html',
     controller: 'InfoCtrl',
-    requiresLogin: true  
+    requiresLogin: true
   }).
   when('/login', {
     tempalteUrl: 'login.html',
-    controller: 'LoginCtrl'  
+    controller: 'LoginCtrl'
   });
 
   authProvider.init({
     domain: 'domain',
-    clientId: 'clientId',
+    clientID: 'clientID',
     callbackUrl: location.href,
-    loginUrl: '/login'  
-  })    
+    loginUrl: '/login'
+  })
 })
 
 // Using ui-router
@@ -247,21 +247,21 @@ module.config(function($stateProvider) {
     templateUrl: 'info.html',
     controller: 'InfoCtrl',
     data: {
-      requiresLogin: true   
+      requiresLogin: true
     }
   }).
   state('login', {
     url: '/login'
     tempalteUrl: 'login.html',
-    controller: 'LoginCtrl'  
+    controller: 'LoginCtrl'
   });
 
   authProvider.init({
     domain: 'domain',
-    clientId: 'clientId',
+    clientID: 'clientID',
     callbackUrl: location.href,
-    loginState: 'login'  
-  })    
+    loginState: 'login'
+  })
 });
 ````
 
@@ -365,16 +365,16 @@ This is the list of all of the available tutorials.
 
 * **[Click here to read the tutorial](docs/jssdk.md)**
 * **[Click here to see the example](https://github.com/auth0/auth0-angular/tree/master/examples/custom-login)**
-   
+
 ![basic_guide](https://cloudup.com/cmaeJKX7LEM+)
-  
+
 #### Social Login
 
 * **[Click here to read the tutorial](docs/jssdk.md#social-authentication)**
 * **[Click here to see the example](https://github.com/auth0/auth0-angular/tree/master/examples/custom-login)**
 
 ![popup_guide](https://cloudup.com/cKpVNpR4s9y+)
-  
+
 
 ### Refresh tokens
 
