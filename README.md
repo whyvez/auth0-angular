@@ -110,7 +110,7 @@ Otherwise, if you'll use a custom UI, you need to include `auth0.js`.
 
 **It's important to note that this scripts must be included before auth0-angular**.
 
-If you're using `bower` or `npm`, this 2 scripts are set as a dependency of auth0-angular so that you choose the best for you. Otherwise, you can include them from the CDN:
+If you're using `bower` or `npm`, these 2 scripts are set as dependencies of auth0-angular so that you choose the best for you. Otherwise, you can include them from the CDN:
 
 ````html
 <!-- Either this -->
@@ -127,7 +127,7 @@ This is the API for the SDK. `[]` means optional parameter.
 
 This method does the signin for you. If you're using `auth0-widget`, it'll display Auth0's widget, otherwise it'll just do the login with the Identity provider that you ask for.
 
-The most important option is the **`popup` option. If set to `true`**, popup mode will be used and as the Angular page will not reload, **you can use callbacks to handle the sigin success and failure**. **We don't use promises since once the widget is openned, the user can enter the password wrong several times and then enter it ok. We cannot fullfill a promise (with success or failure) more than once unfortunately**.
+The most important option is the **`popup` option. If set to `true`**, popup mode will be used and as the Angular page will not reload, **you can use callbacks to handle the sigin success and failure**. **We don't use promises since once the widget is opened, the user can enter the password incorrectly several times and then enter it ok. We cannot fulfill a promise (with success or failure) more than once unfortunately**.
 
 ````js
 auth.signin({popup: true}, function(
@@ -154,7 +154,7 @@ auth.signin({
 })
 ````
 
-**If you set `popup` option to `false`** (**this is the default value**) **and you don't set username and pasword as options**, redirect mode will be used. As Angular page is realoded, you **cannot use callbacks nor promises** to handle login success and failure. You'll need to use `events` to handle them:
+**If you set `popup` option to `false`** (**this is the default value**) **and you don't set username and pasword as options**, redirect mode will be used. As Angular page is reloaded, you **cannot use callbacks nor promises** to handle login success and failure. You'll need to use `events` to handle them:
 
 ````js
 // app.js
@@ -187,7 +187,7 @@ This shows the widget but in `signup` mode. It has the same options and paramete
 
 This will perform the "Forgot your password" flow.
 If you're using `auth0.js` it will send the email to confirm the password change. [See the documentation here](https://github.com/auth0/auth0.js#change-password-database-connections)
-If you're using `auth0-widget.js`, it will open the widget in the reset password more. It can receive in that case the same parameters as the `signin` method.
+If you're using `auth0-widget.js`, it will open the widget in the reset password mode. It can receive in that case the same parameters as the `signin` method.
 This method receives 2 extra parameters to handle the success and failure callbacks similar to `signin`.
 
 #### auth.signout()
@@ -205,15 +205,15 @@ Same as the `auth.profile` but it's actually a promise that you can check. It mi
 
 #### auth.isAuthenticated
 
-This flag returns wether there's a user authenticated or not.
+This flag returns whether there's a user authenticated or not.
 
 #### auth.id_token, auth.access_token, auth.state
 
-This property contains the tokens returned after the user is logged in. Mostly for internal usage.
+These properties contain the tokens returned after the user is logged in. Mostly for internal usage.
 
 #### auth.hookEvents()
 
-auth0-angular takes care of checking that **unauthenticated users canoot access restricted resources**. For that, auth0-angular hooks to internal angular events so that we can redirect the user to the login page if he doesn't have the right permission to access a page. For that, you need to hook auth0-angular to all of this events on application run
+auth0-angular takes care of checking that **unauthenticated users canoot access restricted resources**. For that, auth0-angular hooks to internal angular events so that we can redirect the user to the login page if he doesn't have the right permission to access a page. For that, you need to hook auth0-angular to all of these events on application run.
 
 First, you need to configure the restricted routes:
 
@@ -277,7 +277,7 @@ To learn more about routing and using `ngRoute` or `ui-router` with your app, pl
 
 #### auth.getToken(options)
 
-This method does a Delegation Token request, which means exchanging current token for another one.
+This method does a Delegation Token request, which means exchanging the current token for another one.
 
 There're 2 options:
 
@@ -289,7 +289,7 @@ auth.getToken({
 })
 ````
 
-2) Imagine you have 2 APIs. The user in your angular app is loged in to your angular app that uses API #1. If you want to use API #2, you need to exchange the token you have for the API #1 for a valid one for API #2. The `targetClientId` parameter is just the identifier of the API #2 in this case. **Returns a promise**.
+2) Imagine you have 2 APIs. The user in your angular app is logged in to your angular app that uses API #1. If you want to use API #2, you need to exchange the token you have for the API #1 for a valid one for API #2. The `targetClientId` parameter is just the identifier of the API #2 in this case. **Returns a promise**.
 
 ````js
 auth.getToken({
@@ -302,14 +302,14 @@ To learn more about delegated access [please click here](https://docs.auth0.com/
 
 #### auth.renewIdToken()
 
-You can configure your token to expire after certain time. If you don't want your user to login again, you can just refresh the current token, which means getting a new token that will be valid for a certain amount of time.
+You can configure your token to expire after a certain time. If you don't want your user to login again, you can just refresh the current token, which means getting a new token that will be valid for a certain amount of time.
 
 For example, let's imagine you have a token valid for 10 hours. After 9 hours, you can refresh the token to get a new token that's going to be valid for another 10 hours. You just need to call this method in that case and we'll handle everything for you. **Returns a promise**.
 
 
 #### auth.refreshToken(refresh_token)
 
-Given a **expired** `id_token`, you can use the `refresh_token` to get a new and valid `id_token`
+Given a **expired** `id_token`, you can use the `refresh_token` to get a new and valid `id_token`.
 
 #### auth.hasTokenExpired(token)
 
@@ -319,12 +319,12 @@ This returns if a particular token has expired or not. Mostly for internal usage
 
 You use this method to configure the auth service. You must set the following options:
 
-* **domain**: The domain you have from your Auth0 account
-* **callbackUrl**: The callback URL. Usually this is `location.href`
-* **clientId**: The identifier for the application you've created. This can be got from the settings from your app on Auth0.
-* **sso**: If you have more than one application and you want Single Sign On on your apps, just set this to true. This will mean that if a user signs in to app 1, when he tries to use app2, he will be already logged in
-* **loginUrl**: Set this to the login url **if you're using ngRoute**
-* **loginState**: Set this to the login state **if you're using ui-router**
+* **domain**: The domain you have from your Auth0 account.
+* **callbackUrl**: The callback URL. Usually this is `location.href`.
+* **clientId**: The identifier for the application you've created. This can be found in the settings for your app on Auth0.
+* **sso**: If you have more than one application and you want Single Sign On on your apps, just set this to `true`. This will mean that if a user signs in to app 1, when he tries to use app 2, he will be already logged in.
+* **loginUrl**: Set this to the login url **if you're using ngRoute**.
+* **loginState**: Set this to the login state **if you're using ui-router**.
 * **minutesToRenewToken**: Renew the `idToken` when it expired in less than N minutes. By default, it's 120 minutes.
 
 #### authProvider.on(event, handler)
