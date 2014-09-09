@@ -19,6 +19,7 @@ angular.module('auth0-sample', ['auth0', 'ngRoute'])
   });
 
   authProvider.on('loginSuccess', function($location) {
+    $location.hash('');
     $location.path('/info');
   });
 
@@ -42,6 +43,11 @@ angular.module('auth0-sample', ['auth0', 'ngRoute'])
     auth.signin();
   }
 })
-.controller('InfoCtrl', function($scope, auth) {
+.controller('InfoCtrl', function($scope, auth, $location) {
   $scope.auth = auth;
+
+  $scope.logout = function() {
+    auth.signout();
+    $location.path('/');
+  }
 });
