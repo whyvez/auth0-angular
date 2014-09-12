@@ -20,7 +20,7 @@ myApp.config(function($stateProvider, $urlRouterProvider, $httpProvider, authPro
     controller: 'LoginCtrl'
   })
   .state('root', {
-    url: '/',
+    url: '/home',
     templateUrl: 'views/root.html',
     controller: 'RootCtrl',
     data: {
@@ -38,5 +38,8 @@ myApp.config(function($stateProvider, $urlRouterProvider, $httpProvider, authPro
     loginState: 'login'
   });
   $httpProvider.interceptors.push('authInterceptor');
+})
+.run(function(auth) {
+  auth.hookEvents();
 });
 

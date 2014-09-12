@@ -6,7 +6,10 @@ myApp.controller('MsgCtrl', function ($scope, auth) {
 });
 
 myApp.controller('RootCtrl', function (auth, $scope) {
-  $scope.$parent.message = 'Welcome ' + auth.profile.name + '!';
+  auth.profilePromise.then(function() {
+    $scope.$parent.message = 'Welcome ' + auth.profile.name + '!';
+  });
+
   $scope.auth = auth;
 });
 
