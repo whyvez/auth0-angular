@@ -5,7 +5,7 @@ var myApp = angular.module('myApp', [
 myApp.config(function($stateProvider, $urlRouterProvider, $httpProvider, authProvider, $locationProvider) {
 
   // For any unmatched url, redirect to /login
-  $urlRouterProvider.otherwise('/login');
+  $urlRouterProvider.otherwise('/home');
 
   // Now set up the states
   $stateProvider
@@ -27,8 +27,6 @@ myApp.config(function($stateProvider, $urlRouterProvider, $httpProvider, authPro
       requiresLogin: true
     }
   });
-
-  $locationProvider.hashPrefix('!');
 
 
   authProvider.init({
