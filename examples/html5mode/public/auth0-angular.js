@@ -268,12 +268,14 @@
           var onSigninOk = function (idToken, accessToken, state, refreshToken, locationEvent) {
             authStorage.store(idToken, accessToken, state, refreshToken);
             var profilePromise = auth.getProfile(idToken);
+            var tokenPayload = auth.getTokenPayload(idToken);
             var response = {
                 idToken: idToken,
                 accessToken: accessToken,
                 state: state,
                 refreshToken: refreshToken,
-                isAuthenticated: true
+                isAuthenticated: true,
+                tokenPayload: tokenPayload
               };
             angular.extend(auth, response);
             callHandler('loginSuccess', angular.extend({
@@ -319,7 +321,7 @@
                   return;
                 } else {
                   var expireDate = auth.getTokenExpirationDate(storedValues.idToken);
-                  if (new Date().valueOf() - expireDate.valueOf() <= auth.config.minutesToRenewToken * 60 * 1000) {
+                  if (expireDate.valueOf() - new Date().valueOf() <= auth.config.minutesToRenewToken * 60 * 1000) {
                     auth.renewIdToken(storedValues.idToken).then(function (token) {
                       auth.idToken = token;
                     });
@@ -372,22 +374,26 @@
           };
           auth.hookEvents = function () {
           };
-          auth.getTokenExpirationDate = function (token) {
+          auth.getTokenPayload = function (token) {
             var parts = token.split('.');
             if (parts.length !== 3) {
-              return true;
+              throw new Error('Error getting token payload');
             }
             var decoded = authUtils.urlBase64Decode(parts[1]);
             if (!decoded) {
-              return true;
+              throw new Error('Error getting token payload');
             }
+            return JSON.parse(decoded);
+          };
+          auth.getTokenExpirationDate = function (token) {
+            var decoded;
             try {
-              decoded = JSON.parse(decoded);
+              decoded = auth.getTokenPayload(token);
             } catch (e) {
-              return true;
+              return null;
             }
             if (!decoded.exp) {
-              return true;
+              return null;
             }
             var d = new Date(0);
             // The 0 here is the key, which sets the date to the epoch
@@ -499,6 +505,7 @@
             auth.idToken = null;
             auth.state = null;
             auth.accessToken = null;
+            auth.tokenPayload = null;
             auth.isAuthenticated = false;
             callHandler('logout');
           };

@@ -4,7 +4,7 @@
   "dependencies": {
     "angular": "*",
     "angular-cookies": "*",
-    "auth0.js": "~4.0",
+    "auth0.js": "~4.2",
     "auth0-widget.js": ">= 5.2.5"
   },
   "devDependencies": {

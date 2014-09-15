@@ -5,6 +5,7 @@ angular.module( 'sample.login', [
 
   $scope.login = function() {
     auth.signin({
+      scope: 'openid profile'
       // popup: true to use popup instead of redirect
     });
   }

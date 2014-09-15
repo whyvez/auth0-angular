@@ -202,6 +202,9 @@ This property contains the profile from the user. **This will be filled after th
 
 Same as the `auth.profile` but it's actually a promise that you can check. It might be null or a promise. Null is even before the user tries to log in.
 
+#### auth.tokenPayload
+
+This has the decoded Payload of the JWT. **This will be filled after the user has logged in successfully**
 
 #### auth.isAuthenticated
 
