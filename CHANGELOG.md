@@ -1,6 +1,6 @@
 # 2.2.X
 
-## 2.2.4
+## 2.2.5
 * Added `tokenPayload` to `auth`
 
 ## 2.2.3
