@@ -1,5 +1,8 @@
 # 2.2.X
 
+## 2.2.7
+* Added `authenticated` event for after refresh
+
 ## 2.2.6
 * BugFix with `sso: true`
 

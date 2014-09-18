@@ -163,6 +163,11 @@ module.config(function(authProvider) {
     $location.path('/');
   });
 
+  authProvider.on('authenticated, function($location) {
+    // This is after a refresh of the page
+    // If the user is still authenticated, you get this event
+  });
+
   authProvider.on('loginFailure', function($location, error) {
     $location.path('/error');
   });
