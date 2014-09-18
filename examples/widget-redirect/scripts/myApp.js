@@ -29,7 +29,13 @@ myApp.config(function ($routeProvider, authProvider, $httpProvider) {
   });
 
   authProvider.on('loginSuccess', function($location) {
+    console.log("Login Success");
     $location.path('/');
+  });
+
+  authProvider.on('authenticated', function($location) {
+    console.log("Authenticated");
+
   });
 
   authProvider.on('logout', function() {

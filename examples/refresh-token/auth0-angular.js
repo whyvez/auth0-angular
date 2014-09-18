@@ -265,7 +265,7 @@
             });
           };
           // SignIn
-          var onSigninOk = function (idToken, accessToken, state, refreshToken, locationEvent) {
+          var onSigninOk = function (idToken, accessToken, state, refreshToken, isRefresh) {
             authStorage.store(idToken, accessToken, state, refreshToken);
             var profilePromise = auth.getProfile(idToken);
             var tokenPayload = auth.getTokenPayload(idToken);
@@ -278,10 +278,7 @@
                 tokenPayload: tokenPayload
               };
             angular.extend(auth, response);
-            callHandler('loginSuccess', angular.extend({
-              profile: profilePromise,
-              locationEvent: locationEvent
-            }, response));
+            callHandler(!isRefresh ? 'loginSuccess' : 'authenticated', angular.extend({ profile: profilePromise }, response));
             return profilePromise;
           };
           function forbidden() {
@@ -296,11 +293,11 @@
           }
           // Redirect mode
           var refreshingToken = null;
-          $rootScope.$on('$locationChangeStart', function (e) {
+          $rootScope.$on('$locationChangeStart', function () {
             var hashResult = config.auth0lib.parseHash($window.location.hash);
             if (!auth.isAuthenticated) {
               if (hashResult && hashResult.id_token) {
-                onSigninOk(hashResult.id_token, hashResult.access_token, hashResult.state, hashResult.refresh_token, e);
+                onSigninOk(hashResult.id_token, hashResult.access_token, hashResult.state, hashResult.refresh_token);
                 return;
               }
               var storedValues = authStorage.get();
@@ -309,7 +306,7 @@
                   if (storedValues.refreshToken) {
                     refreshingToken = auth.refreshToken(storedValues.refreshToken);
                     refreshingToken.then(function (idToken) {
-                      onSigninOk(idToken, storedValues.accessToken, storedValues.state, storedValues.refreshToken, e);
+                      onSigninOk(idToken, storedValues.accessToken, storedValues.state, storedValues.refreshToken, true);
                     }, function () {
                       forbidden();
                     }).finally(function () {
@@ -328,7 +325,7 @@
                     });
                   }
                 }
-                onSigninOk(storedValues.idToken, storedValues.accessToken, storedValues.state, storedValues.refreshToken, e);
+                onSigninOk(storedValues.idToken, storedValues.accessToken, storedValues.state, storedValues.refreshToken, true);
                 return;
               }
               if (config.sso) {
