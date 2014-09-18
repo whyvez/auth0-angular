@@ -163,7 +163,7 @@ module.config(function(authProvider) {
     $location.path('/');
   });
 
-  authProvider.on('authenticated, function($location) {
+  authProvider.on('authenticated', function($location) {
     // This is after a refresh of the page
     // If the user is still authenticated, you get this event
   });
@@ -339,8 +339,9 @@ You use this method to configure the auth service. You must set the following op
 
 You can configure the handlers for all the different events that can happen in your app. The following are the available events right now:
 
-* **loginSucces**: This will get called after a user has successfully logged in. In the handler, you can inject any service you want besides the `profile` and `token` from the user
-* **loginFailure**: This will get called if there's an error authenticating the usr. In the handler, you can inject any service you want besides the `error` which was thrown
+* **authenticated**: This will get called after a refresh of the page if the user is still authenticated. In the handler, you can inject any service you want.
+* **loginSucces**: This will get called after a user has successfully logged in. In the handler, you can inject any service you want besides the `profile` and `token` from the user.
+* **loginFailure**: This will get called if there's an error authenticating the usr. In the handler, you can inject any service you want besides the `error` which was thrown.
 * **logout**: This will get called after a user has successfully logged out.
 * **forbidden**: This will get called if a request to an API is made and it returns 401 meaning that the user cannot access that resource. That usually happens when the token is expired. In that case, you should redirect the user to the login page in most cases.
 
