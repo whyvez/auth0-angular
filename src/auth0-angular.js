@@ -327,7 +327,7 @@
               if (expireDate.valueOf() - new Date().valueOf() <= auth.config.minutesToRenewToken * 60 * 1000) {
                 auth.renewIdToken(storedValues.idToken).then(function(token) {
                   auth.idToken = token;
-                  auth.tokenPayload = getTokenPayload(token);
+                  auth.tokenPayload = auth.getTokenPayload(token);
                 });
               }
             }
@@ -340,7 +340,7 @@
                 auth.signin({
                   popup: false,
                   connection: ssoData.lastUsedConnection.strategy
-                }, config.auth0js);
+                }, null, null, config.auth0js);
               }
             }));
           }

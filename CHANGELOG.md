@@ -1,5 +1,8 @@
 # 2.2.X
 
+## 2.2.6
+* BugFix with `sso: true`
+
 ## 2.2.5
 * Added `tokenPayload` to `auth`
 
