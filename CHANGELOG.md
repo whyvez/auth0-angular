@@ -1,5 +1,8 @@
 # 2.2.X
 
+## 2.2.8
+* Fixed bug when using auth0js library
+
 ## 2.2.7
 * Added `authenticated` event for after refresh
 

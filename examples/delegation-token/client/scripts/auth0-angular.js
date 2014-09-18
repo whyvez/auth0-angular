@@ -66,6 +66,9 @@
             };
           }
         };
+        authUtils.isWidget = function (lib) {
+          return lib && lib.getClient;
+        };
         authUtils.promisify = function (nodeback, self) {
           if (angular.isFunction(nodeback)) {
             return function (args) {
@@ -453,7 +456,7 @@
                   errorCallback(err);
                 }
               }, auth0lib);
-            if (config.isWidget) {
+            if (authUtils.isWidget(auth0lib)) {
               signinCall(options, null);
             } else {
               signinCall(options);
