@@ -111,35 +111,50 @@
       }
     ];
   });
-  angular.module('auth0.interceptor', []).factory('authInterceptor', [
-    '$rootScope',
-    '$q',
-    '$injector',
-    function ($rootScope, $q, $injector) {
-      return {
-        request: function (config) {
-          // When using auth dependency is never loading, we need to do this manually
-          // This issue should be related with: https://github.com/angular/angular.js/issues/2367
-          if (!$injector.has('auth')) {
+  angular.module('auth0.interceptor', []).provider('authInterceptor', function () {
+    var skipJWT = 'skipAuthorization';
+    var authHeader = 'Authorization';
+    var authPrefix = 'Bearer ';
+    this.setSkipJWT = function (name) {
+      skipJWT = name || skipJWT;
+    };
+    this.setAuthHeader = function (name) {
+      authHeader = name || authHeader;
+    };
+    this.setAuthPrefix = function (name) {
+      authPrefix = name || authPrefix;
+    };
+    this.$get = [
+      '$rootScope',
+      '$q',
+      '$injector',
+      function ($rootScope, $q, $injector) {
+        var auth;
+        return {
+          request: function (config) {
+            // When using auth dependency is never loading, we need to do this manually
+            // This issue should be related with: https://github.com/angular/angular.js/issues/2367
+            if (config[skipJWT] || !$injector.has('auth')) {
+              return config;
+            }
+            auth = auth || $injector.get('auth');
+            config.headers = config.headers || {};
+            if (auth.idToken && !config.headers[authHeader]) {
+              config.headers[authHeader] = authPrefix + auth.idToken;
+            }
             return config;
+          },
+          responseError: function (response) {
+            // handle the case where the user is not authenticated
+            if (response.status === 401) {
+              $rootScope.$broadcast('auth0.forbidden', response);
+            }
+            return $q.reject(response);
           }
-          var auth = $injector.get('auth');
-          config.headers = config.headers || {};
-          if (auth.idToken && !config.headers.Authorization) {
-            config.headers.Authorization = 'Bearer ' + auth.idToken;
-          }
-          return config;
-        },
-        responseError: function (response) {
-          // handle the case where the user is not authenticated
-          if (response.status === 401) {
-            $rootScope.$broadcast('auth0.forbidden', response);
-          }
-          return $q.reject(response);
-        }
-      };
-    }
-  ]);
+        };
+      }
+    ];
+  });
   angular.module('auth0.storage', []).service('authStorage', [
     '$injector',
     function ($injector) {
