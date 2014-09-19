@@ -3,198 +3,216 @@
   angular.module('auth0', ['auth0.storage', 'auth0.service', 'auth0.interceptor', 'auth0.utils']);
 
   angular.module('auth0.utils', [])
-    .provider('authUtils', function() {
-      var Utils = {
-        capitalize: function(string) {
-          return string ? string.charAt(0).toUpperCase() + string.substring(1).toLowerCase() : null;
-        },
-        urlBase64Decode: function(str) {
-          var output = str.replace('-', '+').replace('_', '/');
-          switch (output.length % 4) {
-            case 0: { break; }
-            case 2: { output += '=='; break; }
-            case 3: { output += '='; break; }
-            default: {
-              throw 'Illegal base64url string!';
-            }
+  .provider('authUtils', function() {
+    var Utils = {
+      capitalize: function(string) {
+        return string ? string.charAt(0).toUpperCase() + string.substring(1).toLowerCase() : null;
+      },
+      urlBase64Decode: function(str) {
+        var output = str.replace('-', '+').replace('_', '/');
+        switch (output.length % 4) {
+          case 0: { break; }
+          case 2: { output += '=='; break; }
+          case 3: { output += '='; break; }
+          default: {
+            throw 'Illegal base64url string!';
           }
-          return window.atob(output); //polifyll https://github.com/davidchambers/Base64.js
         }
-      };
+        return window.atob(output); //polifyll https://github.com/davidchambers/Base64.js
+      }
+    };
 
-      angular.extend(this, Utils);
+    angular.extend(this, Utils);
 
-      this.$get = function($rootScope, $q) {
-        var authUtils = {};
-        angular.extend(authUtils, Utils);
+    this.$get = function($rootScope, $q) {
+      var authUtils = {};
+      angular.extend(authUtils, Utils);
 
-        authUtils.safeApply = function(fn) {
-          var phase = $rootScope.$root.$$phase;
-          if(phase === '$apply' || phase === '$digest') {
-            if(fn && (typeof(fn) === 'function')) {
-              fn();
-            }
-          } else {
-            $rootScope.$apply(fn);
+      authUtils.safeApply = function(fn) {
+        var phase = $rootScope.$root.$$phase;
+        if(phase === '$apply' || phase === '$digest') {
+          if(fn && (typeof(fn) === 'function')) {
+            fn();
           }
-        };
-
-        authUtils.callbackify = function (nodeback, success, error, self) {
-        if (angular.isFunction(nodeback)) {
-          return function (args) {
-            args = Array.prototype.slice.call(arguments);
-            var callback = function (err, response, etc) {
-              if (err) {
-                error && error(err);
-                return;
-              }
-              // if more arguments then turn into an array for .spread()
-              etc = Array.prototype.slice.call(arguments, 1);
-              success && success.apply(null, etc);
-            };
-
-            args.push(authUtils.applied(callback));
-            nodeback.apply(self, args);
-          };
+        } else {
+          $rootScope.$apply(fn);
         }
       };
 
-        authUtils.isWidget = function(lib) {
-          return lib && lib.getClient;
-        };
-
-        authUtils.promisify = function (nodeback, self) {
-        if (angular.isFunction(nodeback)) {
-          return function (args) {
-            args = Array.prototype.slice.call(arguments);
-            var dfd = $q.defer();
-            var callback = function (err, response, etc) {
-              if (err) {
-                dfd.reject(err);
-                return;
-              }
-              // if more arguments then turn into an array for .spread()
-              etc = Array.prototype.slice.call(arguments, 1);
-              dfd.resolve(etc.length > 1 ? etc : response);
-            };
-
-            args.push(authUtils.applied(callback));
-            nodeback.apply(self, args);
-            // spread polyfill only for promisify
-            dfd.promise.spread = dfd.promise.spread || function (fulfilled, rejected) {
-              return dfd.promise.then(function (array) {
-                return Array.isArray(array) ? fulfilled.apply(null, array) : fulfilled(array);
-              }, rejected);
-            };
-            return dfd.promise;
+      authUtils.callbackify = function (nodeback, success, error, self) {
+      if (angular.isFunction(nodeback)) {
+        return function (args) {
+          args = Array.prototype.slice.call(arguments);
+          var callback = function (err, response, etc) {
+            if (err) {
+              error && error(err);
+              return;
+            }
+            // if more arguments then turn into an array for .spread()
+            etc = Array.prototype.slice.call(arguments, 1);
+            success && success.apply(null, etc);
           };
-        }
+
+          args.push(authUtils.applied(callback));
+          nodeback.apply(self, args);
+        };
+      }
+    };
+
+      authUtils.isWidget = function(lib) {
+        return lib && lib.getClient;
       };
 
-        authUtils.applied = function(fn) {
-          // Adding arguments just due to a bug in Auth0.js.
-          return function (err, response) {
-            // Using variables so that they don't get deleted by UglifyJS
-            err = err;
-            response = response;
-            var argsCall = arguments;
-            authUtils.safeApply(function() {
-              fn.apply(null, argsCall);
-            });
+      authUtils.promisify = function (nodeback, self) {
+      if (angular.isFunction(nodeback)) {
+        return function (args) {
+          args = Array.prototype.slice.call(arguments);
+          var dfd = $q.defer();
+          var callback = function (err, response, etc) {
+            if (err) {
+              dfd.reject(err);
+              return;
+            }
+            // if more arguments then turn into an array for .spread()
+            etc = Array.prototype.slice.call(arguments, 1);
+            dfd.resolve(etc.length > 1 ? etc : response);
           };
-        };
 
-        return authUtils;
+          args.push(authUtils.applied(callback));
+          nodeback.apply(self, args);
+          // spread polyfill only for promisify
+          dfd.promise.spread = dfd.promise.spread || function (fulfilled, rejected) {
+            return dfd.promise.then(function (array) {
+              return Array.isArray(array) ? fulfilled.apply(null, array) : fulfilled(array);
+            }, rejected);
+          };
+          return dfd.promise;
+        };
+      }
+    };
+
+      authUtils.applied = function(fn) {
+        // Adding arguments just due to a bug in Auth0.js.
+        return function (err, response) {
+          // Using variables so that they don't get deleted by UglifyJS
+          err = err;
+          response = response;
+          var argsCall = arguments;
+          authUtils.safeApply(function() {
+            fn.apply(null, argsCall);
+          });
+        };
       };
 
+      return authUtils;
+    };
 
 
-    });
+
+  });
 
   angular.module('auth0.interceptor', [])
-  .factory('authInterceptor', function ($rootScope, $q, $injector) {
-    return {
-      request: function (config) {
-        // When using auth dependency is never loading, we need to do this manually
-        // This issue should be related with: https://github.com/angular/angular.js/issues/2367
-        if (!$injector.has('auth')) {
+  .provider('authInterceptor', function() {
+    var skipJWT    = 'skipAuthorization';
+    var authHeader = 'Authorization';
+    var authPrefix = 'Bearer ';
+
+    this.setSkipJWT = function(name) {
+      skipJWT    = name || skipJWT;
+    };
+    this.setAuthHeader = function(name) {
+      authHeader = name || authHeader;
+    };
+    this.setAuthPrefix = function(name) {
+      authPrefix = name || authPrefix;
+    };
+
+    this.$get = function ($rootScope, $q, $injector) {
+      var auth;
+      return {
+        request: function (config) {
+          // When using auth dependency is never loading, we need to do this manually
+          // This issue should be related with: https://github.com/angular/angular.js/issues/2367
+          if (config[skipJWT] || !$injector.has('auth')) {
+            return config;
+          }
+          auth = auth || $injector.get('auth');
+          config.headers = config.headers || {};
+          if (auth.idToken && !config.headers[authHeader]) {
+            config.headers[authHeader] = authPrefix + auth.idToken;
+          }
           return config;
+        },
+        responseError: function (response) {
+          // handle the case where the user is not authenticated
+          if (response.status === 401) {
+            $rootScope.$broadcast('auth0.forbidden', response);
+          }
+          return $q.reject(response);
         }
-        var auth = $injector.get('auth');
-        config.headers = config.headers || {};
-        if (auth.idToken && !config.headers.Authorization) {
-          config.headers.Authorization = 'Bearer '+ auth.idToken;
-        }
-        return config;
-      },
-      responseError: function (response) {
-        // handle the case where the user is not authenticated
-        if (response.status === 401) {
-          $rootScope.$broadcast('auth0.forbidden', response);
-        }
-        return $q.reject(response);
-      }
+      };
     };
   });
 
   angular.module('auth0.storage', [])
-    .service('authStorage', function($injector) {
-      // Sets storage to use
-      var put, get, remove = null;
-      if (localStorage) {
-        put = function(what, value) {
-          return localStorage.setItem(what, value);
-        };
-        get = function(what) {
-          return localStorage.getItem(what);
-        };
-        remove = function(what) {
-          return localStorage.removeItem(what);
-        };
-      } else {
-        var $cookieStore = $injector.get('$cookieStore');
-        put = function(what, value) {
-          return $cookieStore.put(what, value);
-        };
-        get = function(what) {
-          return $cookieStore.get(what);
-        };
-        remove = function(what) {
-          return $cookieStore.remove(what);
-        };
+  .service('authStorage', function($injector) {
+    // Sets storage to use
+    var put, get, remove = null;
+    if (localStorage) {
+      put = function(what, value) {
+        return localStorage.setItem(what, value);
+      };
+      get = function(what) {
+        return localStorage.getItem(what);
+      };
+      remove = function(what) {
+        return localStorage.removeItem(what);
+      };
+    } else {
+      var $cookieStore = $injector.get('$cookieStore');
+      put = function(what, value) {
+        return $cookieStore.put(what, value);
+      };
+      get = function(what) {
+        return $cookieStore.get(what);
+      };
+      remove = function(what) {
+        return $cookieStore.remove(what);
+      };
+    }
+
+    this.store = function(idToken, accessToken, state, refreshToken) {
+      put('idToken', idToken);
+      if (accessToken) {
+        put('accessToken', accessToken);
       }
+      if (state) {
+        put('state', state);
+      }
+      if (refreshToken) {
+       put('refreshToken', refreshToken);
+      }
+    };
 
-      this.store = function(idToken, accessToken, state, refreshToken) {
-        put('idToken', idToken);
-        if (accessToken) {
-          put('accessToken', accessToken);
-        }
-        if (state) {
-          put('state', state);
-        }
-        if (refreshToken) {
-         put('refreshToken', refreshToken);
-        }
+    this.get = function() {
+      return {
+        idToken: get('idToken'),
+        accessToken: get('accessToken'),
+        state: get('state'),
+        refreshToken: get('refreshToken')
       };
+    };
 
-      this.get = function() {
-        return {
-          idToken: get('idToken'),
-          accessToken: get('accessToken'),
-          state: get('state'),
-          refreshToken: get('refreshToken')
-        };
-      };
+    this.remove = function() {
+      remove('idToken');
+      remove('accessToken');
+      remove('state');
+      remove('refreshToken');
+    };
+  });
 
-      this.remove = function() {
-        remove('idToken');
-        remove('accessToken');
-        remove('state');
-        remove('refreshToken');
-      };
-    });
-
-  angular.module('auth0.service', ['auth0.storage', 'auth0.utils']).provider('auth', function(authUtilsProvider) {
+  angular.module('auth0.service', ['auth0.storage', 'auth0.utils'])
+  .provider('auth', function(authUtilsProvider) {
     var defaultOptions = {
       callbackOnLocationHash: true
     };
