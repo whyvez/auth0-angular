@@ -591,5 +591,11 @@
 
       return auth;
     };
+  })
+
+  // inject auth to instantiate it on angular bootstrap
+  .run(function(auth) {
+    auth.hookEvents();
   });
+
 }());
