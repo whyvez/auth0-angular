@@ -1,6 +1,9 @@
 (function () {
 
-  angular.module('auth0', ['auth0.storage', 'auth0.service', 'auth0.interceptor', 'auth0.utils']);
+  angular.module('auth0', ['auth0.storage', 'auth0.service', 'auth0.interceptor', 'auth0.utils'])
+    .run(function(auth) {
+      auth.hookEvents();
+    });
 
   angular.module('auth0.utils', [])
   .provider('authUtils', function() {
@@ -591,11 +594,6 @@
 
       return auth;
     };
-  })
-
-  // inject auth to instantiate it on angular bootstrap
-  .run(function(auth) {
-    auth.hookEvents();
   });
 
 }());

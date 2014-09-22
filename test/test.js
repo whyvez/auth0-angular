@@ -161,7 +161,7 @@ describe('Auth0 Angular', function () {
             domain: 'hello.auth0.com'
           });
           $httpProvider.interceptors.push('authInterceptor');
-          $provide.decorator('auth', function () { return {idToken: 'w00t'}; });
+          $provide.decorator('auth', function () { return {idToken: 'w00t', hookEvents: function() {}}; });
         });
 
         inject(function (_$http_, _$httpBackend_) {
@@ -195,7 +195,7 @@ describe('Auth0 Angular', function () {
           });
 
           $httpProvider.interceptors.push('authInterceptor');
-          $provide.decorator('auth', function () { return {idToken: 'w00t'}; });
+          $provide.decorator('auth', function () { return {idToken: 'w00t', hookEvents: function() {}}; });
         });
 
         inject(function (_$http_, _$httpBackend_, _$rootScope_) {
