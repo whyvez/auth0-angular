@@ -339,7 +339,7 @@
                   onSigninOk(idToken, storedValues.accessToken, storedValues.state, storedValues.refreshToken, true);
                 }, function() {
                   forbidden();
-                }).finally(function() {
+                })["finally"](function() {
                   refreshingToken = null;
                 });
               } else {
