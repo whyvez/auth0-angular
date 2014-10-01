@@ -149,7 +149,7 @@
         responseError: function (response) {
           // handle the case where the user is not authenticated
           if (response.status === 401) {
-            $rootScope.$broadcast('auth0.forbidden', response);
+            $rootScope.$broadcast('auth0.forbiddenRequest', response);
           }
           return $q.reject(response);
         }
@@ -280,6 +280,7 @@
       };
 
       var callHandler = function(anEvent, locals) {
+        $rootScope.$broadcast('auth0.' + anEvent, locals);
         angular.forEach(getHandlers(anEvent) || [], function(handler) {
           $injector.invoke(handler, auth, locals);
         });
@@ -371,7 +372,7 @@
         }
       });
 
-      $rootScope.$on('auth0.forbidden', function() {
+      $rootScope.$on('auth0.forbiddenRequest', function() {
         forbidden();
       });
 
