@@ -265,7 +265,7 @@ describe('Auth0 Angular', function () {
     });
 
     it('should refresh the token OK', function (done) {
-      auth.refreshToken('refresh_token').then(function (token) {
+      auth.refreshIdToken('refresh_token').then(function (token) {
         expect(token).to.be.ok;
       })
       .then(done);

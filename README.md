@@ -315,7 +315,7 @@ You can configure your token to expire after a certain time. If you don't want y
 For example, let's imagine you have a token valid for 10 hours. After 9 hours, you can refresh the token to get a new token that's going to be valid for another 10 hours. You just need to call this method in that case and we'll handle everything for you. **Returns a promise**.
 
 
-#### auth.refreshToken(refresh_token)
+#### auth.refreshIdToken(refresh_token)
 
 Given a **expired** `id_token`, you can use the `refresh_token` to get a new and valid `id_token`.
 

@@ -327,12 +327,12 @@
               if (storedValues && storedValues.idToken) {
                 if (auth.hasTokenExpired(storedValues.idToken)) {
                   if (storedValues.refreshToken) {
-                    refreshingToken = auth.refreshToken(storedValues.refreshToken);
+                    refreshingToken = auth.refreshIdToken(storedValues.refreshToken);
                     refreshingToken.then(function (idToken) {
                       onSigninOk(idToken, storedValues.accessToken, storedValues.state, storedValues.refreshToken, true);
                     }, function () {
                       forbidden();
-                    }).finally(function () {
+                    })['finally'](function () {
                       refreshingToken = null;
                     });
                   } else {
@@ -448,7 +448,7 @@
               return delegationResult.id_token;
             });
           };
-          auth.refreshToken = function (refresh_token) {
+          auth.refreshIdToken = function (refresh_token) {
             var refreshTokenAsync = authUtils.promisify(config.auth0js.refreshToken, config.auth0js);
             return refreshTokenAsync(refresh_token || auth.refreshToken).then(function (delegationResult) {
               return delegationResult.id_token;
