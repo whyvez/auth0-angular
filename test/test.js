@@ -32,18 +32,6 @@ describe('Auth0 Angular', function () {
       inject(function (auth) { expect(auth).to.be.ok; });
     });
 
-    it('should not add authInterceptor to the $httpProvider.interceptors list by default', function (done) {
-      var fakeModule = angular.module('fakeModule', []);
-      fakeModule.config(function($httpProvider) {
-        expect($httpProvider.interceptors).to.be.deep.equal([]);
-        done();
-      });
-
-      module('auth0', 'fakeModule');
-
-      inject(function ($http) { expect($http).to.be.ok; });
-    });
-
     it('should allow passing a different constructor', function () {
 
       var MyAuth0Constructor = function () {
@@ -148,74 +136,6 @@ describe('Auth0 Angular', function () {
     });
   });
 
-  describe('Interceptor', function () {
-    var $http, $httpBackend, $rootScope;
-
-    describe('authInterceptor', function () {
-
-      it('should intercept requests when added to $httpProvider.interceptors', function (done) {
-        executeInConfigBlock(function($httpProvider, authProvider, $provide) {
-          authProvider.init({
-            clientID: 'some-client-id',
-            callbackURL: 'some-callback-URL',
-            domain: 'hello.auth0.com'
-          });
-          $httpProvider.interceptors.push('authInterceptor');
-          $provide.decorator('auth', function () { return {idToken: 'w00t', hookEvents: function() {}}; });
-        });
-
-        inject(function (_$http_, _$httpBackend_) {
-          $httpBackend = _$httpBackend_;
-          $http = _$http_;
-        });
-
-        $http({url: '/hello'}).success(function (data) {
-          expect(data).to.be.equal('hello');
-          done();
-        });
-        $httpBackend.expectGET('/hello', function (headers) {
-          return headers.Authorization === 'Bearer w00t';
-        }).respond(200, 'hello');
-        $httpBackend.flush();
-      });
-
-      it('should intercept requests failing requests', function (done) {
-
-        var forbiddenReceived = false;
-
-        executeInConfigBlock(function($httpProvider, authProvider, $provide) {
-          authProvider.init({
-            clientID: 'some-client-id',
-            callbackURL: 'some-callback-URL',
-            domain: 'hello.auth0.com'
-          });
-
-          authProvider.on('forbidden', function() {
-            forbiddenReceived = true;
-          });
-
-          $httpProvider.interceptors.push('authInterceptor');
-          $provide.decorator('auth', function () { return {idToken: 'w00t', hookEvents: function() {}}; });
-        });
-
-        inject(function (_$http_, _$httpBackend_, _$rootScope_) {
-          $httpBackend = _$httpBackend_;
-          $http = _$http_;
-          $rootScope = _$rootScope_;
-        });
-
-
-
-        $http({url: '/hello'}).error(function (data, status) {
-          expect(status).to.be.equal(401);
-          expect(forbiddenReceived).to.be.equal(true);
-          done();
-        });
-        $httpBackend.expectGET('/hello').respond(401);
-        $httpBackend.flush();
-      });
-    });
-  });
 
   describe('Token store', function () {
     var auth, $rootScope, $timeout, getDelegationToken, hasTokenExpiredOriginal, refreshToken, renewIdToken;

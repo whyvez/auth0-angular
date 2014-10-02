@@ -1,6 +1,6 @@
 (function () {
 
-  angular.module('auth0', ['auth0.storage', 'auth0.service', 'auth0.interceptor', 'auth0.utils'])
+  angular.module('auth0', ['auth0.service', 'auth0.utils'])
     .run(function(auth) {
       auth.hookEvents();
     });
@@ -10,18 +10,6 @@
     var Utils = {
       capitalize: function(string) {
         return string ? string.charAt(0).toUpperCase() + string.substring(1).toLowerCase() : null;
-      },
-      urlBase64Decode: function(str) {
-        var output = str.replace('-', '+').replace('_', '/');
-        switch (output.length % 4) {
-          case 0: { break; }
-          case 2: { output += '=='; break; }
-          case 3: { output += '='; break; }
-          default: {
-            throw 'Illegal base64url string!';
-          }
-        }
-        return window.atob(output); //polifyll https://github.com/davidchambers/Base64.js
       }
     };
 
@@ -114,107 +102,7 @@
 
   });
 
-  angular.module('auth0.interceptor', [])
-  .provider('authInterceptor', function() {
-    var skipJWT    = 'skipAuthorization';
-    var authHeader = 'Authorization';
-    var authPrefix = 'Bearer ';
-
-    this.setSkipJWT = function(name) {
-      skipJWT    = name || skipJWT;
-    };
-    this.setAuthHeader = function(name) {
-      authHeader = name || authHeader;
-    };
-    this.setAuthPrefix = function(name) {
-      authPrefix = name || authPrefix;
-    };
-
-    this.$get = function ($rootScope, $q, $injector) {
-      var auth;
-      return {
-        request: function (config) {
-          // When using auth dependency is never loading, we need to do this manually
-          // This issue should be related with: https://github.com/angular/angular.js/issues/2367
-          if (config[skipJWT] || !$injector.has('auth')) {
-            return config;
-          }
-          auth = auth || $injector.get('auth');
-          config.headers = config.headers || {};
-          if (auth.idToken && !config.headers[authHeader]) {
-            config.headers[authHeader] = authPrefix + auth.idToken;
-          }
-          return config;
-        },
-        responseError: function (response) {
-          // handle the case where the user is not authenticated
-          if (response.status === 401) {
-            $rootScope.$broadcast('auth0.forbiddenRequest', response);
-          }
-          return $q.reject(response);
-        }
-      };
-    };
-  });
-
-  angular.module('auth0.storage', [])
-  .service('authStorage', function($injector) {
-    // Sets storage to use
-    var put, get, remove = null;
-    if (localStorage) {
-      put = function(what, value) {
-        return localStorage.setItem(what, value);
-      };
-      get = function(what) {
-        return localStorage.getItem(what);
-      };
-      remove = function(what) {
-        return localStorage.removeItem(what);
-      };
-    } else {
-      var $cookieStore = $injector.get('$cookieStore');
-      put = function(what, value) {
-        return $cookieStore.put(what, value);
-      };
-      get = function(what) {
-        return $cookieStore.get(what);
-      };
-      remove = function(what) {
-        return $cookieStore.remove(what);
-      };
-    }
-
-    this.store = function(idToken, accessToken, state, refreshToken) {
-      put('idToken', idToken);
-      if (accessToken) {
-        put('accessToken', accessToken);
-      }
-      if (state) {
-        put('state', state);
-      }
-      if (refreshToken) {
-       put('refreshToken', refreshToken);
-      }
-    };
-
-    this.get = function() {
-      return {
-        idToken: get('idToken'),
-        accessToken: get('accessToken'),
-        state: get('state'),
-        refreshToken: get('refreshToken')
-      };
-    };
-
-    this.remove = function() {
-      remove('idToken');
-      remove('accessToken');
-      remove('state');
-      remove('refreshToken');
-    };
-  });
-
-  angular.module('auth0.service', ['auth0.storage', 'auth0.utils'])
+  angular.module('auth0.service', ['auth0.utils'])
   .provider('auth', function(authUtilsProvider) {
     var defaultOptions = {
       callbackOnLocationHash: true
@@ -233,7 +121,6 @@
       this.loginState = options.loginState;
       this.clientID = options.clientID || options.clientId;
       this.sso = options.sso;
-      this.minutesToRenewToken = options.minutesToRenewToken || 120;
 
       var Constructor = Auth0Constructor;
       if (!Constructor && typeof Auth0Widget !== 'undefined') {
@@ -263,14 +150,14 @@
       this.eventHandlers[anEvent].push(handler);
     };
 
-    var events = ['loginSuccess', 'loginFailure', 'logout', 'forbidden'];
+    var events = ['loginSuccess', 'loginFailure', 'logout', 'forbidden', 'authenticated'];
     angular.forEach(events, function(anEvent) {
       config['add' + authUtilsProvider.capitalize(anEvent) + 'Handler'] = function(handler) {
         config.on(anEvent, handler);
       };
     });
 
-    this.$get = function($rootScope, $q, $injector, authStorage, $window, $location, authUtils) {
+    this.$get = function($rootScope, $q, $injector, $window, $location, authUtils) {
       var auth = {
         isAuthenticated: false
       };
@@ -289,18 +176,14 @@
       // SignIn
 
       var onSigninOk = function(idToken, accessToken, state, refreshToken, isRefresh) {
-          authStorage.store(idToken, accessToken, state, refreshToken);
-
           var profilePromise = auth.getProfile(idToken);
-          var tokenPayload = auth.getTokenPayload(idToken);
 
           var response = {
             idToken: idToken,
             accessToken: accessToken,
             state: state,
             refreshToken: refreshToken,
-            isAuthenticated: true,
-            tokenPayload: tokenPayload
+            isAuthenticated: true
           };
 
           angular.extend(auth, response);
@@ -312,7 +195,6 @@
       };
 
       function forbidden() {
-        authStorage.remove();
         if (config.loginUrl) {
           $location.path(config.loginUrl);
         } else if (config.loginState) {
@@ -323,40 +205,11 @@
       }
 
       // Redirect mode
-      var refreshingToken = null;
       $rootScope.$on('$locationChangeStart', function() {
         var hashResult = config.auth0lib.parseHash($window.location.hash);
         if (!auth.isAuthenticated) {
           if (hashResult && hashResult.id_token) {
             onSigninOk(hashResult.id_token, hashResult.access_token, hashResult.state, hashResult.refresh_token);
-            return;
-          }
-          var storedValues = authStorage.get();
-          if (storedValues && storedValues.idToken) {
-            if (auth.hasTokenExpired(storedValues.idToken)) {
-              if (storedValues.refreshToken) {
-                refreshingToken = auth.refreshIdToken(storedValues.refreshToken);
-                refreshingToken.then(function(idToken) {
-                  onSigninOk(idToken, storedValues.accessToken, storedValues.state, storedValues.refreshToken, true);
-                }, function() {
-                  forbidden();
-                })['finally'](function() {
-                  refreshingToken = null;
-                });
-              } else {
-                forbidden();
-              }
-              return;
-            } else {
-              var expireDate = auth.getTokenExpirationDate(storedValues.idToken);
-              if (expireDate.valueOf() - new Date().valueOf() <= auth.config.minutesToRenewToken * 60 * 1000) {
-                auth.renewIdToken(storedValues.idToken).then(function(token) {
-                  auth.idToken = token;
-                  auth.tokenPayload = auth.getTokenPayload(token);
-                });
-              }
-            }
-            onSigninOk(storedValues.idToken, storedValues.accessToken, storedValues.state, storedValues.refreshToken, true);
             return;
           }
           if (config.sso) {
@@ -379,7 +232,7 @@
       if (config.loginUrl) {
         $rootScope.$on('$routeChangeStart', function(e, nextRoute) {
           if (nextRoute.$$route && nextRoute.$$route.requiresLogin) {
-            if (!auth.isAuthenticated && !refreshingToken) {
+            if (!auth.isAuthenticated) {
               $location.path(config.loginUrl);
             }
           }
@@ -390,7 +243,7 @@
       if (config.loginState) {
         $rootScope.$on('$stateChangeStart', function(e, to) {
           if (to.data && to.data.requiresLogin) {
-            if (!auth.isAuthenticated && !refreshingToken) {
+            if (!auth.isAuthenticated) {
               e.preventDefault();
               $injector.get('$state').go(config.loginState);
             }
@@ -416,62 +269,6 @@
 
       auth.hookEvents = function() {
         // Does nothing. Hook events on application's run
-      };
-
-      auth.getTokenPayload = function(token) {
-        var parts = token.split('.');
-
-        if (parts.length !== 3) {
-          throw new Error('Error getting token payload');
-        }
-
-        var decoded = authUtils.urlBase64Decode(parts[1]);
-        if (!decoded) {
-          throw new Error('Error getting token payload');
-        }
-
-        return JSON.parse(decoded);
-      };
-
-
-      auth.getTokenExpirationDate = function(token) {
-        var decoded;
-        try {
-          decoded = auth.getTokenPayload(token);
-        } catch (e) {
-          return null;
-        }
-
-
-        if(!decoded.exp) {
-          return null;
-        }
-
-        var d = new Date(0); // The 0 here is the key, which sets the date to the epoch
-        d.setUTCSeconds(decoded.exp);
-
-        return d;
-      };
-
-      auth.hasTokenExpired = function (token) {
-        if (!token) {
-          return true;
-        }
-
-        var d = auth.getTokenExpirationDate(token);
-
-        if (isNaN(d)) {
-          return true;
-        }
-
-        // Token expired?
-        if( d.valueOf() > new Date().valueOf()) {
-          // No
-          return false;
-        } else {
-          // Yes
-          return true;
-        }
       };
 
       auth.getToken = function(options) {
@@ -573,15 +370,18 @@
       };
 
       auth.signout = function() {
-        authStorage.remove();
+        auth.isAuthenticated = false;
         auth.profile = null;
         auth.profilePromise = null;
         auth.idToken = null;
         auth.state = null;
         auth.accessToken = null;
         auth.tokenPayload = null;
-        auth.isAuthenticated = false;
         callHandler('logout');
+      };
+
+      auth.authenticate = function(idToken, accessToken, state, refreshToken) {
+        onSigninOk(idToken, accessToken, state, refreshToken, true);
       };
 
       auth.getProfile = function(idToken) {
