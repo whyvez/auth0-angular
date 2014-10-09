@@ -121,7 +121,7 @@
         signup: 'showSignup',
         reset: 'showReset',
         library: function() {
-          config.auth0lib;
+          return config.auth0lib;
         }
       }
     };
@@ -135,9 +135,6 @@
 
 
     this.init = function(options, Auth0Constructor) {
-      if (!Auth0Constructor && typeof Auth0Widget === 'undefined' && typeof Auth0 === 'undefined') {
-        throw new Error('You must add either Auth0Widget.js or Auth0.js');
-      }
       if (!options) {
         throw new Error('You must set options when calling init');
       }
@@ -207,7 +204,7 @@
 
       // SignIn
 
-      var onSigninOk = function(idToken, accessToken, state, refreshToken, isRefresh) {
+      var onSigninOk = function(idToken, accessToken, state, refreshToken, profile, isRefresh) {
           var profilePromise = auth.getProfile(idToken);
 
           var response = {
@@ -215,6 +212,7 @@
             accessToken: accessToken,
             state: state,
             refreshToken: refreshToken,
+            profile: profile,
             isAuthenticated: true
           };
 
@@ -340,9 +338,9 @@
         var signinMethod = getInnerLibraryMethod('signin', libName);
 
         var signinCall = authUtils.callbackify(signinMethod, function(profile, idToken, accessToken, state, refreshToken) {
-          onSigninOk(idToken, accessToken, state, refreshToken).then(function(profile) {
+          onSigninOk(idToken, accessToken, state, refreshToken, profile).then(function(profile) {
             if (successCallback) {
-              successCallback(profile);
+              successCallback(profile, idToken, accessToken, state, refreshToken);
             }
           });
         }, function(err) {
@@ -350,7 +348,7 @@
           if (errorCallback) {
             errorCallback(err);
           }
-        });
+        }, innerAuth0libraryConfiguration[libName || config.lib].library());
 
         signinCall(options);
     };
@@ -364,9 +362,9 @@
           if (!angular.isUndefined(options.auto_login) && !options.auto_login) {
             successCallback();
           } else {
-            onSigninOk(idToken, accessToken, state, refreshToken).then(function(profile) {
+            onSigninOk(idToken, accessToken, state, refreshToken, profile).then(function(profile) {
               if (successCallback) {
-                successCallback(profile);
+                successCallback(profile, idToken, accessToken, state, refreshToken);
               }
             });
           }
@@ -400,8 +398,8 @@
         callHandler('logout');
       };
 
-      auth.authenticate = function(idToken, accessToken, state, refreshToken) {
-        onSigninOk(idToken, accessToken, state, refreshToken, true);
+      auth.authenticate = function(profile, idToken, accessToken, state, refreshToken) {
+        onSigninOk(idToken, accessToken, state, refreshToken, profile, true);
       };
 
       auth.getProfile = function(idToken) {

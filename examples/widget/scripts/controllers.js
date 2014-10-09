@@ -1,14 +1,21 @@
 var myApp = angular.module('myApp');
 
-myApp.controller('MenuCtrl', function ($scope, $location, auth) {
+myApp.controller('MenuCtrl', function ($scope, $location, auth, store) {
   $scope.go = function (target) {
     $location.path(target);
   };
 
+  var saveUserInfo = function(profile, token) {
+    store.set('profile', profile);
+    store.set('token', token);
+  }
+
   $scope.signup = function() {
     auth.signup({popup:  true, auto_login: false})
-      .then(function() {
+      .then(function(profile, id_token) {
+        saveUserInfo(profile, id_token);
         $location.path('/');
+
       })
   }
 
@@ -23,8 +30,8 @@ myApp.controller('MenuCtrl', function ($scope, $location, auth) {
   };
 
   $scope.login = function () {
-    auth.signin({popup: true}, function () {
-        // TODO Handle when login succeeds
+    auth.signin({popup: true}, function (profile, id_token) {
+        saveUserInfo(profile, id_token);
         $location.path('/');
       }, function () {
         // TODO Handle when login fails
