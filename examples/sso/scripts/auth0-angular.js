@@ -44,7 +44,9 @@
                 etc = Array.prototype.slice.call(arguments, 1);
                 success && success.apply(null, etc);
               };
-              args.push(authUtils.applied(callback));
+              if (success || error) {
+                args.push(authUtils.applied(callback));
+              }
               nodeback.apply(self, args);
             };
           }
@@ -289,25 +291,26 @@
             options = options || {};
             checkHandlers(options);
             var signinMethod = getInnerLibraryMethod('signin', libName);
-            var signinCall = authUtils.callbackify(signinMethod, function (profile, idToken, accessToken, state, refreshToken) {
+            var successFn = !successCallback ? null : function (profile, idToken, accessToken, state, refreshToken) {
                 onSigninOk(idToken, accessToken, state, refreshToken, profile).then(function (profile) {
                   if (successCallback) {
                     successCallback(profile, idToken, accessToken, state, refreshToken);
                   }
                 });
-              }, function (err) {
+              };
+            var errorFn = !errorCallback ? null : function (err) {
                 callHandler('loginFailure', { error: err });
                 if (errorCallback) {
                   errorCallback(err);
                 }
-              }, innerAuth0libraryConfiguration[libName || config.lib].library());
+              };
+            var signinCall = authUtils.callbackify(signinMethod, successFn, errorFn, innerAuth0libraryConfiguration[libName || config.lib].library());
             signinCall(options);
           };
           auth.signup = function (options, successCallback, errorCallback) {
             options = options || {};
             checkHandlers(options);
-            var auth0lib = config.auth0lib;
-            var signupCall = authUtils.callbackify(getInnerLibraryMethod('signup'), function (profile, idToken, accessToken, state, refreshToken) {
+            var successFn = !successCallback ? null : function (profile, idToken, accessToken, state, refreshToken) {
                 if (!angular.isUndefined(options.auto_login) && !options.auto_login) {
                   successCallback();
                 } else {
@@ -317,12 +320,15 @@
                     }
                   });
                 }
-              }, function (err) {
+              };
+            var errorFn = !errorCallback ? null : function (err) {
                 callHandler('loginFailure', { error: err });
                 if (errorCallback) {
                   errorCallback(err);
                 }
-              }, auth0lib);
+              };
+            var auth0lib = config.auth0lib;
+            var signupCall = authUtils.callbackify(getInnerLibraryMethod('signup'), successFn, errorFn, auth0lib);
             signupCall(options);
           };
           auth.reset = function (options, successCallback, errorCallback) {

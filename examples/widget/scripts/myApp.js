@@ -36,13 +36,13 @@ myApp.config(function ($routeProvider, authProvider,
   // want to check the delegation-token example
   $httpProvider.interceptors.push('jwtInterceptor');
 }).run(function($rootScope, auth, store) {
-$rootScope.$on('$locationChangeStart', function() {
-  if (!auth.isAuthenticated) {
-    var token = store.get('token');
-    if (token) {
-      auth.authenticate(store.get('profile'), token);
+  $rootScope.$on('$locationChangeStart', function() {
+    if (!auth.isAuthenticated) {
+      var token = store.get('token');
+      if (token) {
+        auth.authenticate(store.get('profile'), token);
+      }
     }
-  }
 
-});
+  });
 });
