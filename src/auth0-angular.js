@@ -50,10 +50,6 @@
       }
     };
 
-      authUtils.isWidget = function(lib) {
-        return lib && lib.getClient;
-      };
-
       authUtils.promisify = function (nodeback, self) {
       if (angular.isFunction(nodeback)) {
         return function (args) {
@@ -102,12 +98,40 @@
 
   });
 
+
+
   angular.module('auth0.service', ['auth0.utils'])
   .provider('auth', function(authUtilsProvider) {
     var defaultOptions = {
       callbackOnLocationHash: true
     };
     var config = this;
+
+    var innerAuth0libraryConfiguration = {
+      'Auth0': {
+        signin: 'login',
+        signup: 'signup',
+        reset: 'changePassword',
+        library: function() {
+          return config.auth0js;
+        }
+      },
+      'Auth0Lock': {
+        signin: 'showSignin',
+        signup: 'showSignup',
+        reset: 'showReset',
+        library: function() {
+          config.auth0lib;
+        }
+      }
+    };
+
+    function getInnerLibraryMethod(name, libName) {
+      libName = libName || config.lib;
+      var library = innerAuth0libraryConfiguration[libName].library();
+      return library[innerAuth0libraryConfiguration[libName][name]];
+    }
+
 
 
     this.init = function(options, Auth0Constructor) {
@@ -120,23 +144,31 @@
       this.loginUrl = options.loginUrl;
       this.loginState = options.loginState;
       this.clientID = options.clientID || options.clientId;
+      var domain = options.domain;
       this.sso = options.sso;
 
       var Constructor = Auth0Constructor;
-      if (!Constructor && typeof Auth0Widget !== 'undefined') {
-        Constructor = Auth0Widget;
+      if (!Constructor && typeof Auth0Lock !== 'undefined') {
+        Constructor = Auth0Lock;
       }
       if (!Constructor && typeof Auth0 !== 'undefined') {
         Constructor = Auth0;
       }
 
-      this.auth0lib = new Constructor(angular.extend(defaultOptions, options));
-      if (this.auth0lib.getClient) {
+      if (Constructor.name === 'Auth0Widget') {
+        throw new Error('Auth0Widget is not supported with this ' +
+          ' version of auth0-angular anymore. Please try with an older one');
+      }
+      if (Constructor.name === 'Auth0Lock') {
+        this.auth0lib = new Constructor(this.clientID, domain, angular.extend(defaultOptions, options));
         this.auth0js = this.auth0lib.getClient();
-        this.isWidget = true;
+        this.isLock = true;
+        this.lib = 'Auth0Lock';
       } else {
+        this.auth0lib = new Constructor(angular.extend(defaultOptions, options));
         this.auth0js = this.auth0lib;
-        this.isWidget = false;
+        this.isLock = false;
+        this.lib = 'Auth0';
       }
     };
 
@@ -188,7 +220,7 @@
 
           angular.extend(auth, response);
           callHandler(!isRefresh ? 'loginSuccess' : 'authenticated', angular.extend({
-            profile: profilePromise
+            profilePromise: profilePromise
           }, response));
 
           return profilePromise;
@@ -218,7 +250,7 @@
                 auth.signin({
                   popup: false,
                   connection: ssoData.lastUsedConnection.strategy
-                }, null, null, config.auth0js);
+                }, null, null, 'Auth0');
               }
             }));
           }
@@ -301,12 +333,13 @@
         });
       };
 
-      auth.signin = function(options, successCallback, errorCallback, lib) {
+      auth.signin = function(options, successCallback, errorCallback, libName) {
         options = options || {};
         checkHandlers(options);
 
-        var auth0lib = lib || config.auth0lib;
-        var signinCall = authUtils.callbackify(auth0lib.signin, function(profile, idToken, accessToken, state, refreshToken) {
+        var signinMethod = getInnerLibraryMethod('signin', libName);
+
+        var signinCall = authUtils.callbackify(signinMethod, function(profile, idToken, accessToken, state, refreshToken) {
           onSigninOk(idToken, accessToken, state, refreshToken).then(function(profile) {
             if (successCallback) {
               successCallback(profile);
@@ -317,21 +350,17 @@
           if (errorCallback) {
             errorCallback(err);
           }
-        }, auth0lib);
+        });
 
-        if (authUtils.isWidget(auth0lib)) {
-          signinCall(options, null);
-        } else {
-          signinCall(options);
-        }
-      };
+        signinCall(options);
+    };
 
       auth.signup = function(options, successCallback, errorCallback) {
         options = options || {};
         checkHandlers(options);
 
         var auth0lib = config.auth0lib;
-        var signupCall = authUtils.callbackify(auth0lib.signup, function(profile, idToken, accessToken, state, refreshToken) {
+        var signupCall = authUtils.callbackify(getInnerLibraryMethod('signup'), function(profile, idToken, accessToken, state, refreshToken) {
           if (!angular.isUndefined(options.auto_login) && !options.auto_login) {
             successCallback();
           } else {
@@ -348,23 +377,14 @@
           }
         }, auth0lib);
 
-        if (config.isWidget) {
-          signupCall(options, null);
-        } else {
-          signupCall(options);
-        }
-      };
+        signupCall(options);
+    };
 
       auth.reset = function(options, successCallback, errorCallback) {
         options = options || {};
 
         var auth0lib = config.auth0lib;
-        var resetCall;
-        if (config.isWidget) {
-          resetCall = authUtils.callbackify(auth0lib.reset, successCallback, errorCallback, auth0lib);
-        } else {
-          resetCall = authUtils.callbackify(auth0lib.changePassword, successCallback, errorCallback, auth0lib);
-        }
+        var resetCall = authUtils.callbackify(getInnerLibraryMethod('reset'), successCallback, errorCallback, auth0lib);
 
         resetCall(options);
       };

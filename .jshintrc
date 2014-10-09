@@ -35,6 +35,7 @@
     "it": false,
     "angular": false,
     "Auth0Widget": false,
+    "Auth0Lock": false,
     "Auth0": false,
 
 
