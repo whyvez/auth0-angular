@@ -515,10 +515,11 @@
             var resetCall;
             if (config.isWidget) {
               resetCall = authUtils.callbackify(auth0lib.reset, successCallback, errorCallback, auth0lib);
+              resetCall(options, null);
             } else {
               resetCall = authUtils.callbackify(auth0lib.changePassword, successCallback, errorCallback, auth0lib);
+              resetCall(options);
             }
-            resetCall(options);
           };
           auth.signout = function () {
             authStorage.remove();
