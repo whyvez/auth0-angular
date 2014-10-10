@@ -53,8 +53,10 @@ myApp.controller('LoginCtrl', function (auth, $scope, $cookies, $state) {
   };
 });
 
-myApp.controller('LogoutCtrl', function (auth, $scope, $state) {
+myApp.controller('LogoutCtrl', function (auth, $scope, $state, store) {
   auth.signout();
+  store.remove('profile');
+  store.remove('token');
   $scope.$parent.message = '';
   $state.go('login');
 });

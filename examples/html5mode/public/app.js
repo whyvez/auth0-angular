@@ -62,11 +62,13 @@ angular.module('auth0-sample', ['auth0', 'ngRoute', 'angular-jwt', 'angular-stor
     auth.signin();
   }
 })
-.controller('InfoCtrl', function($scope, auth, $location) {
+.controller('InfoCtrl', function($scope, auth, $location, store) {
   $scope.auth = auth;
 
   $scope.logout = function() {
     auth.signout();
+    store.remove('profile');
+    store.remove('token');
     $location.path('/');
   }
 });
