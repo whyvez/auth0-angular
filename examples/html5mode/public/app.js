@@ -1,5 +1,6 @@
-angular.module('auth0-sample', ['auth0', 'ngRoute'])
-.config(function (authProvider, $httpProvider, $routeProvider, $locationProvider) {
+angular.module('auth0-sample', ['auth0', 'ngRoute', 'angular-jwt', 'angular-storage'])
+.config(function (authProvider, $httpProvider, $routeProvider, $locationProvider,
+  jwtInterceptorProvider) {
 
   $routeProvider.when('/', {
     templateUrl: 'public/main.html',
@@ -18,7 +19,11 @@ angular.module('auth0-sample', ['auth0', 'ngRoute'])
     loginUrl: '/'
   });
 
-  authProvider.on('loginSuccess', function($location) {
+  authProvider.on('loginSuccess', function($location, profilePromise, idToken, store) {
+    profilePromise.then(function(profile) {
+      store.set('profile', profile);
+      store.set('token', idToken);
+    });
     $location.hash('');
     $location.path('/info');
   });
@@ -32,10 +37,24 @@ angular.module('auth0-sample', ['auth0', 'ngRoute'])
   $locationProvider.html5Mode(true);
 
 
-  $httpProvider.interceptors.push('authInterceptor');
-})
-.run(function(auth) {
-  auth.hookEvents();
+  jwtInterceptorProvider.tokenGetter = function(store) {
+    return store.get('token');
+  }
+
+  // Add a simple interceptor that will fetch all requests and add the jwt token to its authorization header.
+  // NOTE: in case you are calling APIs which expect a token signed with a different secret, you might
+  // want to check the delegation-token example
+  $httpProvider.interceptors.push('jwtInterceptor');
+}).run(function($rootScope, auth, store) {
+  $rootScope.$on('$locationChangeStart', function() {
+    if (!auth.isAuthenticated) {
+      var token = store.get('token');
+      if (token) {
+        auth.authenticate(store.get('profile'), token);
+      }
+    }
+
+  });
 })
 .controller('MainCtrl', function($scope, auth) {
 
