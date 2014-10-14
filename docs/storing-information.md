@@ -2,11 +2,11 @@
 
 You can use `angular-storage` to store the user profile and tokens so that he doesn't have to log in again every time he refreshes the webpage. 
 
-In this tutorial, we'll learn how to do this.
+In this tutorial, you'll learn how to do this.
 
 ### 1. Including angular-storage dependency
 
-The first thing we should do is adding `angular-storage` dependency. Follow [this link](https://github.com/auth0/angular-storage#installing-it) to learn how to install it via npm, bower or manually. Once we've done that, just include `angular-storage` module to your application:
+The first thing you should do is adding `angular-storage` dependency. Follow [this link](https://github.com/auth0/angular-storage#installing-it) to learn how to install it via npm, bower or manually. Once you've done that, just include `angular-storage` module to your application:
 
 ````js
 angular.module('myApp', ['auth0', 'angular-storage']);
@@ -14,7 +14,7 @@ angular.module('myApp', ['auth0', 'angular-storage']);
 
 ### 2. Saving the user information after login.
 
-After the user has logged in, we want to store his profile and token. For that, we'll do the following:
+After the user has logged in, you want to store his profile and token. For that, you'll do the following:
 
 
 ````js
@@ -32,7 +32,7 @@ function Controller(auth, $location, store, $scope)
 
 ### 3. Authenticating the user on page refresh
 
-Now that we have the user information stored, we can use `auth.authenticate` method after the page has refreshed to let `auth0-angular` know that the user is already authenticated:
+Now that you have the user information stored, you can use `auth.authenticate` method after the page has refreshed to let `auth0-angular` know that the user is already authenticated:
 
 ````js
 angular.module('myApp', ['auth0', 'angular-storage'])
@@ -51,5 +51,5 @@ angular.module('myApp', ['auth0', 'angular-storage'])
 
 ### 4. You've nailed it
 
-That's it :). Now, you can check out some of our [examples](https://github.com/auth0/auth0-angular/tree/master/examples) which handle storage. 
+That's it :). Now, you can check out some of our [examples](https://github.com/auth0/auth0-angular/tree/master/examples). 
 

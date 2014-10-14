@@ -20,9 +20,9 @@ We recommend using `angular-storage` to store the refresh token. You can learn h
 
 ### 3. Using the refresh token to get a new JWT
 
-Now, we want to always send a not expired JWT to the server when calling it. For that, we'll use `angular-jwt`. You can learn how to install and configure the library in [this other guide](calling-an-api.md).
+Now, you want to always send a not expired JWT to the server when calling it. For that, you'll use `angular-jwt`. You can learn how to install and configure the library in [this other guide](calling-an-api.md).
 
-The only difference with the example is that now we'll configure the library to get a new JWT if the current one is expired:
+The only difference with the example on the `angular-jwt` guide is that now you'll configure the library to get a new JWT if the current one is expired:
 
 ````js
 angular.module('myApp', ['auth0', 'angular-jwt'])
