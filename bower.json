@@ -7,9 +7,8 @@
     "auth0-lock": ">= 6.0"
   },
   "devDependencies": {
-    "angular-cookies": "*",
-    "angular-mocks": "~1.2.16",
-    "angular-route": "~1.2.16"
+    "angular-mocks": "~1.3.0",
+    "angular-route": "~1.3.0"
   },
   "resolutions": {
     "angular": "1.3.0"
