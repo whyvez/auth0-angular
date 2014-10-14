@@ -290,9 +290,9 @@
 
       auth.config = config;
 
-      var checkHandlers = function(options) {
+      var checkHandlers = function(options, successCallback) {
         var successHandlers = getHandlers('loginSuccess');
-        if (!options.popup && !options.username && !options.email && (!successHandlers || successHandlers.length === 0)) {
+        if (!successCallback && !options.username && !options.email && (!successHandlers || successHandlers.length === 0)) {
             throw new Error('You must define a loginSuccess handler ' +
               'if not using popup mode or not doing ro call because that means you are doing a redirect');
           }
@@ -334,7 +334,7 @@
 
       auth.signin = function(options, successCallback, errorCallback, libName) {
         options = options || {};
-        checkHandlers(options);
+        checkHandlers(options, successCallback, errorCallback);
 
         var signinMethod = getInnerLibraryMethod('signin', libName);
         var successFn = !successCallback ? null : function(profile, idToken, accessToken, state, refreshToken) {
@@ -359,7 +359,7 @@
 
       auth.signup = function(options, successCallback, errorCallback) {
         options = options || {};
-        checkHandlers(options);
+        checkHandlers(options, successCallback, errorCallback);
 
         var successFn = !successCallback ? null : function(profile, idToken, accessToken, state, refreshToken) {
           if (!angular.isUndefined(options.auto_login) && !options.auto_login) {
