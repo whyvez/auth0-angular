@@ -1,3 +1,12 @@
+# 3.0.X
+
+## 3.0.0
+* Magic is removed. `auth0-angular` is now much smaller and with less magic
+* We recommend the usage of `angular-storage` and `angular-jwt` for storing information and token handling
+* All samples were redone. 
+* New tutorials are made to teach people how to use the new dependencies
+* We've migrated to Auth0 Lock
+
 # 2.2.X
 
 ## 2.2.8
