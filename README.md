@@ -7,10 +7,9 @@ This AngularJS module will help you implement client-side and server-side (API) 
 ## Key Features
 
 * **User Login & Signup**: This module lets you easily sign in and sign up your users with any Social Provider, Enterprise Provider or Username and password. You can use the UI already made by Auth0 or create your own
-* **Persistent user authentication**: We'll take care of keeping the user logged in after page refresh, browser closed and so on.
 * **Authenticated API calls**: We'll take care of automatically adding the `JWT` in every request that is made to your API after the user is authenticated
 * **Events/Promise based services**: Our service supports both Events based actions as well as promise based ones
-* **Token management**: We'll handle the token storage and configuration all the time. You don't even need to know there's a token.
+* **Token management**: Using `auth0-angular` together with `angular-storage` and `angular-jwt` you can handle the complete token lifecycle, including storing, expiration and renewal.
 
 ## Installation
 
@@ -31,11 +30,11 @@ npm install auth0-angular
 ### CDN
 
 ````html
-<script type="text/javascript" src="//cdn.auth0.com/w2/auth0-widget-5.js"></script>
-<script type="text/javascript" src="//cdn.auth0.com/w2/auth0-angular-2.js"></script>
+<script type="text/javascript" src="//cdn.auth0.com/js/lock-6.js"></script>
+<script type="text/javascript" src="//cdn.auth0.com/w2/auth0-angular-3.js"></script>
 ````
 
-> **Warning**: If you use a CDN or get the script manually, please be sure to include `auth0-widget` or `auth0.js` that matches the versions [specified on the `bower.json`](https://github.com/auth0/auth0-angular/blob/master/bower.json#L7-L8)
+> **Warning**: If you use a CDN or get the script manually, please be sure to include `auth0-lock` or `auth0.js` that matches the versions [specified on the `bower.json`](https://github.com/auth0/auth0-angular/blob/master/bower.json#L7-L8)
 
 ## TL;DR: Quick start guide
 
@@ -43,7 +42,7 @@ npm install auth0-angular
 
 ````js
 angular.module('myCoolApp', ['auth0'])
-  .config(function(authProvider, $httpProvider) {
+  .config(function(authProvider) {
 
     // routing configuration and other stuff
     // ...
@@ -51,12 +50,8 @@ angular.module('myCoolApp', ['auth0'])
     authProvider.init({
       domain: 'mydomain.auth0.com',
       clientID: 'myClientID',
-      loginUrl: '/login',
-      callbackUrl: location.href
+      loginUrl: '/login'
     });
-
-    // This automatically adds the token in every request
-    $httpProvider.interceptors.push('authInterceptor');
   })
   .run(function(auth) {
     auth.hookEvents();
@@ -69,7 +64,7 @@ angular.module('myCoolApp', ['auth0'])
 // LoginCtrl.js
 angular.module('myCoolApp').controller('LoginCtrl', function(auth) {
   $scope.signin = function() {
-    auth.signin({popup: true}, function() {
+    auth.signin({}, function() {
       $location.path('/user-info')
     }, function(err) {
       console.log("Error :(", err);
@@ -85,6 +80,11 @@ angular.module('myCoolApp').controller('LoginCtrl', function(auth) {
 ````js
 // UserInfo.js
 angular.module('myCoolApp').controller('UserInfoCtrl', function(auth) {
+  // Using a promise
+  auth.profilePromise.then(function(profile) {
+    $scope.profile = profile;
+  });
+  // Or using the object
   $scope.profile = auth.profile;
 });
 ````
@@ -92,6 +92,14 @@ angular.module('myCoolApp').controller('UserInfoCtrl', function(auth) {
 <!-- userInfo.html -->
 <span>{{profile.first_name}} {{profile.email}}</span>
 ````
+
+### Keeping the user logged in, saving the token and using a refresh token.
+
+There're many more things that you can do with `auth0-angular` in conjunction with [angular-storage](https://github.com/auth0/angular-storage) and [angular-jwt](https://github.com/auth0/angular-jwt).
+
+* [Read this article](docs/storing-information.md) to learn how to **keep the user logged in by saving the token and profile**
+* [Read this article](docs/calling-an-api.md) to learn how to **send the JWT in every request made to the API**.
+* [Read this article](docs/refresh-token.md) to learn how to **use a refresh token to always send a not expired JWT when calling the API**.
 
 ## Getting Started Guide
 
@@ -102,9 +110,9 @@ The third mode is just doing a CORS call to `/ro` to authenticate the user. This
 
 ### Dependencies
 
-auth0-angular depends on either `auth0.js` or `auth0-widget.js`.
+auth0-angular depends on either `auth0.js` or `auth0-lock.js`.
 
-If you want to use Auth0's beautiful Widget UI, you need to include `auth0-widget.js`. This lets you configure Title and Icons, but the UI is taken care for you. For all the customization properties, please check out [tihs link](https://docs.auth0.com/login-widget2#4)
+If you want to use Auth0's [beautiful Lock UI](https://auth0.com/lock), you need to include `auth0-lock.js`. This lets you configure Title and Icons, but the UI is taken care for you. For all the customization properties, please check out [tihs link](https://github.com/auth0/lock/wiki/Auth0Lock-customization)
 
 Otherwise, if you'll use a custom UI, you need to include `auth0.js`.
 
@@ -114,7 +122,7 @@ If you're using `bower` or `npm`, these 2 scripts are set as dependencies of aut
 
 ````html
 <!-- Either this -->
-<script type="text/javascript" src="//cdn.auth0.com/w2/auth0-widget-5.js"></script>
+<script type="text/javascript" src="//cdn.auth0.com/js/auth0-lock-6.js"></script>
 <!-- or -->
 <script type="text/javascript" src="//cdn.auth0.com/w2/auth0-3.js"></script>
 ````
@@ -125,12 +133,12 @@ This is the API for the SDK. `[]` means optional parameter.
 
 #### auth.signin(options[, successCallback, errorCallback])
 
-This method does the signin for you. If you're using `auth0-widget`, it'll display Auth0's widget, otherwise it'll just do the login with the Identity provider that you ask for.
+This method does the signin for you. If you're using `auth0-lock`, it'll display Auth0's widget, otherwise it'll just do the login with the Identity provider that you ask for.
 
-The most important option is the **`popup` option. If set to `true`**, popup mode will be used and as the Angular page will not reload, **you can use callbacks to handle the sigin success and failure**. **We don't use promises since once the widget is opened, the user can enter the password incorrectly several times and then enter it ok. We cannot fulfill a promise (with success or failure) more than once unfortunately**.
+The most important thing to **check is if we're setting the callbacks or not**. **If set**, popup mode will be used and as the Angular page will not reload **the callbacks will be used to handle the sigin success and failure**. **We don't use promises since once the widget is opened, the user can enter the password incorrectly several times and then enter it ok. We cannot fulfill a promise (with success or failure) more than once unfortunately**.
 
 ````js
-auth.signin({popup: true}, function(
+auth.signin({}, function(
   // All good
   $location.path('/');
 ), function(error) {
@@ -138,8 +146,8 @@ auth.signin({popup: true}, function(
 })
 ````
 
-**If you set `popup` option to `false`** (**this is the default value**), there're 2 posibilities.
-If you've set the `username` and `password` options, then a CORS call to `/ro` will be done and you can use a promise to handle this case.
+**If you don't set any success or failure callback**, there're 2 posibilities.
+**If you've set the `username` and `password` options**, then a CORS call to `/ro` will be done and you can use a promise to handle this case.
 
 ````js
 auth.signin({
@@ -154,7 +162,7 @@ auth.signin({
 })
 ````
 
-**If you set `popup` option to `false`** (**this is the default value**) **and you don't set username and pasword as options**, redirect mode will be used. As Angular page is reloaded, you **cannot use callbacks nor promises** to handle login success and failure. You'll need to use `events` to handle them:
+**If you don't set any success or failure callback and you don't set username and pasword as options**, redirect mode will be used, which means the Angular page is reloaded. You'll need to use `events` to handle the login success and failure:
 
 ````js
 // app.js
@@ -175,14 +183,12 @@ module.config(function(authProvider) {
 ````
 ````js
 // LoginCtrl.js
-auth.signin(
-  // popup: false. This is the default
-);
+auth.signin();
 ````
 
 You can read **a more extensive tutorial on how to use auth0-angular with [popup mode here](docs/widget-popup.md) and with [redirect mode here](docs/widget-redirect.md)**.
 
-The rest of the **options that can be sent can be [checked here](https://docs.auth0.com/login-widget2#4)**.
+The rest of the **options that can be sent can be [checked here](https://github.com/auth0/lock/wiki/Auth0Lock-customization)**.
 
 #### auth.signup(options[, successCallback, errorCallback])
 
@@ -192,12 +198,19 @@ This shows the widget but in `signup` mode. It has the same options and paramete
 
 This will perform the "Forgot your password" flow.
 If you're using `auth0.js` it will send the email to confirm the password change. [See the documentation here](https://github.com/auth0/auth0.js#change-password-database-connections)
-If you're using `auth0-widget.js`, it will open the widget in the reset password mode. It can receive in that case the same parameters as the `signin` method.
+If you're using `auth0-lock.js`, it will open the widget in the reset password mode. It can receive in that case the same parameters as the `signin` method.
+
 This method receives 2 extra parameters to handle the success and failure callbacks similar to `signin`.
 
 #### auth.signout()
 
 This signouts the user. Deletes the token from the client storage.
+
+#### auth.authenticate(profile, idToken[, accessToken, state, refreshToken])
+
+If you stored the user's Profile and tokens and want to authenticate the user without making him login again, you can call this method.
+
+You can read more about this subject in [this article]();
 
 #### auth.profile
 
@@ -206,10 +219,6 @@ This property contains the profile from the user. **This will be filled after th
 #### auth.profilePromise
 
 Same as the `auth.profile` but it's actually a promise that you can check. It might be null or a promise. Null is even before the user tries to log in.
-
-#### auth.tokenPayload
-
-This has the decoded Payload of the JWT. **This will be filled after the user has logged in successfully**
 
 #### auth.isAuthenticated
 
@@ -308,39 +317,33 @@ auth.getToken({
 
 To learn more about delegated access [please click here](https://docs.auth0.com/auth-api#delegated).
 
-#### auth.renewIdToken()
+#### auth.renewIdToken([id_token])
 
 You can configure your token to expire after a certain time. If you don't want your user to login again, you can just refresh the current token, which means getting a new token that will be valid for a certain amount of time.
 
 For example, let's imagine you have a token valid for 10 hours. After 9 hours, you can refresh the token to get a new token that's going to be valid for another 10 hours. You just need to call this method in that case and we'll handle everything for you. **Returns a promise**.
 
 
-#### auth.refreshIdToken(refresh_token)
+#### auth.refreshIdToken([refresh_token])
 
 Given a **expired** `id_token`, you can use the `refresh_token` to get a new and valid `id_token`.
-
-#### auth.hasTokenExpired(token)
-
-This returns if a particular token has expired or not. Mostly for internal usage.
 
 #### authProvider.init(options)
 
 You use this method to configure the auth service. You must set the following options:
 
 * **domain**: The domain you have from your Auth0 account.
-* **callbackUrl**: The callback URL. Usually this is `location.href`.
 * **clientId**: The identifier for the application you've created. This can be found in the settings for your app on Auth0.
 * **sso**: If you have more than one application and you want Single Sign On on your apps, just set this to `true`. This will mean that if a user signs in to app 1, when he tries to use app 2, he will be already logged in.
 * **loginUrl**: Set this to the login url **if you're using ngRoute**.
 * **loginState**: Set this to the login state **if you're using ui-router**.
-* **minutesToRenewToken**: Renew the `idToken` when it expired in less than N minutes. By default, it's 120 minutes.
 
 #### authProvider.on(event, handler)
 
 You can configure the handlers for all the different events that can happen in your app. The following are the available events right now:
 
-* **authenticated**: This will get called after a refresh of the page if the user is still authenticated. In the handler, you can inject any service you want.
-* **loginSucces**: This will get called after a user has successfully logged in. In the handler, you can inject any service you want besides the `profile` and `token` from the user.
+* **authenticated**: This will get called after a user is authenticated by calling the `auth.authenticate` method. In the handler, you can inject any service you want.
+* **loginSucces**: This will get called after a user has successfully logged in. In the handler, you can inject any service you want besides the `profileProfile` and `idToken` from the user.
 * **loginFailure**: This will get called if there's an error authenticating the usr. In the handler, you can inject any service you want besides the `error` which was thrown.
 * **logout**: This will get called after a user has successfully logged out.
 * **forbidden**: This will get called if a request to an API is made and it returns 401 meaning that the user cannot access that resource. That usually happens when the token is expired. In that case, you should redirect the user to the login page in most cases.
@@ -350,20 +353,20 @@ It's important to note that in the case of **redirect mode, it's mandatory to ha
 
 ## Tutorials & Examples
 
-This is the list of all of the available tutorials.
+This is the list of all of the available tutorials & samples.
 
-### Using Auth0 Widget (You don't want your custom UI)
+### Using Auth0 Lock (You don't want your custom UI)
+
+* **[Clcik here to read the tutorial](docs/widget-popup.md)**
 
 #### Redirect mode
 
-* **[Click here to read the tutorial](docs/widget-redirect.md)**
 * **[Click here to see the tutorial](https://github.com/auth0/auth0-angular/tree/master/examples/widget-redirect)**
 
 ![Widget redirect](http://cl.ly/image/2o423i362s2P/WidgetRedirect.gif)
 
 #### Popup mode
 
-* **[Clcik here to read the tutorial](docs/widget-popup.md)**
 * **[Click here to see the example](https://github.com/auth0/auth0-angular/tree/master/examples/widget)**
 
 ![Widget Popup](https://cloudup.com/cg8u9kVV5Vh+)
@@ -372,27 +375,16 @@ This is the list of all of the available tutorials.
 
 #### User/Password Login
 
-* **[Click here to read the tutorial](docs/jssdk.md)**
 * **[Click here to see the example](https://github.com/auth0/auth0-angular/tree/master/examples/custom-login)**
 
 ![basic_guide](https://cloudup.com/cmaeJKX7LEM+)
 
 #### Social Login
 
-* **[Click here to read the tutorial](docs/jssdk.md#social-authentication)**
 * **[Click here to see the example](https://github.com/auth0/auth0-angular/tree/master/examples/custom-login)**
 
 ![popup_guide](https://cloudup.com/cKpVNpR4s9y+)
 
-
-### Refresh tokens
-
-* **[Click here to read the tutorial](docs/refreshToken.md)**
-
-### Consuming a protected REST API
-
-* **[Click here to read the tutorial](docs/backend.md)**
-* **[Click here to see the example](https://github.com/auth0/auth0-angular/tree/master/examples/api-authentication)**
 
 ### Join or Link accounts
 
@@ -404,10 +396,6 @@ This is the list of all of the available tutorials.
 * **[Click here to see the ui-router example](https://github.com/auth0/auth0-angular/tree/master/examples/ui-router)**
 * **[Click here to see the ngRoute example](https://github.com/auth0/auth0-angular/tree/master/examples/widget-redirect)**
 * **[Click here to see the html5mode example](https://github.com/auth0/auth0-angular/tree/master/examples/html5mode)**
-
-### Using your custom storage
-
-* **[Click here to learn how to use your custom storage to store the tokens instead of localStorage or ngCookies](docs/custom-storage.md)**
 
 ### Delegation Token
 
