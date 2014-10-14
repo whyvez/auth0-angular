@@ -20,7 +20,7 @@ myApp.controller('MenuCtrl', function ($scope, $location, auth, store) {
   }
 
   $scope.reset = function () {
-    auth.reset({popup: true}, function () {
+    auth.reset({}, function () {
         // TODO Handle when login succeeds
         console.log("OK");
       }, function () {
@@ -30,7 +30,7 @@ myApp.controller('MenuCtrl', function ($scope, $location, auth, store) {
   };
 
   $scope.login = function () {
-    auth.signin({popup: true}, function (profile, id_token) {
+    auth.signin({}, function (profile, id_token) {
         saveUserInfo(profile, id_token);
         $location.path('/');
       }, function () {

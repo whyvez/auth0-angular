@@ -2,18 +2,17 @@ require.config({
     paths: {
         'angular':          '//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular',
         'angular-route':    '//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-route',
-        'angular-cookies':  '//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-cookies',
         'auth-angular':     './auth0-angular',
+        'angular-jwt':     '//rawgit.com/auth0/angular-jwt/master/dist/angular-jwt',
+        'angular-storage': '//rawgit.com/auth0/angular-storage/master/dist/angular-storage',
         'auth0':            '//cdn.auth0.com/w2/auth0-4'
     },
     shim: {
         'angular':{ exports:'angular' },
-
-        'angular-cookies':  { deps:['angular']         },
         'angular-route':    { deps:['angular']         },
-        'auth0-angular':    { deps:['angular',
-                                    'angular-cookies',
-                                    'angular-route']   }
+        'angular-storage':    { deps:['angular']         },
+        'angular-jwt':    { deps:['angular']         },
+        'auth0-angular':    { deps:['angular']         }
     }
 });
 
