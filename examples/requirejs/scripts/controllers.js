@@ -14,12 +14,14 @@ define(['angular', './myApp'], function (angular, myApp) {
     $scope.auth = auth;
   });
 
-  myApp.controller('LoginCtrl', function (auth, $scope, $location) {
+  myApp.controller('LoginCtrl', function (auth, $scope, $location, store) {
     $scope.user = '';
     $scope.pass = '';
 
-    function onLoginSuccess() {
+    function onLoginSuccess(profile, token) {
       $scope.$parent.message = '';
+      store.set('profile', profile);
+      store.set('token', token);
       $location.path('/');
       $scope.loading = false;
     }

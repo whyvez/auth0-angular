@@ -28,13 +28,15 @@ myApp.controller('RootCtrl', function (auth, $scope, $location, $http) {
   };
 });
 
-myApp.controller('LoginCtrl', function (auth, $scope, $location) {
+myApp.controller('LoginCtrl', function (auth, $scope, $location, store) {
   $scope.user = '';
   $scope.pass = '';
 
-  function onLoginSuccess() {
+  function onLoginSuccess(profile, token) {
     $scope.$parent.message = '';
     $scope.loading = false;
+    store.set('profile', profile);
+    store.set('token', token);
     $location.path('/');
   }
 

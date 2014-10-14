@@ -1,8 +1,9 @@
 var myApp = angular.module('myApp', [
-  'auth0', 'ngRoute'
+  'auth0', 'ngRoute', 'angular-jwt', 'angular-storage'
 ]);
 
-myApp.config(function ($routeProvider, authProvider, $httpProvider, $locationProvider) {
+myApp.config(function ($routeProvider, authProvider,
+  $httpProvider, $locationProvider, jwtInterceptorProvider) {
   $routeProvider
   .when('/logout',  {
     templateUrl: 'views/logout.html',
@@ -23,12 +24,25 @@ myApp.config(function ($routeProvider, authProvider, $httpProvider, $locationPro
   authProvider.init({
     domain: 'samples.auth0.com',
     clientID: 'BUIJSW9x60sIHBw8Kd9EmCbj8eDIFxDC',
-    callbackURL: location.href,
     loginUrl: '/login'
   });
+
+  jwtInterceptorProvider.tokenGetter = function(store) {
+    return store.get('token');
+  }
 
   // Add a simple interceptor that will fetch all requests and add the jwt token to its authorization header.
   // NOTE: in case you are calling APIs which expect a token signed with a different secret, you might
   // want to check the delegation-token example
-  $httpProvider.interceptors.push('authInterceptor');
+  $httpProvider.interceptors.push('jwtInterceptor');
+}).run(function($rootScope, auth, store) {
+  $rootScope.$on('$locationChangeStart', function() {
+    if (!auth.isAuthenticated) {
+      var token = store.get('token');
+      if (token) {
+        auth.authenticate(store.get('profile'), token);
+      }
+    }
+
+  });
 });

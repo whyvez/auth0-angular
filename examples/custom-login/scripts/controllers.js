@@ -21,12 +21,14 @@ myApp.controller('RootCtrl', function (auth, $scope) {
 
 });
 
-myApp.controller('LoginCtrl', function (auth, $scope, $location) {
+myApp.controller('LoginCtrl', function (auth, $scope, $location, store) {
   $scope.user = '';
   $scope.pass = '';
 
-  function onLoginSuccess() {
+  function onLoginSuccess(profile, token) {
     $scope.message.text = '';
+    store.set('profile', profile);
+    store.set('token', token);
     $location.path('/');
     $scope.loading = false;
   }
@@ -69,8 +71,10 @@ myApp.controller('LoginCtrl', function (auth, $scope, $location) {
 
 });
 
-myApp.controller('LogoutCtrl', function (auth, $scope, $location) {
+myApp.controller('LogoutCtrl', function (auth, $scope, $location, store) {
   auth.signout();
   $scope.$parent.message = '';
+  store.remove('profile');
+  store.remove('token');
   $location.path('/login');
 });

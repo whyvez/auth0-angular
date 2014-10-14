@@ -27,7 +27,6 @@ Then, when configuring the `authProvider` just set the `loginState` to the name 
     authProvider.init({ 
       domain: 'yourdomain.auth0.com', 
       clientID: 'YOUR_CLIENT_ID',  
-      callbackURL: 'http://localhost:1337/',
       loginState: 'login' // matches login state
     });
     
@@ -65,7 +64,6 @@ Then, when configuring the `authProvider` just set the `loginUrl` to the name of
     authProvider.init({ 
       domain: 'yourdomain.auth0.com', 
       clientID: 'YOUR_CLIENT_ID',  
-      callbackURL: 'http://localhost:1337/',
       loginUrl: '/login' // matches login url
     });
     

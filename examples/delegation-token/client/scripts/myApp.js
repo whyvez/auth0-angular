@@ -1,47 +1,9 @@
 var myApp = angular.module('myApp', [
-  'ngCookies', 'auth0', 'ngRoute'
+  'ngCookies', 'auth0', 'ngRoute', 'angular-storage', 'angular-jwt'
 ]);
 
-myApp.factory('customInterceptor', function ($injector, $rootScope, $q) {
-  return {
-    request: function (config) {
-      var auth = $injector.get('auth');
-      var targetClientId = 'vYPeq7LGf1utg2dbDlGKCwGKgy94lPH0'; // Another App
-      config.headers = config.headers || {};
-
-      // Is this request for the secondary app?
-      if (config.url.indexOf('http://localhost:33000') === 0) {
-        // Then fetch the secondary app token
-        var tokenPromise = auth.getToken({
-          targetClientId: targetClientId,
-          scope: 'openid'
-        })
-          .then(function(token) {
-            config.headers.Authorization = 'Bearer ' + token;
-            return config;
-          }, function (err) {
-            // Handle error fetching token here
-            return err;
-          });
-        return $q.when(tokenPromise);
-      } else {
-        if (auth.idToken) {
-          config.headers.Authorization = 'Bearer ' + auth.idToken;
-        }
-        return config;
-      }
-    },
-    responseError: function (response) {
-      // handle the case where the user is not authenticated
-      if (response.status === 401) {
-        $rootScope.$broadcast('auth:forbidden', response);
-      }
-      return response || $q.when(response);
-    }
-  };
-});
-
-myApp.config(function ($routeProvider, authProvider, $httpProvider, $locationProvider) {
+myApp.config(function ($routeProvider, authProvider, $httpProvider,
+  $locationProvider, jwtInterceptorProvider) {
   $routeProvider
   .when('/logout',  {
     templateUrl: 'views/logout.html',
@@ -61,12 +23,37 @@ myApp.config(function ($routeProvider, authProvider, $httpProvider, $locationPro
   $locationProvider.hashPrefix('!');
 
   authProvider.init({
-    clientID: 'DyG9nCwIEofSy66QM3oo5xU6NFs3TmvT',
-    domain: 'contoso.auth0.com',
+    clientID: 'BUIJSW9x60sIHBw8Kd9EmCbj8eDIFxDC',
+    domain: 'samples.auth0.com',
     callbackURL: location.href,
     loginUrl: '/login'
   });
 
-  $httpProvider.interceptors.push('customInterceptor');
-  $httpProvider.defaults.cache = true;
-});
+  $httpProvider.interceptors.push('jwtInterceptor');
+
+  jwtInterceptorProvider.tokenGetter = function(store, config, auth) {
+    var targetClientId = 'vYPeq7LGf1utg2dbDlGKCwGKgy94lPH0'; // Another App
+    if (config.url.indexOf('http://localhost:33000') === 0) {
+      return auth.getToken({
+        targetClientId: targetClientId
+      });
+    } else {
+      return store.get('token');
+    }
+  }
+
+  // Add a simple interceptor that will fetch all requests and add the jwt token to its authorization header.
+  // NOTE: in case you are calling APIs which expect a token signed with a different secret, you might
+  // want to check the delegation-token example
+  $httpProvider.interceptors.push('jwtInterceptor');
+}).run(function($rootScope, auth, store) {
+  $rootScope.$on('$locationChangeStart', function() {
+    if (!auth.isAuthenticated) {
+      var token = store.get('token');
+      if (token) {
+        auth.authenticate(store.get('profile'), token);
+      }
+    }
+
+  });
+})

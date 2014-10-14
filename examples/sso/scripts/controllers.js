@@ -14,7 +14,9 @@ myApp.controller('LoginCtrl', function (auth, $scope) {
   $scope.auth = auth;
 });
 
-myApp.controller('LogoutCtrl', function (auth, $location) {
+myApp.controller('LogoutCtrl', function (auth, $location, store) {
   auth.signout();
+  store.remove('profile');
+  store.remove('token');
   $location.path('/login');
 });
