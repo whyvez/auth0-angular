@@ -115,6 +115,14 @@
         reset: 'changePassword',
         library: function() {
           return config.auth0js;
+        },
+        parseOptions: function(options) {
+          var retOptions = angular.copy(options);
+          if (retOptions.authParams) {
+            angular.extend(retOptions, retOptions.authParams);
+            delete retOptions.authParams;
+          }
+          return retOptions;
         }
       },
       'Auth0Lock': {
@@ -123,6 +131,9 @@
         reset: 'showReset',
         library: function() {
           return config.auth0lib;
+        },
+        parseOptions: function(options) {
+         return angular.copy(options);
         }
       }
     };
@@ -131,6 +142,11 @@
       libName = libName || config.lib;
       var library = innerAuth0libraryConfiguration[libName].library();
       return library[innerAuth0libraryConfiguration[libName][name]];
+    }
+
+    function getInnerLibraryConfigField(name, libName) {
+      libName = libName || config.lib;
+      return innerAuth0libraryConfiguration[libName][name];
     }
 
 
@@ -335,6 +351,7 @@
       auth.signin = function(options, successCallback, errorCallback, libName) {
         options = options || {};
         checkHandlers(options, successCallback, errorCallback);
+        options = getInnerLibraryConfigField('parseOptions', libName)(options);
 
         var signinMethod = getInnerLibraryMethod('signin', libName);
         var successFn = !successCallback ? null : function(profile, idToken, accessToken, state, refreshToken) {
@@ -360,6 +377,7 @@
       auth.signup = function(options, successCallback, errorCallback) {
         options = options || {};
         checkHandlers(options, successCallback, errorCallback);
+        options = getInnerLibraryConfigField('parseOptions')(options);
 
         var successFn = !successCallback ? null : function(profile, idToken, accessToken, state, refreshToken) {
           if (!angular.isUndefined(options.auto_login) && !options.auto_login) {
@@ -389,6 +407,7 @@
       auth.reset = function(options, successCallback, errorCallback) {
         options = options || {};
 
+        options = getInnerLibraryConfigField('parseOptions')(options);
         var auth0lib = config.auth0lib;
         var resetCall = authUtils.callbackify(getInnerLibraryMethod('reset'), successCallback, errorCallback, auth0lib);
 

@@ -5,8 +5,9 @@ angular.module( 'sample.login', [
 
   $scope.login = function() {
     auth.signin({
-      // Get the refresh token
-      offline_mode: true
+      authParams: {
+        scope: 'openid offline_access'
+      }
     });
   }
 

@@ -28,12 +28,12 @@ angular.module( 'sample', [
     loginUrl: '/login'
   });
 
-  authProvider.on('loginSuccess', function($location, profilePromise, idToken, refreshToken) {
+  authProvider.on('loginSuccess', function($location, profilePromise, idToken, refreshToken, store) {
     $location.path('/');
+    store.set('token', idToken);
+    store.set('refreshToken', refreshToken);
     profilePromise.then(function(profile) {
       store.set('profile', profile);
-      store.set('token', idToken);
-      store.set('refreshToken', refreshToken);
     });
   });
 
@@ -41,9 +41,12 @@ angular.module( 'sample', [
     $log('Error logging in', error);
   });
 
-  jwtInterceptorProvider.tokenGetter = function(store, $http, jwtHelper) {
+  jwtInterceptorProvider.tokenGetter = function(store, jwtHelper, auth) {
     var idToken = store.get('token');
     var refreshToken = store.get('refreshToken');
+    if (!idToken || !refreshToken) {
+      return null;
+    }
     if (jwtHelper.isTokenExpired(idToken)) {
       return auth.refreshIdToken(refreshToken);
     } else {
