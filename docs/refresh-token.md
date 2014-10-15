@@ -6,11 +6,11 @@ Mostly when building mobile apps, we want to show the signin page only once and 
 
 ### 1. Getting the Refresh Token
 
-In order to be able to get the refresh token, all we need to do is to send the option `offline_mode: true` when calling the `signin` or `signup`.
+In order to be able to get the refresh token, all we need to do is add the `offline_access` scope when calling the `signin` or `signup`. Optionally, you can set the `device` parameter.
 
 ````js
 auth.signin({
-  offline_mode: true
+  scope: 'openid offline_access`
 });
 ````
 
