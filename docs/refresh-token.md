@@ -10,7 +10,11 @@ In order to be able to get the refresh token, all we need to do is add the `offl
 
 ````js
 auth.signin({
-  scope: 'openid offline_access`
+    authParams: {
+      scope: 'openid offline_access',
+      // The following is optional
+      device: 'Chrome browser'
+    }
 });
 ````
 
