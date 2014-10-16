@@ -48,7 +48,10 @@ angular.module( 'sample', [
       return null;
     }
     if (jwtHelper.isTokenExpired(idToken)) {
-      return auth.refreshIdToken(refreshToken);
+      return auth.refreshIdToken(refreshToken).then(function(idToken) {
+        store.set('token', idToken);
+        return idToken;
+      });
     } else {
       return idToken;
     }
