@@ -58,6 +58,8 @@ define(['angular', './myApp'], function (angular, myApp) {
 
   myApp.controller('LogoutCtrl', function (auth, $scope, $location) {
     auth.signout();
+    store.remove('profile');
+    store.remove('token');
     $scope.$parent.message = '';
     $location.path('/login');
   });
