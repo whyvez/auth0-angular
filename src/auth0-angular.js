@@ -279,7 +279,7 @@
       if (config.loginUrl) {
         $rootScope.$on('$routeChangeStart', function(e, nextRoute) {
           if (nextRoute.$$route && nextRoute.$$route.requiresLogin) {
-            if (!auth.isAuthenticated) {
+            if (!auth.isAuthenticated && !auth.refreshTokenPromise) {
               $location.path(config.loginUrl);
             }
           }
@@ -290,7 +290,7 @@
       if (config.loginState) {
         $rootScope.$on('$stateChangeStart', function(e, to) {
           if (to.data && to.data.requiresLogin) {
-            if (!auth.isAuthenticated) {
+            if (!auth.isAuthenticated && !auth.refreshTokenPromise) {
               e.preventDefault();
               $injector.get('$state').go(config.loginState);
             }
@@ -335,9 +335,13 @@
       auth.refreshIdToken = function(refresh_token) {
         var refreshTokenAsync = authUtils.promisify(config.auth0js.refreshToken, config.auth0js);
 
-        return refreshTokenAsync(refresh_token || auth.refreshToken).then(function (delegationResult) {
+        auth.refreshTokenPromise = refreshTokenAsync(refresh_token || auth.refreshToken).then(function (delegationResult) {
           return delegationResult.id_token;
+        })['finally'](function() {
+          auth.refreshTokenPromise = null;
         });
+
+        return auth.refreshTokenPromise;
       };
 
       auth.renewIdToken = function(id_token) {

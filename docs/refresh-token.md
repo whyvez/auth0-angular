@@ -44,7 +44,39 @@ angular.module('myApp', ['auth0', 'angular-jwt'])
     $httpProvider.interceptors.push('jwtInterceptor');
   });
 ````
-### 4. You've nailed it
+
+### 4. Using the Refresh Token on page refresh is JWT is expired
+
+Once the page is refreshed, you want the user to stay logged in. For that, if the JWT is expired, you'll use the `refreshToken` to get a new one:
+
+````js
+angular.module('myApp', ['auth0', 'angular-jwt', 'angular-storage'])
+.run(function($rootScope, auth, store, jwtHelper, $location) {
+  $rootScope.$on('$locationChangeStart', function() {
+    if (!auth.isAuthenticated) {
+      var token = store.get('token');
+      var refreshToken = store.get('refreshToken');
+      if (token) {
+        if (!jwtHelper.isTokenExpired(token)) {
+          auth.authenticate(store.get('profile'), token);
+        } else {
+          if (refreshToken) {
+            return auth.refreshIdToken(refreshToken).then(function(idToken) {
+              store.set('token', idToken);
+              auth.authenticate(store.get('profile'), idToken);
+            });
+          } else {
+            $location.path('/login');
+          }
+        }
+      }
+    }
+
+  });
+})
+````
+
+### 5. You've nailed it
 
 That's it :). Now, you can check out some of our [examples](https://github.com/auth0/auth0-angular/tree/master/examples). 
 

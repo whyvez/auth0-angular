@@ -57,15 +57,18 @@ myApp.config(function ($routeProvider, authProvider, $httpProvider, jwtIntercept
   // NOTE: in case you are calling APIs which expect a token signed with a different secret, you might
   // want to check the delegation-token example
   $httpProvider.interceptors.push('jwtInterceptor');
-}).run(function($rootScope, auth, store) {
+}).run(function($rootScope, auth, store, jwtHelper, $location) {
   $rootScope.$on('$locationChangeStart', function() {
     if (!auth.isAuthenticated) {
       var token = store.get('token');
       if (token) {
-        auth.authenticate(store.get('profile'), token);
+        if (!jwtHelper.isTokenExpired(token)) {
+          auth.authenticate(store.get('profile'), token);
+        } else {
+          $location.path('/login');
+        }
       }
     }
 
   });
 });
-

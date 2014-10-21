@@ -6,10 +6,10 @@ In this tutorial, you'll learn how to do this.
 
 ### 1. Including angular-storage dependency
 
-The first thing you should do is adding `angular-storage` dependency. Follow [this link](https://github.com/auth0/angular-storage#installing-it) to learn how to install it via npm, bower or manually. Once you've done that, just include `angular-storage` module to your application:
+The first thing you should do is adding `angular-storage` and `angular-jwt` as dependencies. Follow [this link](https://github.com/auth0/angular-storage#installing-it) to learn how to install `angular-storage` and [this other one](https://github.com/auth0/angular-jwt#installing-it) to install `angular-jwt` via npm, bower or manually. Once you've done that, just include `angular-storage` and `angular-jwt` modules to your application:
 
 ````js
-angular.module('myApp', ['auth0', 'angular-storage']);
+angular.module('myApp', ['auth0', 'angular-storage', 'angular-jwt']);
 ````
 
 ### 2. Saving the user information after login.
@@ -32,17 +32,21 @@ function Controller(auth, $location, store, $scope)
 
 ### 3. Authenticating the user on page refresh
 
-Now that you have the user information stored, you can use `auth.authenticate` method after the page has refreshed to let `auth0-angular` know that the user is already authenticated:
+Now that you have the user information stored, you can use `auth.authenticate` method after the page has refreshed to let `auth0-angular` know that the user is already authenticated if the JWT isn't expired:
 
 ````js
-angular.module('myApp', ['auth0', 'angular-storage'])
-.run(function($rootScope, auth, store) {
+angular.module('myApp', ['auth0', 'angular-storage', 'angular-jwt'])
+.run(function($rootScope, auth, store, jwtHelper) {
   // This events gets triggered on refresh or URL change
   $rootScope.$on('$locationChangeStart', function() {
     if (!auth.isAuthenticated) {
       var token = store.get('token');
       if (token) {
-        auth.authenticate(store.get('profile'), token);
+        if (!jwtHelper.isTokenExpired(token)) {
+          auth.authenticate(store.get('profile'), token);
+        } else {
+          // Either show Login page or use the refresh token to get a new idToken
+        }
       }
     }
   });
