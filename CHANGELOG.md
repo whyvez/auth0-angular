@@ -1,5 +1,15 @@
 # 3.0.X
 
+## 3.0.3
+* Tutorial fixes for when the page is refreshed and the JWT is expired
+* Added handling for the case when JWT is expired, page is refreshed and a RefreshToken is used to refresh the page.
+
+## 3.0.2
+* Minor fixes
+
+## 3.0.1
+* Minor fixes
+
 ## 3.0.0
 * Magic is removed. `auth0-angular` is now much smaller and with less magic
 * We recommend the usage of `angular-storage` and `angular-jwt` for storing information and token handling
