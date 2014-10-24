@@ -1,5 +1,8 @@
 # 3.0.X
 
+## 3.0.4
+* Now the signin by default shows the signup and reset buttons
+
 ## 3.0.3
 * Tutorial fixes for when the page is refreshed and the JWT is expired
 * Added handling for the case when JWT is expired, page is refreshed and a RefreshToken is used to refresh the page.
