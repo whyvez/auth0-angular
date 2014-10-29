@@ -64,7 +64,11 @@ angular.module('myCoolApp', ['auth0'])
 // LoginCtrl.js
 angular.module('myCoolApp').controller('LoginCtrl', function(auth) {
   $scope.signin = function() {
-    auth.signin({}, function() {
+    auth.signin({
+      authParams: {
+        scope: 'openid profile' // This is if you want the full JWT
+      }
+    }, function() {
       $location.path('/user-info')
     }, function(err) {
       console.log("Error :(", err);
