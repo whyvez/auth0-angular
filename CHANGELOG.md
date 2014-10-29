@@ -1,5 +1,9 @@
 # 3.0.X
 
+## 3.0.5
+* Fixed bug with IE and `Function.name`
+* Added `redirect` mode example for `Auth0.js`
+
 ## 3.0.4
 * Now the signin by default shows the signup and reset buttons
 
