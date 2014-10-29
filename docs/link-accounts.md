@@ -4,6 +4,7 @@ In order to link two accounts, create a link method in a controller (make sure t
 
 ```js
 $scope.link = function () {
+  auth.auth0js._callbackOnLocationHash = true;
   auth.signin({
     authParams: {
       access_token: auth.accessToken
