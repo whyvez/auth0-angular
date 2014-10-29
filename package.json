@@ -1,5 +1,8 @@
 {
   "name": "auth0-angular",
+  "description": "Angular SDK to use with Auth0",
+  "homepage": "https://auth0.com",
+  "author": "Martin Gontovnikas",
   "version": "3.0.5",
   "main": "./build/auth0-angular.js",
   "devDependencies": {

@@ -22,6 +22,19 @@ module.exports = function (grunt) {
   ];
 
   grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json'),
+    meta: {
+      banner: [
+                '/**',
+                ' * <%= pkg.description %>',
+                ' * @version v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>',
+                ' * @link <%= pkg.homepage %>',
+                ' * @author <%= pkg.author %>',
+                ' * @license MIT License, http://www.opensource.org/licenses/MIT',
+                ' */',
+                ''
+              ].join('\n')
+    },
     clean: [
       'build/'
     ],
@@ -48,6 +61,9 @@ module.exports = function (grunt) {
     },
 
     concat: {
+      options: {
+        banner: '<%= meta.banner %>'
+      },
       dist: { dest: 'build/auth0-angular.js', src: ['build/auth0-angular.js'] }
     },
 
