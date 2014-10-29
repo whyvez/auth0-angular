@@ -53,7 +53,9 @@ myApp.controller('LoginCtrl', function (auth, $scope, $location, store) {
       connection: 'Username-Password-Authentication',
       username: $scope.user,
       password: $scope.pass,
-      scope: 'openid name email'
+      authParams: {
+        scope: 'openid name email'
+      }
     }, onLoginSuccess, onLoginFailed);
 
   };

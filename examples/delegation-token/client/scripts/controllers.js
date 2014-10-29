@@ -51,7 +51,9 @@ myApp.controller('LoginCtrl', function (auth, $scope, $location, store) {
       connection: 'Username-Password-Authentication',
       username: $scope.user,
       password: $scope.pass,
-      scope: 'openid name email'
+      authParams: {
+        scope: 'openid name email'
+      }
     }, onLoginSuccess, onLoginFailed);
   };
 
@@ -61,7 +63,9 @@ myApp.controller('LoginCtrl', function (auth, $scope, $location, store) {
     auth.signin({
       popup: true,
       connection: 'google-oauth2',
-      scope: 'openid name email'
+      authParams: {
+        scope: 'openid name email'
+      }
     }, onLoginSuccess, onLoginFailed);
   };
 

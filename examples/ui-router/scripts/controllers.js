@@ -35,9 +35,10 @@ myApp.controller('LoginCtrl', function (auth, $scope, $cookies, $state) {
     auth.signin({
       connection: 'Username-Password-Authentication',
       username: $scope.user,
-      popup: true,
       password: $scope.pass,
-      scope: 'openid name email'
+      authParams: {
+        scope: 'openid name email'
+      }
     }, onLoginSuccess, onLoginFailed);
   };
 
