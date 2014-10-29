@@ -10,6 +10,12 @@
     var Utils = {
       capitalize: function(string) {
         return string ? string.charAt(0).toUpperCase() + string.substring(1).toLowerCase() : null;
+      },
+      fnName : function(fun) {
+        var ret = fun.toString();
+        ret = ret.substr('function '.length);
+        ret = ret.substr(0, ret.indexOf('('));
+        return ret;
       }
     };
 
@@ -169,11 +175,11 @@
         Constructor = Auth0;
       }
 
-      if (Constructor.name === 'Auth0Widget') {
+      if (authUtilsProvider.fnName(Constructor) === 'Auth0Widget') {
         throw new Error('Auth0Widget is not supported with this ' +
           ' version of auth0-angular anymore. Please try with an older one');
       }
-      if (Constructor.name === 'Auth0Lock') {
+      if (authUtilsProvider.fnName(Constructor) === 'Auth0Lock') {
         this.auth0lib = new Constructor(this.clientID, domain, angular.extend(defaultOptions, options));
         this.auth0js = this.auth0lib.getClient();
         this.isLock = true;
