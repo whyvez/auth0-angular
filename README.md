@@ -116,7 +116,7 @@ The third mode is just doing a CORS call to `/ro` to authenticate the user. This
 
 auth0-angular depends on either `auth0.js` or `auth0-lock.js`.
 
-If you want to use Auth0's [beautiful Lock UI](https://auth0.com/lock), you need to include `auth0-lock.js`. This lets you configure Title and Icons, but the UI is taken care for you. For all the customization properties, please check out [tihs link](https://github.com/auth0/lock/wiki/Auth0Lock-customization)
+If you want to use Auth0's [beautiful Lock UI](https://auth0.com/lock), you need to include `auth0-lock.js`. This lets you configure Title and Icons, but the UI is taken care for you. For all the customization properties, please check out [this link](https://github.com/auth0/lock/wiki/Auth0Lock-customization)
 
 Otherwise, if you'll use a custom UI, you need to include `auth0.js`.
 
@@ -166,7 +166,7 @@ auth.signin({
 })
 ````
 
-**If you don't set any success or failure callback and you don't set username and pasword as options**, redirect mode will be used, which means the Angular page is reloaded. You'll need to use `events` to handle the login success and failure:
+**If you don't set any success or failure callback and you don't set username and password as options**, redirect mode will be used, which means the Angular page is reloaded. You'll need to use `events` to handle the login success and failure:
 
 ````js
 // app.js
@@ -234,7 +234,7 @@ These properties contain the tokens returned after the user is logged in. Mostly
 
 #### auth.hookEvents()
 
-auth0-angular takes care of checking that **unauthenticated users canoot access restricted resources**. For that, auth0-angular hooks to internal angular events so that we can redirect the user to the login page if he doesn't have the right permission to access a page. For that, you need to hook auth0-angular to all of these events on application run.
+auth0-angular takes care of checking that **unauthenticated users cannot access restricted resources**. For that, auth0-angular hooks to internal angular events so that we can redirect the user to the login page if he doesn't have the right permission to access a page. For that, you need to hook auth0-angular to all of these events on application run.
 
 First, you need to configure the restricted routes:
 
@@ -248,7 +248,7 @@ module.config(function($routeProvider) {
     requiresLogin: true
   }).
   when('/login', {
-    tempalteUrl: 'login.html',
+    template: 'login.html',
     controller: 'LoginCtrl'
   });
 
@@ -306,7 +306,7 @@ There're 2 options:
 
 ````js
 auth.getToken({
-  api: 'firebase' // By default it's going to be the first active addonn in the list of addons
+  api: 'firebase' // By default it's going to be the first active addon in the list of addons
 })
 ````
 
@@ -348,7 +348,7 @@ You can configure the handlers for all the different events that can happen in y
 
 * **authenticated**: This will get called after a user is authenticated by calling the `auth.authenticate` method. In the handler, you can inject any service you want.
 * **loginSucces**: This will get called after a user has successfully logged in. In the handler, you can inject any service you want besides the `profileProfile` and `idToken` from the user.
-* **loginFailure**: This will get called if there's an error authenticating the usr. In the handler, you can inject any service you want besides the `error` which was thrown.
+* **loginFailure**: This will get called if there's an error authenticating the user. In the handler, you can inject any service you want besides the `error` which was thrown.
 * **logout**: This will get called after a user has successfully logged out.
 * **forbidden**: This will get called if a request to an API is made and it returns 401 meaning that the user cannot access that resource. That usually happens when the token is expired. In that case, you should redirect the user to the login page in most cases.
 
@@ -426,10 +426,10 @@ Check [the CHANGELOG file](CHANGELOG.md) to see the changes from version to vers
 
 Auth0 helps you to:
 
-* Add authentication with [multiple authentication sources](https://docs.auth0.com/identityproviders), either social like **Google, Facebook, Microsoft Account, LinkedIn, GitHub, Twitter, Box, Salesforce, amont others**, or enterprise identity systems like **Windows Azure AD, Google Apps, Active Directory, ADFS or any SAML Identity Provider**.
+* Add authentication with [multiple authentication sources](https://docs.auth0.com/identityproviders), either social like **Google, Facebook, Microsoft Account, LinkedIn, GitHub, Twitter, Box, Salesforce, among others**, or enterprise identity systems like **Windows Azure AD, Google Apps, Active Directory, ADFS or any SAML Identity Provider**.
 * Add authentication through more traditional **[username/password databases](https://docs.auth0.com/mysql-connection-tutorial)**.
 * Add support for **[linking different user accounts](https://docs.auth0.com/link-accounts)** with the same user.
-* Support for generating signed [Json Web Tokens](https://docs.auth0.com/jwt) to call your APIs and **flow the user identity** securely.
+* Support for generating signed [JSON Web Tokens](https://docs.auth0.com/jwt) to call your APIs and **flow the user identity** securely.
 * Analytics of how, when and where users are logging in.
 * Pull data from other sources and add it to the user profile, through [JavaScript rules](https://docs.auth0.com/rules).
 
