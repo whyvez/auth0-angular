@@ -248,7 +248,7 @@ module.config(function($routeProvider) {
     requiresLogin: true
   }).
   when('/login', {
-    template: 'login.html',
+    templateUrl: 'login.html',
     controller: 'LoginCtrl'
   });
 
