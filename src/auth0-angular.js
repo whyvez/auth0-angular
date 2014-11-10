@@ -436,7 +436,7 @@
       };
 
       auth.authenticate = function(profile, idToken, accessToken, state, refreshToken) {
-        onSigninOk(idToken, accessToken, state, refreshToken, profile, true);
+        return onSigninOk(idToken, accessToken, state, refreshToken, profile, true);
       };
 
       auth.getProfile = function(idToken) {
