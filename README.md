@@ -321,6 +321,11 @@ auth.getToken({
 
 To learn more about delegated access [please click here](https://docs.auth0.com/auth-api#delegated).
 
+#### auth.delegate(options)
+
+Equivalent to calling `auth.getToken` but returns a promise with the full delegation result instead of just the `id_token` field.
+Use this method for delegating with AWS or other APIs that return compound objects.
+
 #### auth.renewIdToken([id_token])
 
 You can configure your token to expire after a certain time. If you don't want your user to login again, you can just refresh the current token, which means getting a new token that will be valid for a certain amount of time.
