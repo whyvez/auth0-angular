@@ -417,8 +417,11 @@ This is the list of all of the available tutorials & samples.
 
 Check [the CHANGELOG file](CHANGELOG.md) to see the changes from version to version
 
+## Issue Reporting
 
-## Contributing
+If you have found a bug or if you have a feature request, please report them at this repository issues section. Please do not report security vulnerabilities on the public GitHub issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
+
+## Contributing 
  [Read here how to run auth0-angular tests](docs/testing.md)
 
 
