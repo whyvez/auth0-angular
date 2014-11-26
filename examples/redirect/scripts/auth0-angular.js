@@ -1,6 +1,6 @@
 /**
  * Angular SDK to use with Auth0
- * @version v3.0.5 - 2014-11-05
+ * @version v3.0.5 - 2014-11-26
  * @link https://auth0.com
  * @author Martin Gontovnikas
  * @license MIT License, http://www.opensource.org/licenses/MIT
@@ -293,14 +293,19 @@
           };
           auth.hookEvents = function () {
           };
-          auth.getToken = function (options) {
+          auth.getDelegationToken = function (options) {
             options = options || { scope: 'openid' };
             if (!options.id_token && !options.refresh_token) {
               options.id_token = auth.idToken;
             }
             var getDelegationTokenAsync = authUtils.promisify(config.auth0js.getDelegationToken, config.auth0js);
             return getDelegationTokenAsync(options).then(function (delegationResult) {
-              return delegationResult.id_token;
+              return delegationResult;
+            });
+          };
+          auth.getToken = function (options) {
+            return auth.getDelegationToken(options).then(function (result) {
+              return result.id_token;
             });
           };
           auth.refreshIdToken = function (refresh_token) {
