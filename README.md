@@ -305,7 +305,7 @@ There're 2 options:
 1) Auth0 has several Addons which let you get new tokens based on Auth0 one. Imagine you have Firebase or AWS. You want to get the token for Firebase, then you can call the following:
 
 ````js
-auth.getToken({
+auth.getDelegationToken({
   api: 'firebase' // By default it's going to be the first active addon in the list of addons
 })
 ````
@@ -313,18 +313,13 @@ auth.getToken({
 2) Imagine you have 2 APIs. The user in your angular app is logged in to your angular app that uses API #1. If you want to use API #2, you need to exchange the token you have for the API #1 for a valid one for API #2. The `targetClientId` parameter is just the identifier of the API #2 in this case. **Returns a promise**.
 
 ````js
-auth.getToken({
+auth.getDelegationToken({
   targetClientId: 'other client id',
   api: 'auth0' // We want the Auth0 ID_token of the other API
 })
 ````
 
 To learn more about delegated access [please click here](https://docs.auth0.com/auth-api#delegated).
-
-#### auth.delegate(options)
-
-Equivalent to calling `auth.getToken` but returns a promise with the full delegation result instead of just the `id_token` field.
-Use this method for delegating with AWS or other APIs that return compound objects.
 
 #### auth.renewIdToken([id_token])
 
