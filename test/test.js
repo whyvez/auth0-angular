@@ -173,11 +173,21 @@ describe('Auth0 Angular', function () {
       auth.hasTokenExpired = hasTokenExpiredOriginal;
     });
 
-    it('should get the token using the API on the first time', function (done) {
-      auth.getToken('client-id').then(function (token) {
-        expect(token).to.be.ok;
-      })
-      .then(done);
+    it('should get the token using the API on the first time as a string', function (done) {
+      auth.getToken({targetClientId: 'client-id'}).then(function (token) {
+        expect(token).to.be.a('string');
+      }).then(done);
+
+      // Flush the promise and timeout!
+      $rootScope.$apply();
+      $timeout.flush();
+    });
+
+    it('should get the token using the API on the first time as an object', function (done) {
+      auth.getDelegationToken({targetClientId: 'client-id'}).then(function (token) {
+        expect(token).to.have.property('id_token');
+        expect(token.id_token).to.be.a('string');
+      }).then(done);
 
       // Flush the promise and timeout!
       $rootScope.$apply();

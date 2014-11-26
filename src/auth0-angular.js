@@ -324,7 +324,7 @@
         // Does nothing. Hook events on application's run
       };
 
-      auth.delegate = function(options) {
+      auth.getDelegationToken = function(options) {
         options = options || { scope: 'openid' };
 
         if (!options.id_token && !options.refresh_token) {
@@ -338,7 +338,11 @@
         });
       };
 
-      auth.getToken = function(options) { return auth.delegate.id_token; }
+      auth.getToken = function(options) {
+        return auth.getDelegationToken(options).then(function(result) {
+          return result.id_token;
+        });
+      };
 
       auth.refreshIdToken = function(refresh_token) {
         var refreshTokenAsync = authUtils.promisify(config.auth0js.refreshToken, config.auth0js);

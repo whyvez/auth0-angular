@@ -6,8 +6,8 @@ var cors      = require('cors');
 var app             = express();
 var secondaryApp    = express();
 
-var SECRET    = 'A92LWsdBgH6legaUm8U3uyJ7n1bdEik7WvO8nQab9LlHTtnawpRx8d-HPqW0b2g-';
-var AUDIENCE  = 'DyG9nCwIEofSy66QM3oo5xU6NFs3TmvT';
+var SECRET    = 'gcyGiDHsIE6bUT9oAs6ghuynjt8usUqTRglg8n8eWqw9SgnGJ5cRLCUz03gJ_s_X';
+var AUDIENCE  = 'BUIJSW9x60sIHBw8Kd9EmCbj8eDIFxDC';
 
 var authenticate = jwt({
   secret: new Buffer(SECRET, 'base64'),
@@ -27,8 +27,8 @@ app.get('/api/protected', function (req, res) {
 app.listen(3000);
 console.log('Main application listening on port http://localhost:3000');
 
-var SECONDARY_APP_SECRET    = 'DLQ5dWkNMwPlUWo2jqVkbG1PFyeMvV60HEJaW0FioeI4ZxGaAW73BiqRBZmRk29v';
-var SECONDARY_APP_AUDIENCE  = 'vYPeq7LGf1utg2dbDlGKCwGKgy94lPH0'; // Another App
+var SECONDARY_APP_SECRET    = 'M1IKNcRQDmaLeGfa0IBEDIyFNrDSHTFigbyEUjqcvHub2qrg368gWmwfHYZ9doy5';
+var SECONDARY_APP_AUDIENCE  = 'r34d7GotLSGQciOHGHLrJaQo1Zg0cXQb'; // Another App
 
 var authenticateSecondaryApp = jwt({
   secret: new Buffer(SECONDARY_APP_SECRET, 'base64'),

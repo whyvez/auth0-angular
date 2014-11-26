@@ -32,10 +32,14 @@ myApp.config(function ($routeProvider, authProvider, $httpProvider,
   $httpProvider.interceptors.push('jwtInterceptor');
 
   jwtInterceptorProvider.tokenGetter = function(store, config, auth) {
-    var targetClientId = 'vYPeq7LGf1utg2dbDlGKCwGKgy94lPH0'; // Another App
+    var targetClientId = 'r34d7GotLSGQciOHGHLrJaQo1Zg0cXQb'; // Another App
     if (config.url.indexOf('http://localhost:33000') === 0) {
       return auth.getToken({
         targetClientId: targetClientId
+      }).then(function (delegationResult) {
+        return delegationResult;
+      }, function (err) {
+        console.log(err);
       });
     } else {
       return store.get('token');
