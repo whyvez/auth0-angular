@@ -1,6 +1,6 @@
 /**
  * Angular SDK to use with Auth0
- * @version v3.0.5 - 2014-11-05
+ * @version v3.0.5 - 2014-12-02
  * @link https://auth0.com
  * @author Martin Gontovnikas
  * @license MIT License, http://www.opensource.org/licenses/MIT
@@ -24,7 +24,7 @@
           var ret = fun.toString();
           ret = ret.substr('function '.length);
           ret = ret.substr(0, ret.indexOf('('));
-          return ret;
+          return ret ? ret.trim() : ret;
         }
       };
     angular.extend(this, Utils);
@@ -382,7 +382,7 @@
             callHandler('logout');
           };
           auth.authenticate = function (profile, idToken, accessToken, state, refreshToken) {
-            onSigninOk(idToken, accessToken, state, refreshToken, profile, true);
+            return onSigninOk(idToken, accessToken, state, refreshToken, profile, true);
           };
           auth.getProfile = function (idToken) {
             var getProfilePromisify = authUtils.promisify(config.auth0lib.getProfile, config.auth0lib);
