@@ -310,9 +310,7 @@
               options.id_token = auth.idToken;
             }
             var getDelegationTokenAsync = authUtils.promisify(config.auth0js.getDelegationToken, config.auth0js);
-            return getDelegationTokenAsync(options).then(function (delegationResult) {
-              return delegationResult.id_token;
-            });
+            return getDelegationTokenAsync(options);
           };
           auth.refreshIdToken = function (refresh_token) {
             var refreshTokenAsync = authUtils.promisify(config.auth0js.refreshToken, config.auth0js);
@@ -393,9 +391,6 @@
             callHandler('logout');
           };
           auth.authenticate = function (profile, idToken, accessToken, state, refreshToken) {
-            if (!config.initialized) {
-              return null;
-            }
             return onSigninOk(idToken, accessToken, state, refreshToken, profile, true);
           };
           auth.getProfile = function (idToken) {

@@ -346,9 +346,7 @@
 
         var getDelegationTokenAsync = authUtils.promisify(config.auth0js.getDelegationToken, config.auth0js);
 
-        return getDelegationTokenAsync(options).then(function (delegationResult) {
-          return delegationResult.id_token;
-        });
+        return getDelegationTokenAsync(options);
       };
 
       auth.refreshIdToken = function(refresh_token) {
