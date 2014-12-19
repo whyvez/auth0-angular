@@ -270,7 +270,7 @@
               if (ssoData.sso) {
                 auth.signin({
                   popup: false,
-                  connection: ssoData.lastUsedConnection.strategy
+                  connection: ssoData.lastUsedConnection.name
                 }, null, null, 'Auth0');
               }
             }));
