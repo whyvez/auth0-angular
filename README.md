@@ -1,4 +1,4 @@
-# Auth0 and AngularJS
+f# Auth0 and AngularJS
 
 This AngularJS module will help you implement client-side and server-side (API) authentication. You can use it together with [Auth0](https://www.auth0.com) to add support for username/password authentication, enterprise identity providers like Active Directory or SAML and also for social identity providers like Google, Facebook or Salesforce among others to your web, API and mobile native apps.
 
@@ -332,9 +332,9 @@ For example, let's imagine you have a token valid for 10 hours. After 9 hours, y
 
 Given a **expired** `id_token`, you can use the `refresh_token` to get a new and valid `id_token`.
 
-#### authProvider.init(options)
+#### authProvider.init(options) || auth.init(options)
 
-You use this method to configure the auth service. You must set the following options:
+You use this method to configure the auth service. It can be used either from the provider in the `config` method of your app, or anywhere else in the application from the `auth` service by calling `auth.init`. You can set the following options:
 
 * **domain**: The domain you have from your Auth0 account.
 * **clientId**: The identifier for the application you've created. This can be found in the settings for your app on Auth0.
