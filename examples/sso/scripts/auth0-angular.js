@@ -1,6 +1,6 @@
 /**
  * Angular SDK to use with Auth0
- * @version v3.0.5 - 2014-12-02
+ * @version v3.0.6 - 2014-12-19
  * @link https://auth0.com
  * @author Martin Gontovnikas
  * @license MIT License, http://www.opensource.org/licenses/MIT
@@ -179,6 +179,7 @@
           this.isLock = false;
           this.lib = 'Auth0';
         }
+        this.initialized = true;
       };
       this.eventHandlers = {};
       this.on = function (anEvent, handler) {
@@ -243,6 +244,9 @@
           }
           // Redirect mode
           $rootScope.$on('$locationChangeStart', function () {
+            if (!config.initialized) {
+              return;
+            }
             var hashResult = config.auth0lib.parseHash($window.location.hash);
             if (!auth.isAuthenticated) {
               if (hashResult && hashResult.id_token) {
@@ -254,7 +258,7 @@
                   if (ssoData.sso) {
                     auth.signin({
                       popup: false,
-                      connection: ssoData.lastUsedConnection.strategy
+                      connection: ssoData.lastUsedConnection.name
                     }, null, null, 'Auth0');
                   }
                 }));
@@ -266,6 +270,9 @@
           });
           if (config.loginUrl) {
             $rootScope.$on('$routeChangeStart', function (e, nextRoute) {
+              if (!config.initialized) {
+                return;
+              }
               if (nextRoute.$$route && nextRoute.$$route.requiresLogin) {
                 if (!auth.isAuthenticated && !auth.refreshTokenPromise) {
                   $location.path(config.loginUrl);
@@ -275,6 +282,9 @@
           }
           if (config.loginState) {
             $rootScope.$on('$stateChangeStart', function (e, to) {
+              if (!config.initialized) {
+                return;
+              }
               if (to.data && to.data.requiresLogin) {
                 if (!auth.isAuthenticated && !auth.refreshTokenPromise) {
                   e.preventDefault();
@@ -293,6 +303,7 @@
           };
           auth.hookEvents = function () {
           };
+          auth.init = angular.bind(config, config.init);
           auth.getToken = function (options) {
             options = options || { scope: 'openid' };
             if (!options.id_token && !options.refresh_token) {
@@ -382,6 +393,9 @@
             callHandler('logout');
           };
           auth.authenticate = function (profile, idToken, accessToken, state, refreshToken) {
+            if (!config.initialized) {
+              return null;
+            }
             return onSigninOk(idToken, accessToken, state, refreshToken, profile, true);
           };
           auth.getProfile = function (idToken) {

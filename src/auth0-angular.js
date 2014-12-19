@@ -190,6 +190,7 @@
         this.isLock = false;
         this.lib = 'Auth0';
       }
+      this.initialized = true;
     };
 
 
@@ -259,6 +260,10 @@
 
       // Redirect mode
       $rootScope.$on('$locationChangeStart', function() {
+        if (!config.initialized) {
+          return;
+        }
+
         var hashResult = config.auth0lib.parseHash($window.location.hash);
         if (!auth.isAuthenticated) {
           if (hashResult && hashResult.id_token) {
@@ -284,6 +289,9 @@
 
       if (config.loginUrl) {
         $rootScope.$on('$routeChangeStart', function(e, nextRoute) {
+          if (!config.initialized) {
+            return;
+          }
           if (nextRoute.$$route && nextRoute.$$route.requiresLogin) {
             if (!auth.isAuthenticated && !auth.refreshTokenPromise) {
               $location.path(config.loginUrl);
@@ -295,6 +303,9 @@
 
       if (config.loginState) {
         $rootScope.$on('$stateChangeStart', function(e, to) {
+          if (!config.initialized) {
+            return;
+          }
           if (to.data && to.data.requiresLogin) {
             if (!auth.isAuthenticated && !auth.refreshTokenPromise) {
               e.preventDefault();
@@ -323,6 +334,8 @@
       auth.hookEvents = function() {
         // Does nothing. Hook events on application's run
       };
+
+      auth.init = angular.bind(config, config.init);
 
       auth.getToken = function(options) {
         options = options || { scope: 'openid' };
