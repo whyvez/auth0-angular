@@ -1,4 +1,4 @@
-f# Auth0 and AngularJS
+# Auth0 and AngularJS
 
 This AngularJS module will help you implement client-side and server-side (API) authentication. You can use it together with [Auth0](https://www.auth0.com) to add support for username/password authentication, enterprise identity providers like Active Directory or SAML and also for social identity providers like Google, Facebook or Salesforce among others to your web, API and mobile native apps.
 
