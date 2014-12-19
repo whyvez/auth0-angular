@@ -37,7 +37,6 @@
     "uglify-js": "~2.4.0"
   },
   "scripts": {
-    "postinstall": "bower install -s --allow-root",
     "test": "grunt test -v"
   },
   "repository": {
