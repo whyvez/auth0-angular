@@ -68,7 +68,7 @@ angular.module('myCoolApp').controller('LoginCtrl', function(auth) {
       authParams: {
         scope: 'openid profile' // This is if you want the full JWT
       }
-    }, function() {
+    }, function(profile, idToken, accessToken, state, refreshToken) {
       $location.path('/user-info')
     }, function(err) {
       console.log("Error :(", err);
@@ -142,10 +142,10 @@ This method does the signin for you. If you're using `auth0-lock`, it'll display
 The most important thing to **check is if we're setting the callbacks or not**. **If set**, popup mode will be used and as the Angular page will not reload **the callbacks will be used to handle the sigin success and failure**. **We don't use promises since once the widget is opened, the user can enter the password incorrectly several times and then enter it ok. We cannot fulfill a promise (with success or failure) more than once unfortunately**.
 
 ````js
-auth.signin({}, function(
+auth.signin({}, function(profile, idToken, accessToken, state, refreshToken) {
   // All good
   $location.path('/');
-), function(error) {
+}, function(error) {
   // Error
 })
 ````
@@ -158,10 +158,10 @@ auth.signin({
   username: $scope.username,
   password: $scope.password,
   connection: ['Username-Password-Authentication']
-}, function(
+}, function() {
   // All good
   $location.path('/');
-), function(error) {
+}, function(error) {
   // Error
 })
 ````
