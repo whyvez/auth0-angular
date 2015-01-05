@@ -37,7 +37,7 @@
     "uglify-js": "~2.4.0"
   },
   "scripts": {
-    "test": "grunt test -v"
+    "test": "bower install && grunt test -v"
   },
   "repository": {
     "type": "git",
