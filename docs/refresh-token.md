@@ -52,6 +52,7 @@ Once the page is refreshed, you want the user to stay logged in. For that, if th
 ````js
 angular.module('myApp', ['auth0', 'angular-jwt', 'angular-storage'])
 .run(function($rootScope, auth, store, jwtHelper, $location) {
+  var refreshingToken = null;
   $rootScope.$on('$locationChangeStart', function() {
     if (!auth.isAuthenticated) {
       var token = store.get('token');
@@ -61,10 +62,15 @@ angular.module('myApp', ['auth0', 'angular-jwt', 'angular-storage'])
           auth.authenticate(store.get('profile'), token);
         } else {
           if (refreshToken) {
-            return auth.refreshIdToken(refreshToken).then(function(idToken) {
-              store.set('token', idToken);
-              auth.authenticate(store.get('profile'), idToken);
-            });
+            if (refreshingToken === null) {
+                refreshingToken =  auth.refreshIdToken(refreshToken).then(function(idToken) {
+                  store.set('token', idToken);
+                  auth.authenticate(store.get('profile'), idToken);
+                }).finally(function() {
+                    refreshingToken = null;
+                });
+            }
+            return refreshingToken;
           } else {
             $location.path('/login');
           }
