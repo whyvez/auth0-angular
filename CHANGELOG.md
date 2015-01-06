@@ -1,6 +1,9 @@
 # 4.0.X
 
-# 4.0.0
+## 4.0.1
+* Fixed minification problem with `auth0-angular` and `Lock`
+
+## 4.0.0
 
 * `getToken` method now returns the full delegation object instead of just the `id_token`. This **breaks backward compatibility** with the previous version. It lets you use `auth0-angular` for other delegations besides Auth0 like Amazon which doesn't return an `id_token`
 * Post install script has been removed. It forced people using this library to have `bower` installed.
