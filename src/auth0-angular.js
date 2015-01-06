@@ -155,7 +155,37 @@
       return innerAuth0libraryConfiguration[libName][name];
     }
 
+    function constructorName(fun) {
+      if (fun) {
+        return {
+          lib: authUtilsProvider.fnName(fun),
+          constructor: fun
+        };
+      }
 
+      /* jshint ignore:start */
+      if (null != window.Auth0Lock) {
+        return {
+          lib: 'Auth0Lock',
+          constructor: window.Auth0Lock
+        };
+      }
+
+      if (null != window.Auth0) {
+        return {
+          lib: 'Auth0',
+          constructor: window.Auth0
+        };
+      }
+
+      if (null != Auth0Widget) {
+        throw new Error('Auth0Widget is not supported with this version of auth0-angular' +
+          'anymore. Please try with an older one');
+      }
+
+      throw new Error('Cannott initialize Auth0Angular. Auth0Lock or Auth0 must be available');
+      /* jshint ignore:end */
+    }
 
     this.init = function(options, Auth0Constructor) {
       if (!options) {
@@ -167,29 +197,18 @@
       var domain = options.domain;
       this.sso = options.sso;
 
-      var Constructor = Auth0Constructor;
-      if (!Constructor && typeof Auth0Lock !== 'undefined') {
-        Constructor = Auth0Lock;
-      }
-      if (!Constructor && typeof Auth0 !== 'undefined') {
-        Constructor = Auth0;
-      }
-
-      if (authUtilsProvider.fnName(Constructor) === 'Auth0Widget') {
-        throw new Error('Auth0Widget is not supported with this ' +
-          ' version of auth0-angular anymore. Please try with an older one');
-      }
-      if (authUtilsProvider.fnName(Constructor) === 'Auth0Lock') {
-        this.auth0lib = new Constructor(this.clientID, domain, angular.extend(defaultOptions, options));
+      var constructorInfo = constructorName(Auth0Constructor);
+      this.lib = constructorInfo.lib;
+      if (constructorInfo.lib === 'Auth0Lock') {
+        this.auth0lib = new constructorInfo.constructor(this.clientID, domain, angular.extend(defaultOptions, options));
         this.auth0js = this.auth0lib.getClient();
         this.isLock = true;
-        this.lib = 'Auth0Lock';
       } else {
-        this.auth0lib = new Constructor(angular.extend(defaultOptions, options));
+        this.auth0lib = new constructorInfo.constructor(angular.extend(defaultOptions, options));
         this.auth0js = this.auth0lib;
         this.isLock = false;
-        this.lib = 'Auth0';
       }
+
       this.initialized = true;
     };
 
