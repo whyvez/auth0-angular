@@ -31,13 +31,25 @@ The only difference with the example on the `angular-jwt` guide is that now you'
 ````js
 angular.module('myApp', ['auth0', 'angular-jwt'])
   .config(function($httpProvider, jwtInterceptorProvider) {
+    var refreshingToken = null;
     jwtInterceptorProvider.tokenGetter = function(store, $http, jwtHelper) {
-      var idToken = store.get('token');
+      
+      var token = store.get('token');
       var refreshToken = store.get('refreshToken');
-      if (jwtHelper.isTokenExpired(idToken)) {
-        return auth.refreshIdToken(refreshToken);
-      } else {
-        return idToken;
+      if (token) {
+        if (!jwtHelper.isTokenExpired(token)) {
+          return store.get('token');
+        } else {
+          if (refreshingToken === null) {
+            refreshingToken =  auth.refreshIdToken(refreshToken).then(function(idToken) {
+              store.set('token', idToken);
+              return idToken;
+            }).finally(function() {
+                refreshingToken = null;
+            });
+          }
+          return refreshingToken;
+        }
       }
     }
 
